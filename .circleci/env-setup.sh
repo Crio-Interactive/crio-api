@@ -3,13 +3,13 @@
 {
   echo "export STACK_ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)"
   echo "export NODE_ENV=production"
-  echo "export DOMAIN_NAME=hcx.ai"
+  echo "export DOMAIN_NAME=tlabs.app"
 } >> "$BASH_ENV"
 
 if [ "${CIRCLE_BRANCH}" == "develop" ]
 then
   {
-    echo "export CLIENT_URL=https://crio-qa.hcx.ai/"
+    echo "export CLIENT_URL=https://crio-qa.tlabs.app/"
     echo "export SUBDOMAIN_NAME=crio-qa-api"
     echo "export STACK_REGION=us-west-1"
     echo "export APP_NAME=crio-development"
@@ -17,7 +17,7 @@ then
 elif [ "${CIRCLE_BRANCH}" == "staging" ]
 then
   {
-    echo "export CLIENT_URL=https://crio-staging.hcx.ai/"
+    echo "export CLIENT_URL=https://crio-staging.tlabs.app/"
     echo "export SUBDOMAIN_NAME=crio-staging-api"
     echo "export STACK_REGION=us-west-2"
     echo "export APP_NAME=crio-staging"
@@ -25,7 +25,7 @@ then
 elif [ "${CIRCLE_BRANCH}" == "master" ]
 then
   {
-    echo "export CLIENT_URL=https://crio.hcx.ai/"
+    echo "export CLIENT_URL=https://crio.tlabs.app/"
     echo "export SUBDOMAIN_NAME=crio-api"
     echo "export STACK_REGION=us-east-1"
     echo "export APP_NAME=crio-production"
