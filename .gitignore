@@ -1,0 +1,16 @@
+# dependencies
+node_modules
+
+# testing
+/coverage
+
+npm-debug.log*
+
+*/*/.env
+whole/.env
+*/*/.env.local
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+/env.sh

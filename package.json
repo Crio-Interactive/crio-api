@@ -1,0 +1,71 @@
+{
+  "name": "web-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "whole/index.js",
+  "bin": {
+    "hcx-cdk": "bin/hcx-cdk.js"
+  },
+  "scripts": {
+    "test:server": "echo \"Error: no test specified\" && exit 0",
+    "cdk": "cdk",
+    "deploy": "./deploy.sh",
+    "generate-config": "node generateCdkConfig.js",
+    "install:services": "npx lerna bootstrap --no-ci",
+    "install:whole": "cd ./whole && npm install",
+    "install-all": "concurrently npm:install:*",
+    "server": "concurrently npm:server:*",
+    "server:programs": "node services/programs/index.js",
+    "server:upload": "node services/upload/index.js",
+    "server:manage-users": "node services/manage-users/index.js",
+    "server:gateway": "wait-on tcp:4005 tcp:4004 tcp:4003 && node ./whole/index.js",
+    "dev": "concurrently npm:dev:*",
+    "dev:upload": "nodemon services/upload/index.js",
+    "dev:programs": "nodemon services/programs/index.js",
+    "dev:manage-users": "nodemon services/manage-users/index.js",
+    "dev:gateway": "wait-on tcp:4005 tcp:4004 tcp:4003 && nodemon ./whole/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tidepoollabs/hcx-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tidepoollabs/hcx-server/issues"
+  },
+  "homepage": "https://github.com/tidepoollabs/hcx-server#readme",
+  "dependencies": {
+    "@apollo/gateway": "^0.18.0",
+    "@aws-cdk/aws-apigateway": "^1.78.0",
+    "@aws-cdk/aws-certificatemanager": "^1.84.0",
+    "@aws-cdk/aws-cloudfront": "^1.83.0",
+    "@aws-cdk/aws-cognito": "^1.83.0",
+    "@aws-cdk/aws-ec2": "^1.78.0",
+    "@aws-cdk/aws-events": "^1.89.0",
+    "@aws-cdk/aws-events-targets": "^1.89.0",
+    "@aws-cdk/aws-iam": "^1.83.0",
+    "@aws-cdk/aws-lambda": "^1.78.0",
+    "@aws-cdk/aws-logs": "^1.109.0",
+    "@aws-cdk/aws-rds": "^1.78.0",
+    "@aws-cdk/aws-route53": "^1.84.0",
+    "@aws-cdk/aws-route53-targets": "^1.84.0",
+    "@aws-cdk/aws-s3": "^1.83.0",
+    "@aws-cdk/aws-secretsmanager": "^1.80.0",
+    "@aws-cdk/core": "1.78.0",
+    "apollo-server-lambda": "^2.19.0",
+    "aws-sdk": "^2.825.0",
+    "concurrently": "^5.3.0",
+    "express": "^4.17.1",
+    "wait-on": "^5.2.0"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.78.0",
+    "aws-cdk": "^1.78.0",
+    "jest": "^26.4.2",
+    "lerna": "^3.22.1",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.2.1"
+  }
+}

@@ -1,0 +1,66 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@1.3.0
+  node: circleci/node@4.2.1
+
+commands:
+  setup-env-vars:
+    steps:
+      - run: chmod +x .circleci/env-setup.sh && .circleci/env-setup.sh
+  deploy-app:
+    steps:
+      - setup_remote_docker
+      - install-packages
+      - run:
+          name: Make Dockerfiles ready
+          command: |
+            #migrateable
+            cp ./docker/migratable.Dockerfile ./services/programs/Dockerfile
+            cp ./docker/migrate-entrypoint.sh ./services/programs/migrate-entrypoint.sh
+
+            #nonmigrateable
+            cp ./docker/nonmigratable.Dockerfile ./services/cron/Dockerfile
+            cp ./docker/nonmigratable.Dockerfile ./services/manage-users/Dockerfile
+            cp ./docker/nonmigratable.Dockerfile ./services/upload/Dockerfile
+      - run: npm run deploy
+  install-packages:
+    steps:
+      - run: npm install
+      - run: npm run install:whole
+
+jobs:
+  test-server:
+    executor: node/default
+    steps:
+      - checkout
+      - install-packages
+      - run: npm run test:server
+  deploy:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - aws-cli/setup
+      - setup-env-vars
+      - deploy-app
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - test-server:
+          context: tidepool-npm
+      - deploy:
+          context:
+            - aws-account #should be specified on circleci
+            - tidepool-npm #should be specified on circleci
+          requires:
+            - test-server
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
