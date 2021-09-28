@@ -16,8 +16,8 @@ commands:
           name: Make Dockerfiles ready
           command: |
             #migrateable
-            cp ./docker/migratable.Dockerfile ./services/programs/Dockerfile
-            cp ./docker/migrate-entrypoint.sh ./services/programs/migrate-entrypoint.sh
+            cp ./docker/migratable.Dockerfile ./services/crio/Dockerfile
+            cp ./docker/migrate-entrypoint.sh ./services/crio/migrate-entrypoint.sh
 
             #nonmigrateable
             cp ./docker/nonmigratable.Dockerfile ./services/cron/Dockerfile

@@ -13,9 +13,9 @@ app.use(express.urlencoded({ limit: '15mb', extended: true }));
 // your implementing service names and URLs
 const gateway = new ApolloGateway({
   serviceList: [
-    { name: 'programs', url: 'http://localhost:4003/' },
-    { name: 'upload', url: 'http://localhost:4004/' },
-    { name: 'manage-users', url: 'http://localhost:4005/' },
+    { name: 'crio', url: 'http://localhost:4001/' },
+    // { name: 'upload', url: 'http://localhost:4004/' },
+    // { name: 'manage-users', url: 'http://localhost:4005/' },
     // Define additional services here
   ],
   buildService({ _, url }) {

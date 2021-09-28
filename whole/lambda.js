@@ -124,7 +124,7 @@ class LambdaGraphQLDataSource extends RemoteGraphQLDataSource {
 }
 
 const serviceList = [
-  { name: 'programs', url: process.env.PROGRAMS_URL },
+  { name: 'crio', url: process.env.CRIO_URL },
   { name: 'upload', url: process.env.UPLOAD_URL },
   { name: 'manage-users', url: process.env.MANAGE_USERS_URL },
   // Define additional services here

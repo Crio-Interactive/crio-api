@@ -28,7 +28,7 @@ const cognitoStack = new CognitoStack(app, Utils.prefixByAppName('CognitoStack')
   ...stackProps
 });
 const appStack = new AppStack(app, Utils.prefixByAppName('AppStack'), {
-  programsDb: rdsStack.programsDb,
+  crioDb: rdsStack.crioDb,
   s3Bucket: s3Stack.bucket,
   userPoolId: cognitoStack.userPoolId,
   userPoolDomain: cognitoStack.userPoolDomain,

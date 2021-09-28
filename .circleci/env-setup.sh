@@ -9,29 +9,26 @@
 if [ "${CIRCLE_BRANCH}" == "develop" ]
 then
   {
-    echo "export CLIENT_URL=https://qa-cardiac-admin-test.hcx.ai/"
-    echo "export SUBDOMAIN_NAME=api-cardiac-qa-test"
+    echo "export CLIENT_URL=https://crio-qa.hcx.ai/"
+    echo "export SUBDOMAIN_NAME=crio-qa-api"
     echo "export STACK_REGION=us-west-1"
-    echo "export APP_NAME=cardiac-development"
-    echo "export WEB_LINK=https://qa-cardiac-admin-test.hcx.ai"
+    echo "export APP_NAME=crio-development"
   } >> "$BASH_ENV"
 elif [ "${CIRCLE_BRANCH}" == "staging" ]
 then
   {
-    echo "export CLIENT_URL=https://staging-cardiac-admin-test.hcx.ai/"
-    echo "export SUBDOMAIN_NAME=api-cardiac-staging-test"
+    echo "export CLIENT_URL=https://crio-staging.hcx.ai/"
+    echo "export SUBDOMAIN_NAME=crio-staging-api"
     echo "export STACK_REGION=us-west-2"
-    echo "export APP_NAME=cardiac-staging"
-    echo "export WEB_LINK=https://staging-cardiac-admin-test.hcx.ai"
+    echo "export APP_NAME=crio-staging"
   } >> "$BASH_ENV"
 elif [ "${CIRCLE_BRANCH}" == "master" ]
 then
   {
-    echo "export CLIENT_URL=https://cardiac-admin-test.hcx.ai/"
-    echo "export SUBDOMAIN_NAME=api-cardiac-test"
+    echo "export CLIENT_URL=https://crio.hcx.ai/"
+    echo "export SUBDOMAIN_NAME=crio-api"
     echo "export STACK_REGION=us-east-1"
-    echo "export APP_NAME=cardiac-production"
-    echo "export WEB_LINK=https://cardiac-admin-test.hcx.ai"
+    echo "export APP_NAME=crio-production"
   } >> "$BASH_ENV"
 else
   #should not be executed
