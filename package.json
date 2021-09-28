@@ -15,15 +15,15 @@
     "install:whole": "cd ./whole && npm install",
     "install-all": "concurrently npm:install:*",
     "server": "concurrently npm:server:*",
-    "server:programs": "node services/programs/index.js",
+    "server:crio": "node services/crio/index.js",
     "server:upload": "node services/upload/index.js",
     "server:manage-users": "node services/manage-users/index.js",
-    "server:gateway": "wait-on tcp:4005 tcp:4004 tcp:4003 && node ./whole/index.js",
+    "server:gateway": "wait-on tcp:4005 tcp:4004 tcp:4001 && node ./whole/index.js",
     "dev": "concurrently npm:dev:*",
     "dev:upload": "nodemon services/upload/index.js",
-    "dev:programs": "nodemon services/programs/index.js",
+    "dev:crio": "nodemon services/crio/index.js",
     "dev:manage-users": "nodemon services/manage-users/index.js",
-    "dev:gateway": "wait-on tcp:4005 tcp:4004 tcp:4003 && nodemon ./whole/index.js"
+    "dev:gateway": "wait-on tcp:4005 tcp:4004 tcp:4001 && nodemon ./whole/index.js"
   },
   "repository": {
     "type": "git",

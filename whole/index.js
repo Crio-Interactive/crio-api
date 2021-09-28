@@ -14,8 +14,8 @@ app.use(express.urlencoded({ limit: '15mb', extended: true }));
 const gateway = new ApolloGateway({
   serviceList: [
     { name: 'crio', url: 'http://localhost:4001/' },
-    // { name: 'upload', url: 'http://localhost:4004/' },
-    // { name: 'manage-users', url: 'http://localhost:4005/' },
+    { name: 'upload', url: 'http://localhost:4004/' },
+    { name: 'manage-users', url: 'http://localhost:4005/' },
     // Define additional services here
   ],
   buildService({ _, url }) {
