@@ -5,39 +5,16 @@ module.exports = gql`
 
   input UserAttributes {
     email: String
-    name: String
-    gender: String
-    dob: Date
-    age: Int
-    weight: Float
-    height: Float
-    address: String
-    diagnosis: String
-    eventDate: Date
-    cardiologist: String
-    isVerified: Boolean
-    isFaceIdEnabled: Boolean
-    timezone: String
+    username: String
+    firstName: String
+    lastName: String
   }
 
   type UserInfo {
     id: ID
-    username: String
-    phoneNumber: String
     email: String
-    name: String
-    gender: String
-    dob: Date
-    age: Int
-    weight: Float
-    height: Float
-    address: String
-    diagnosis: String
-    eventDate: Date
-    cardiologist: String
-    isVerified: Boolean
-    isFaceIdEnabled: Boolean
-    timezone: String
+    username: String
+    firstName: String
   }
 
   type Query {
@@ -47,5 +24,6 @@ module.exports = gql`
 
   type Mutation {
     updateUser(attributes: UserAttributes!): UserInfo!
+    saveUser(username: String!): UserInfo!
   }
 `;
