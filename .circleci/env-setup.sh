@@ -11,7 +11,7 @@ then
   {
     echo "export CLIENT_URL=https://crio-qa.tlabs.app/"
     echo "export SUBDOMAIN_NAME=crio-qa-api"
-    echo "export STACK_REGION=us-west-1"
+    echo "export STACK_REGION=us-west-2"
     echo "export APP_NAME=crio-development"
   } >> "$BASH_ENV"
 elif [ "${CIRCLE_BRANCH}" == "staging" ]
