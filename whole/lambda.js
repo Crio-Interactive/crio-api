@@ -146,10 +146,6 @@ const gateway = new ApolloGateway({
             request.http.headers.set('user', JSON.stringify(user));
           }
         }
-        request.http.headers.set(
-          'organizationkey',
-          context.organizationkey || null,
-        );
       },
     });
   },
