@@ -1,3 +1,5 @@
+console.log('process.env.CRIO_DATABASE_URL', process.env.CRIO_DATABASE_URL);
+
 module.exports = {
   development: {
     username: 'postgres',
