@@ -146,10 +146,6 @@ const gateway = new ApolloGateway({
             request.http.headers.set('user', JSON.stringify(user));
           }
         }
-        request.http.headers.set(
-          'organizationkey',
-          context.organizationkey || null,
-        );
       },
     });
   },
@@ -160,6 +156,7 @@ const server = new ApolloServer({
   gateway,
   // Disable subscriptions (not currently supported with ApolloGateway)
   subscriptions: false,
+  introspection: true,
   playground: {
     endpoint: '/prod/graphql',
   },
@@ -172,20 +169,19 @@ const server = new ApolloServer({
       ? authHeader.substring(7, authHeader.length)
       : '';
 
-    const { organizationkey } = event.headers;
-    return { token, organizationkey };
+    return { token };
   },
 });
 
-exports.handler = logs.wrapHandler(function(event, context, callback) {
+exports.handler = logs.wrapHandler(function (event, context, callback) {
   context.callbackWaitsForEmptyEventLoop = false;
-  const callbackFilter = function(error, output) {
+  const callbackFilter = function (error, output) {
     output.headers['Access-Control-Allow-Origin'] = '*';
     output.headers['Access-Control-Allow-Credentials'] = 'true';
     callback(error, output);
   };
 
-  const callHandler = function() {
+  const callHandler = function () {
     const handler = server.createHandler({
       async onHealthCheck() {
         try {
