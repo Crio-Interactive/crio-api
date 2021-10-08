@@ -6,31 +6,32 @@ module.exports = {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
     },
     userId: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      unique: true,
     },
     email: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     username: {
       type: Sequelize.STRING,
       allowNull: false,
     },
     firstName: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     lastName: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     deletedAt: {
       allowNull: true,
