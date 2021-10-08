@@ -18,6 +18,7 @@ module.exports = gql`
     username: String
     firstName: String
     lastName: String
+    creator: Boolean
   }
 
   type Query {
