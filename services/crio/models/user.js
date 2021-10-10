@@ -17,10 +17,16 @@ module.exports = (sequelize, DataTypes) => {
   User.init(
     {
       userId: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        unique: true,
       },
       email: {
         type: DataTypes.STRING,
+        validate: {
+          isEmail: {
+            msg: 'Please input valid email address',
+          },
+        },
       },
       username: {
         type: DataTypes.STRING,
@@ -31,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       lastName: {
         type: DataTypes.STRING,
+      },
+      creator: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

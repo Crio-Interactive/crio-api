@@ -6,9 +6,13 @@ module.exports = {
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
   },
   Mutation: {
-    saveUser: async (_, { username }, { models }) => {
+    saveUser: async (_, { attributes }, { models }) => {
       try {
-        return models.User.create({ username });
+        const user = await models.User.findOne({ where: { userId: attributes.userId} });
+        if (!user) {
+          return models.User.create(attributes);
+        }
+        return user;
       } catch (e) {
         return e;
       }

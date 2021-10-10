@@ -4,6 +4,7 @@ module.exports = gql`
   scalar Date
 
   input UserAttributes {
+    userId: String
     email: String
     username: String
     firstName: String
@@ -12,9 +13,12 @@ module.exports = gql`
 
   type UserInfo {
     id: ID
+    userId: String
     email: String
     username: String
     firstName: String
+    lastName: String
+    creator: Boolean
   }
 
   type Query {
@@ -24,6 +28,6 @@ module.exports = gql`
 
   type Mutation {
     updateUser(attributes: UserAttributes!): UserInfo!
-    saveUser(username: String!): UserInfo!
+    saveUser(attributes: UserAttributes!): UserInfo!
   }
 `;
