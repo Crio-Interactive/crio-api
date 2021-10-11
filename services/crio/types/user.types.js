@@ -28,6 +28,6 @@ module.exports = gql`
 
   type Mutation {
     updateUser(attributes: UserAttributes!): UserInfo!
-    saveUser(attributes: UserAttributes!): UserInfo!
+    saveUser: UserInfo!
   }
 `;

@@ -23,7 +23,7 @@ module.exports = applyMiddleware(
     },
     Mutation: {
       updateUser: isAuthenticated,
-      saveUser: isNotAuthenticated,
+      saveUser: isAuthenticated,
     },
   }),
 );

@@ -6,13 +6,20 @@ module.exports = {
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
   },
   Mutation: {
-    saveUser: async (_, { attributes }, { models }) => {
+    saveUser: async (_, {}, { user, models }) => {
       try {
-        const user = await models.User.findOne({ where: { userId: attributes.userId} });
-        if (!user) {
-          return models.User.create(attributes);
+        const attr = user.attributes;
+        const existingUser = await models.User.findOne({ where: { userId: attr.sub} });
+        if (!existingUser) {
+          return models.User.create({
+            userId: attr.sub,
+            email: attr.email,
+            username: attr.sub,
+            firstName: attr.family_name,
+            lastName: attr.given_name,
+          });
         }
-        return user;
+        return existingUser;
       } catch (e) {
         return e;
       }
