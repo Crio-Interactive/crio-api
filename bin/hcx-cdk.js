@@ -34,6 +34,7 @@ const appStack = new AppStack(app, Utils.prefixByAppName('AppStack'), {
   userPoolDomain: cognitoStack.userPoolDomain,
   userPoolClientId: cognitoStack.userPoolClientId,
   userPool: cognitoStack.userPool,
+  vpc: vpcStackEntity.vpc,
   ...stackProps
 });
 
