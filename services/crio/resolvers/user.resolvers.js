@@ -1,8 +1,11 @@
 const moment = require('moment');
 
 module.exports = {
+  UserInfo: {
+    creator: async (parent, {}, { loaders }) => console.log(parent, 'parent') || loaders.isCreator.load(parent.email),
+  },
   Query: {
-    me: async (_, params, { user }) => user,
+    me: async (_, params, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
   },
   Mutation: {

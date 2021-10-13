@@ -19,6 +19,11 @@ const loaders = models => {
         userIds.map(userId => users.find(user => user.userId == userId)),
       ),
     ),
+    isCreator: new DataLoader(emails =>
+      models.Creator.findAll({ where: { email: emails } }).then(users =>
+        emails.map(email => !!users.find(user => user.email == email)),
+      ),
+    ),
   };
   return self;
 };
