@@ -22,8 +22,8 @@ module.exports = applyMiddleware(
       getUser: isAuthenticated,
     },
     Mutation: {
-      updateUser: isAuthenticated,
       saveUser: isAuthenticated,
+      updateUser: isAuthenticated,
     },
   }),
 );

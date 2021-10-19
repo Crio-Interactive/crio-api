@@ -15,11 +15,9 @@ const server = new ApolloServer({
   context: async ({ event }) => {
     const modelLoaders = loaders(models);
     const user = await getUserFromRequest(event);
-    const patient = await (user &&
-      modelLoaders.userByUserId.load(user.username));
     return {
       models,
-      user: user ? Object.assign(patient || {}, user) : null,
+      user,
       loaders: modelLoaders,
     };
   },
