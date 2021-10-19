@@ -2,7 +2,7 @@ const moment = require('moment');
 
 module.exports = {
   UserInfo: {
-    creator: async (parent, {}, { loaders }) => console.log(parent, 'parent') || loaders.isCreator.load(parent.email),
+    creator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.userId),
   },
   Query: {
     me: async (_, params, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
@@ -29,10 +29,8 @@ module.exports = {
     },
     updateUser: async (_, { attributes }, { user, models }) => {
       try {
-        if (attributes.age) {
-          attributes.dob = moment().subtract(attributes.age, 'years');
-        }
-        return user.update(attributes);
+        const [, updatedUser] = await models.User.update(attributes, { where: { userId: user.attributes.sub }, returning: true });
+        return updatedUser?.[0].dataValues;
       } catch (e) {
         return e;
       }

@@ -27,7 +27,7 @@ module.exports = gql`
   }
 
   type Mutation {
-    updateUser(attributes: UserAttributes!): UserInfo!
     saveUser: UserInfo!
+    updateUser(attributes: UserAttributes!): UserInfo!
   }
 `;
