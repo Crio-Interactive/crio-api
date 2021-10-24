@@ -1,5 +1,3 @@
-const moment = require('moment');
-
 module.exports = {
   UserInfo: {
     creator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.userId),
@@ -16,8 +14,9 @@ module.exports = {
         if (!existingUser) {
           return models.User.create({
             userId: attr.sub,
+            fbUserId: user.username.substring(user.username.indexOf('_') + 1),
             email: attr.email,
-            username: attr.sub,
+            username: `${attr.given_name}_${attr.family_name}`,
             firstName: attr.family_name,
             lastName: attr.given_name,
           });
