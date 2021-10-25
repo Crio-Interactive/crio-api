@@ -12,6 +12,9 @@ module.exports = {
       type: Sequelize.STRING,
       unique: true,
     },
+    fbUserId: {
+      type: Sequelize.STRING,
+    },
     email: {
       type: Sequelize.STRING,
     },
@@ -24,10 +27,6 @@ module.exports = {
     },
     lastName: {
       type: Sequelize.STRING,
-    },
-    creator: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
     },
     createdAt: {
       allowNull: false,
