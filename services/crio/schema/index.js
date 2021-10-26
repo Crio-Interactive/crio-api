@@ -20,6 +20,7 @@ module.exports = applyMiddleware(
     Query: {
       me: isAuthenticated,
       getUser: isAuthenticated,
+      getCreatorUsers: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,

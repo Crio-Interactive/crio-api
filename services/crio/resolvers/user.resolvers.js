@@ -5,6 +5,11 @@ module.exports = {
   Query: {
     me: async (_, params, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
+    getCreatorUsers: async (_, {}, { models }) => {
+      const creators = await models.Creator.findAll({ attributes: ['email' ] });
+      console.log(creators.map(({ dataValues }) => dataValues.email), 'creators')
+      return models.User.findAll({ where: { email: creators.map(({ dataValues }) => dataValues.email) } });
+    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, models }) => {
