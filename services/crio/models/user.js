@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
       },
+      fbUserId: {
+        type: DataTypes.STRING,
+      },
       email: {
         type: DataTypes.STRING,
         validate: {
@@ -37,10 +40,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       lastName: {
         type: DataTypes.STRING,
-      },
-      creator: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
       },
     },
     {

@@ -1,5 +1,3 @@
-const moment = require('moment');
-
 module.exports = {
   UserInfo: {
     creator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.userId),
@@ -7,6 +5,11 @@ module.exports = {
   Query: {
     me: async (_, params, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
+    getCreatorUsers: async (_, {}, { models }) => {
+      const creators = await models.Creator.findAll({ attributes: ['email' ] });
+      console.log(creators.map(({ dataValues }) => dataValues.email), 'creators')
+      return models.User.findAll({ where: { email: creators.map(({ dataValues }) => dataValues.email) } });
+    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, models }) => {
@@ -16,8 +19,9 @@ module.exports = {
         if (!existingUser) {
           return models.User.create({
             userId: attr.sub,
+            fbUserId: user.username.substring(user.username.indexOf('_') + 1),
             email: attr.email,
-            username: attr.sub,
+            username: `${attr.given_name}_${attr.family_name}`,
             firstName: attr.family_name,
             lastName: attr.given_name,
           });

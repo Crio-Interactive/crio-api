@@ -5,6 +5,7 @@ module.exports = gql`
 
   input UserAttributes {
     userId: String
+    fbUserId: String
     email: String
     username: String
     firstName: String
@@ -14,16 +15,17 @@ module.exports = gql`
   type UserInfo {
     id: ID
     userId: String
+    fbUserId: String
     email: String
     username: String
     firstName: String
     lastName: String
-    creator: Boolean
   }
 
   type Query {
     me: UserInfo!
     getUser(id: ID!): UserInfo
+    getCreatorUsers: [UserInfo]
   }
 
   type Mutation {
