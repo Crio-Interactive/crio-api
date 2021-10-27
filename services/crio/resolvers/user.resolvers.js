@@ -59,7 +59,12 @@ module.exports = {
     createFollowing: async (_, { followingId }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        await models.Following.create({ userId: id, followingId });
+        const count = await models.Following.count({ where: { userId: id, followingId }});
+        if (count) {
+          await models.Following.destroy({ where: { userId: id, followingId } });
+        } else {
+          await models.Following.create({ userId: id, followingId });
+        }
         return true;
       } catch (e) {
         return e;
