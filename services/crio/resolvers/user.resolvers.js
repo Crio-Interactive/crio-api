@@ -6,9 +6,14 @@ module.exports = {
     me: async (_, params, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
     getCreatorUsers: async (_, {}, { models }) => {
-      const creators = await models.Creator.findAll({ attributes: ['email' ] });
-      console.log(creators.map(({ dataValues }) => dataValues.email), 'creators')
-      return models.User.findAll({ where: { email: creators.map(({ dataValues }) => dataValues.email) } });
+      const creators = await models.Creator.findAll({ attributes: ['email'] });
+      console.log(
+        creators.map(({ dataValues }) => dataValues.email),
+        'creators',
+      );
+      return models.User.findAll({
+        where: { email: creators.map(({ dataValues }) => dataValues.email) },
+      });
     },
     // getFollowings: async (_, { id }, { loaders }) => loaders.followingsByUserId.load(id),
     getFollowings: async (_, {}, { user, loaders, models }) => {
@@ -32,7 +37,7 @@ module.exports = {
     saveUser: async (_, {}, { user, models }) => {
       try {
         const attr = user.attributes;
-        const existingUser = await models.User.findOne({ where: { userId: attr.sub} });
+        const existingUser = await models.User.findOne({ where: { userId: attr.sub } });
         if (!existingUser) {
           return models.User.create({
             userId: attr.sub,
@@ -50,7 +55,10 @@ module.exports = {
     },
     updateUser: async (_, { attributes }, { user, models }) => {
       try {
-        const [, updatedUser] = await models.User.update(attributes, { where: { userId: user.attributes.sub }, returning: true });
+        const [, updatedUser] = await models.User.update(attributes, {
+          where: { userId: user.attributes.sub },
+          returning: true,
+        });
         return updatedUser?.[0].dataValues;
       } catch (e) {
         return e;

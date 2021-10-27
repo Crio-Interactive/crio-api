@@ -27,21 +27,23 @@ const mockUsers = [
     lastName: 'Smith',
     username: 'joe',
     email: 'smith@gmail.com',
-  }
+  },
 ];
 
 module.exports = {
   up: async () => {
-    await models.User.bulkCreate(mockUsers.map(item => ({
-      ...item,
-      userId: uuidv4(),
-    })));
+    await models.User.bulkCreate(
+      mockUsers.map(item => ({
+        ...item,
+        userId: uuidv4(),
+      })),
+    );
     return models.Creator.bulkCreate(mockUsers.map(({ email }) => ({ email })));
   },
 
   down: async () => {
     const emails = mockUsers.map(({ email }) => email);
-    await models.User.destroy({ where: { email: emails }});
-    return models.Creator.destroy({ where: { email: emails }});
+    await models.User.destroy({ where: { email: emails } });
+    return models.Creator.destroy({ where: { email: emails } });
   },
 };

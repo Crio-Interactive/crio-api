@@ -1,9 +1,6 @@
 const { applyMiddleware, shield } = require('@tidepoollabs/node-auth');
 const { buildFederatedSchema } = require('@apollo/federation');
-const {
-  isAuthenticated,
-  isNotAuthenticated,
-} = require('./permissions');
+const { isAuthenticated, isNotAuthenticated } = require('./permissions');
 const typeDefs = require('../types/index');
 const resolvers = require('../resolvers/index');
 
