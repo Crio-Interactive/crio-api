@@ -26,10 +26,13 @@ module.exports = gql`
     me: UserInfo!
     getUser(id: ID!): UserInfo
     getCreatorUsers: [UserInfo]
+    getFollowings: [UserInfo]
+    isFollowing(followingId: ID!): Boolean
   }
 
   type Mutation {
     saveUser: UserInfo!
     updateUser(attributes: UserAttributes!): UserInfo!
+    createFollowing(followingId: ID!): Boolean
   }
 `;

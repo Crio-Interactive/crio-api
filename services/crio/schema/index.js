@@ -21,10 +21,13 @@ module.exports = applyMiddleware(
       me: isAuthenticated,
       getUser: isAuthenticated,
       getCreatorUsers: isAuthenticated,
+      getFollowings: isAuthenticated,
+      isFollowing: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,
       updateUser: isAuthenticated,
+      createFollowing: isAuthenticated,
     },
   }),
 );
