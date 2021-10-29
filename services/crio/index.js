@@ -14,8 +14,8 @@ const server = new ApolloServer({
     return { message: err.message, status: err.status };
   },
   context: async ({ req }) => {
-    const modelLoaders = loaders(models);
     const user = await getUserFromRequest(req);
+    const modelLoaders = loaders(models, user);
     return {
       user,
       models,

@@ -7,7 +7,6 @@ module.exports = {
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
     getCreatorUsers: async (_, {}, { models }) => {
       const creators = await models.Creator.findAll({ attributes: ['email' ] });
-      console.log(creators.map(({ dataValues }) => dataValues.email), 'creators')
       return models.User.findAll({ where: { email: creators.map(({ dataValues }) => dataValues.email) } });
     },
     // getFollowings: async (_, { id }, { loaders }) => loaders.followingsByUserId.load(id),
@@ -23,10 +22,7 @@ module.exports = {
         where: { userId: id },
       });
     },
-    isFollowing: async (_, { followingId }, { user, loaders, models }) => {
-      const { id } = await loaders.userByUserId.load(user.attributes.sub);
-      return models.Following.count({ where: { userId: id, followingId }});
-    }
+    isFollowing: async (_, { followingId }, { loaders }) => loaders.isFollowing.load(followingId)
   },
   Mutation: {
     saveUser: async (_, {}, { user, models }) => {
@@ -59,8 +55,8 @@ module.exports = {
     createFollowing: async (_, { followingId }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        const count = await models.Following.count({ where: { userId: id, followingId }});
-        if (count) {
+        const isFollowing = await loaders.isFollowing.load(followingId);
+        if (isFollowing) {
           await models.Following.destroy({ where: { userId: id, followingId } });
         } else {
           await models.Following.create({ userId: id, followingId });
