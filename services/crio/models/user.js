@@ -41,6 +41,9 @@ module.exports = (sequelize, DataTypes) => {
       lastName: {
         type: DataTypes.STRING,
       },
+      visibility: {
+        type: DataTypes.JSONB,
+      },
     },
     {
       sequelize,
