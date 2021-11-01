@@ -13,8 +13,8 @@ const server = new ApolloServer({
   plugins: [logs.apolloPlugin],
   formatError: err => ({ message: err.message, status: err.status }),
   context: async ({ event }) => {
-    const modelLoaders = loaders(models);
     const user = await getUserFromRequest(event);
+    const modelLoaders = loaders(models, user);
     return {
       models,
       user,
