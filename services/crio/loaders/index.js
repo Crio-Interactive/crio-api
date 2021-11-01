@@ -39,7 +39,7 @@ const loaders = (models, user) => {
         where: {
           userId: userIds,
         },
-      }).then(followings => console.log(userIds.map(userId => followings.find(user => user.userId == userId))) || userIds.map(userId => followings.find(user => user.userId == userId))),
+      }).then(followings => userIds.map(userId => followings.find(user => user.userId == userId))),
     ),
   };
   return self;
