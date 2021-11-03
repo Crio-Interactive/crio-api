@@ -42,7 +42,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       visibility: {
-        type: DataTypes.JSONB,
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: ['name', 'username', 'email'],
       },
     },
     {
