@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       lastName: {
         type: DataTypes.STRING,
       },
+      visibility: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: ['name', 'username', 'email'],
+      },
     },
     {
       sequelize,

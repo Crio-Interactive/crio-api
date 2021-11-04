@@ -1,8 +1,6 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
-  scalar Date
-
   input UserAttributes {
     userId: String
     fbUserId: String
@@ -10,6 +8,7 @@ module.exports = gql`
     username: String
     firstName: String
     lastName: String
+    visibility: [String]
   }
 
   type UserInfo {
@@ -20,6 +19,7 @@ module.exports = gql`
     username: String
     firstName: String
     lastName: String
+    visibility: [String]
   }
 
   type Query {
