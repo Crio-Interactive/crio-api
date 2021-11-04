@@ -2,7 +2,7 @@
 const DataLoader = require('dataloader');
 
 const loaders = models => {
-  const self = {
+  return {
     userById: new DataLoader(ids =>
       models.User.findAll({
         where: {
@@ -33,10 +33,24 @@ const loaders = models => {
         where: {
           userId: userIds,
         },
-      }).then(followings => console.log(userIds.map(userId => followings.find(user => user.userId == userId))) || userIds.map(userId => followings.find(user => user.userId == userId))),
+      }).then(followings => userIds.map(userId => followings.find(user => user.userId == userId))),
     ),
+    artworkById: new DataLoader(async (artworkIds) => {
+      const result = await models.Artwork.findAll({
+        where: {
+          id: artworkIds,
+        },
+      });
+
+      const map = result.reduce((acc, item) => {
+          acc[item.id] = item;
+          return acc;
+        }, {});
+
+      return artworkIds.map(id => map[id]);
+    }),
+
   };
-  return self;
 };
 
 module.exports = loaders;

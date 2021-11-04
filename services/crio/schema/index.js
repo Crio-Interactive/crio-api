@@ -20,11 +20,16 @@ module.exports = applyMiddleware(
       getCreatorUsers: isAuthenticated,
       getFollowings: isAuthenticated,
       isFollowing: isAuthenticated,
+      getUploadUrl: isNotAuthenticated,
+      getArtworks: isNotAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,
       updateUser: isAuthenticated,
       createFollowing: isAuthenticated,
+      updateThumbnail: isNotAuthenticated,
+      createArtwork: isNotAuthenticated,
+      deleteArtwork: isNotAuthenticated,
     },
   }),
 );

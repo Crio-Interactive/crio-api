@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { VIMEO_ACCESS_TOKEN, VIMEO_GET_UPLOAD_URL } = require('./environment');
+const { VIMEO_ACCESS_TOKEN, VIMEO_API_URL } = require('./environment');
 
 const authToken = `bearer ${VIMEO_ACCESS_TOKEN}`;
 const headers = {
@@ -10,7 +10,7 @@ const headers = {
 };
 
 const vimeoClient = axios.create({
-  baseURL: VIMEO_GET_UPLOAD_URL,
+  baseURL: VIMEO_API_URL,
   headers,
 });
 

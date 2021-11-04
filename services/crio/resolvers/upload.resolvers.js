@@ -1,20 +1,47 @@
+const axios = require('axios');
 const { vimeoClient } = require('../config/httpClient');
 
 module.exports = {
-  UserInfo: {
-    creator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.userId),
-  },
   Query: {
-    me: async (_, params, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUploadUrl: async (_, { size }) => {
-      const result = await vimeoClient.post('/', {
-        upload: {
-          approach: 'tus',
-          size,
-        },
-      });
-      return result.data.upload.upload_link;
+      try {
+        const result = await vimeoClient.post('/me/videos', {
+          upload: {
+            approach: 'tus',
+            size,
+          },
+        });
+        return {
+          uri: result.data.uri,
+          upload_link: result.data.upload.upload_link,
+          status: result.data.status,
+          pictures_uri: result.data.metadata.connections.pictures.uri,
+        };
+      } catch (e) {
+        return e;
+      }
     },
   },
-  Mutation: {},
+  Mutation: {
+    updateThumbnail: async (_, params, { user, loaders, models }) => {
+      try {
+        const artwork = await loaders.artworkById.load(params.artworkId);
+        const { data: { uri, link } } = await vimeoClient.post(artwork.pictures_uri);
+        const imageFile = new Buffer(params.image);
+        const { data: { status } } = await axios.put(link, imageFile, {
+          headers: {
+            'Content-Type': params.mime,
+          }
+        });
+        if (status === 'success') {
+          await vimeoClient.patch(uri, { active: true });
+          const videoData = await vimeoClient.get(artwork.videoUri);
+          await models.Artwork.update({ thumbnailUri: videoData.data.pictures.base_link});
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+    },
+  },
 };
