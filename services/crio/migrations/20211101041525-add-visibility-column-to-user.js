@@ -5,7 +5,8 @@ module.exports = {
         return Promise.resolve();
       }
       return queryInterface.addColumn('Users', 'visibility', {
-        type: Sequelize.DataTypes.JSONB,
+        type: Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.STRING),
+        defaultValue: ['name', 'username', 'email'],
       });
     }),
 
