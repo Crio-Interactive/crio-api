@@ -36,14 +36,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
       status: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -51,6 +43,14 @@ module.exports = {
       pictures_uri: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
     });
   },
