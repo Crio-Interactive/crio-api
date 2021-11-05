@@ -8,7 +8,7 @@ module.exports = {
         const result = await vimeoClient.post('/me/videos', {
           upload: {
             approach: 'tus',
-            size,
+            size: 1,
           },
         });
         return {
@@ -23,29 +23,25 @@ module.exports = {
     },
   },
   Mutation: {
-    updateMetadata: async (_, params, { loaders, models }) => {
+    updateMetadata: async (_, { params }, { loaders, models }) => {
       try {
-        const { artworkId, name, description, image, mime } = params;
+        const { artworkId, title, description, image, mime, isThumbnail } = params;
         const artwork = await loaders.artworkById.load(artworkId);
-        // update name and description
-        const result = vimeoClient.patch(artwork.videoUri, {
-          name,
-          description,
-        });
-        // update the thumbnail
-        const { data: { uri, link } } = await vimeoClient.post(artwork.pictures_uri);
-        const imageFile = new Buffer(image);
-        const { data: { status } } = await axios.put(link, imageFile, {
-          headers: {
-            'Content-Type': mime,
+        if (isThumbnail) {
+          const { data: { uri, link } } = await vimeoClient.post(artwork.pictures_uri);
+          const imageFile = new Buffer(image);
+          const { data: { status } } = await axios.put(link, imageFile, { headers: { 'Content-Type': mime } });
+          if (status === 'success') {
+            await vimeoClient.patch(uri, { active: true });
+            const videoData = await vimeoClient.get(artwork.videoUri);
+            await models.Artwork.update({ thumbnailUri: videoData.data.pictures.base_link});
+            return true;
           }
-        });
-        if (status === 'success') {
-          await vimeoClient.patch(uri, { active: true });
-          const videoData = await vimeoClient.get(artwork.videoUri);
-          await models.Artwork.update({ thumbnailUri: videoData.data.pictures.base_link});
-          return true;
+          return false;
         }
+        await vimeoClient.patch(artwork.videoUri, { name: title, description });
+        await models.Artwork.update({ title, description }, { where: { id: artworkId } });
+        return true;
       } catch (e) {
         return false;
       }

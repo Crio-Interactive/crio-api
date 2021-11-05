@@ -28,8 +28,8 @@ module.exports = applyMiddleware(
       updateUser: isAuthenticated,
       createFollowing: isAuthenticated,
       createArtwork: isAuthenticated,
-      updateArtwork: isAuthenticated,
       deleteArtwork: isAuthenticated,
+      updateMetadata: isAuthenticated,
     },
   }),
 );
