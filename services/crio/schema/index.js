@@ -1,9 +1,6 @@
 const { applyMiddleware, shield } = require('@tidepoollabs/node-auth');
 const { buildFederatedSchema } = require('@apollo/federation');
-const {
-  isAuthenticated,
-  isNotAuthenticated,
-} = require('./permissions');
+const { isAuthenticated, isNotAuthenticated } = require('./permissions');
 const typeDefs = require('../types/index');
 const resolvers = require('../resolvers/index');
 
@@ -23,11 +20,16 @@ module.exports = applyMiddleware(
       getCreatorUsers: isAuthenticated,
       getFollowings: isAuthenticated,
       isFollowing: isAuthenticated,
+      getUploadUrl: isNotAuthenticated,
+      getArtworks: isNotAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,
       updateUser: isAuthenticated,
       createFollowing: isAuthenticated,
+      updateThumbnail: isNotAuthenticated,
+      createArtwork: isNotAuthenticated,
+      deleteArtwork: isNotAuthenticated,
     },
   }),
 );

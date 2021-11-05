@@ -12,20 +12,20 @@ const Utils = require('../utils');
 const app = new cdk.App();
 const stackProps = {
   env: {
-    account: Utils.getEnv("STACK_ACCOUNT"),
-    region: Utils.getEnv("STACK_REGION"),
-  }
+    account: Utils.getEnv('STACK_ACCOUNT'),
+    region: Utils.getEnv('STACK_REGION'),
+  },
 };
 
-const vpcStackEntity  = new VpcStack(app, Utils.prefixByAppName('VpcStack'), stackProps);
+const vpcStackEntity = new VpcStack(app, Utils.prefixByAppName('VpcStack'), stackProps);
 const s3Stack = new S3Stack(app, Utils.prefixByAppName('S3Stack'), stackProps);
 const rdsStack = new RdsStack(app, Utils.prefixByAppName('RdsStack'), {
   vpc: vpcStackEntity.vpc,
   ingressSecurityGroup: vpcStackEntity.ingressSecurityGroup,
-  ...stackProps
+  ...stackProps,
 });
 const cognitoStack = new CognitoStack(app, Utils.prefixByAppName('CognitoStack'), {
-  ...stackProps
+  ...stackProps,
 });
 const appStack = new AppStack(app, Utils.prefixByAppName('AppStack'), {
   crioDb: rdsStack.crioDb,
@@ -35,7 +35,7 @@ const appStack = new AppStack(app, Utils.prefixByAppName('AppStack'), {
   userPoolClientId: cognitoStack.userPoolClientId,
   userPool: cognitoStack.userPool,
   vpc: vpcStackEntity.vpc,
-  ...stackProps
+  ...stackProps,
 });
 
 const cronStack = new CronStack(app, Utils.prefixByAppName('CronStack'), {

@@ -23,16 +23,16 @@ class AwsHelper {
   async getUserFromToken(accessToken) {
     try {
       const { Username, UserAttributes } = await this.cognito
-      .getUser({
-        AccessToken: accessToken,
-      })
-      .promise();
+        .getUser({
+          AccessToken: accessToken,
+        })
+        .promise();
       const { Groups } = await this.cognito
-      .adminListGroupsForUser({
-        Username,
-        UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
-      })
-      .promise();
+        .adminListGroupsForUser({
+          Username,
+          UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+        })
+        .promise();
       return {
         username: Username,
         groups: Groups.map(({ GroupName }) => GroupName),
