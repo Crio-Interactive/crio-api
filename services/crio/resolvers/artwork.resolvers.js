@@ -4,21 +4,18 @@ module.exports = {
     getArtworks: async () => {},
   },
   Mutation: {
-    createArtwork: async (_, { videoUri }, {
-      user,
-      models,
-    }) => {
+    createArtwork: async (_, { videoUri }, { user, models }) => {
       try {
-
         const videoData = await vimeoClient.get(videoUri);
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
         return models.Artwork.create({
-          userId: user.id,
+          userId: id,
           videoUri,
-          thumbnailUri: videoData.data.pictures.base_link,
-          title: videoData.data.name,
+          thumbnailUri: videoData?.data?.pictures?.base_link,
+          title: videoData?.data?.name,
           description: 'No description',
-          status: videoData.data.status,
-          pictures_uri: videoData.data.meta.connections.pictures.uri,
+          status: videoData?.data?.status,
+          pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
         });
       } catch (e) {
         return false;

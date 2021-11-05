@@ -20,13 +20,13 @@ module.exports = gql`
     status: String!
     pictures_uri: String!
   }
-
+  
   type Query {
     getArtworks: [Artwork!]!
   }
 
   type Mutation {
-    createArtwork(artwork: ArtworkInfo): Artwork
+    createArtwork(videoUri: String!): Artwork
     deleteArtwork(artworkId: ID!): Boolean
   }
 `;
