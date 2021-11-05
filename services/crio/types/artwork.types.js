@@ -13,20 +13,20 @@ module.exports = gql`
   }
 
   input ArtworkInfo {
-    videoUri: String!
-    thumbnailUri: String!
-    title: String!
-    description: String!
-    status: String!
-    pictures_uri: String!
+    id: ID!
+    thumbnailUri: String
+    title: String
+    description: String
+    status: String
   }
-  
+
   type Query {
     getArtworks: [Artwork!]!
   }
 
   type Mutation {
     createArtwork(videoUri: String!): Artwork
+    updateArtwork(attributes: ArtworkInfo!): Artwork
     deleteArtwork(artworkId: ID!): Boolean
   }
 `;

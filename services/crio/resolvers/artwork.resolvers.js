@@ -21,9 +21,26 @@ module.exports = {
         return false;
       }
     },
-    deleteArtwork: async (_, params, { models }) => {
+    updateArtwork: async (_, { attributes }, { models }) => {
       try {
-        const artwork = await models.Artwork.findByPk(params.artworkId);
+        const data = {};
+        if (attributes.thumbnailUri) {
+          data.thumbnailUri = attributes.thumbnailUri;
+        }
+        if (attributes.title) {
+          data.title = attributes.title;
+        }
+        if (attributes.description) {
+          data.description = attributes.description;
+        }
+        return models.Artwork.update(data, { where: { id: attributes.id } });
+      } catch (e) {
+        return false;
+      }
+    },
+    deleteArtwork: async (_, { artworkId }, { models }) => {
+      try {
+        const artwork = await models.Artwork.findByPk(artworkId);
         await vimeoClient.delete(artwork.videoUri);
         await artwork.destroy();
         return true;
