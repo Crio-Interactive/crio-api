@@ -12,6 +12,8 @@ module.exports = gql`
     artworkId: ID!
     image: String!
     mime: String!
+    title: String!
+    description: String!
   }
 
   type Query {
@@ -19,6 +21,6 @@ module.exports = gql`
   }
 
   type Mutation {
-    updateThumbnail(params: ThumbnailParams): Boolean
+    updateMetadata(params: ThumbnailParams): Boolean
   }
 `;

@@ -23,14 +23,21 @@ module.exports = {
     },
   },
   Mutation: {
-    updateThumbnail: async (_, params, { user, loaders, models }) => {
+    updateMetadata: async (_, params, { loaders, models }) => {
       try {
-        const artwork = await loaders.artworkById.load(params.artworkId);
+        const { artworkId, name, description, image, mime } = params;
+        const artwork = await loaders.artworkById.load(artworkId);
+        // update name and description
+        const result = vimeoClient.patch(artwork.videoUri, {
+          name,
+          description,
+        });
+        // update the thumbnail
         const { data: { uri, link } } = await vimeoClient.post(artwork.pictures_uri);
-        const imageFile = new Buffer(params.image);
+        const imageFile = new Buffer(image);
         const { data: { status } } = await axios.put(link, imageFile, {
           headers: {
-            'Content-Type': params.mime,
+            'Content-Type': mime,
           }
         });
         if (status === 'success') {

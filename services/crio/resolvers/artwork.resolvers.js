@@ -1,29 +1,24 @@
+const { vimeoClient } = require('../config/httpClient');
 module.exports = {
   Query: {
     getArtworks: async () => {},
   },
   Mutation: {
-    createArtwork: async (_, params, {
+    createArtwork: async (_, { videoUri }, {
       user,
       models,
     }) => {
       try {
-        const {
-          videoUri,
-          thumbnailUri,
-          title,
-          description,
-          status,
-          pictures_uri,
-        } = params;
+
+        const videoData = await vimeoClient.get(videoUri);
         return models.Artwork.create({
           userId: user.id,
           videoUri,
-          thumbnailUri,
-          title,
-          description,
-          status,
-          pictures_uri,
+          thumbnailUri: videoData.data.pictures.base_link,
+          title: videoData.data.name,
+          description: 'No description',
+          status: videoData.data.status,
+          pictures_uri: videoData.data.meta.connections.pictures.uri,
         });
       } catch (e) {
         return false;
@@ -31,9 +26,10 @@ module.exports = {
     },
     deleteArtwork: async (_, params, { models }) => {
       try {
-        return Boolean(await models.Artwork.destroy({
-          where: { id: params.artworkId },
-        }));
+        const artwork = await models.Artwork.findByPk(params.artworkId);
+        await vimeoClient.delete(artwork.videoUri);
+        await artwork.destroy();
+        return true;
       } catch(e) {
         return false;
       }
