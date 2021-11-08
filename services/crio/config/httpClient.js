@@ -17,3 +17,4 @@ const vimeoClient = axios.create({
 module.exports = {
   vimeoClient,
 };
+
