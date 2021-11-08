@@ -10,10 +10,10 @@ module.exports = gql`
 
   input ThumbnailParams {
     artworkId: ID!
-    image: String!
-    mime: String!
-    title: String!
-    description: String!
+    image: String
+    mime: String
+    title: String
+    description: String
   }
 
   type Query {
@@ -21,6 +21,6 @@ module.exports = gql`
   }
 
   type Mutation {
-    updateMetadata(params: ThumbnailParams): Boolean
+    updateMetadata(params: ThumbnailParams!): Boolean
   }
 `;
