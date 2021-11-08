@@ -15,10 +15,11 @@
     "install:whole": "cd ./whole && npm install",
     "install-all": "concurrently npm:install:*",
     "dev": "concurrently npm:dev:*",
+    "dev:rest": "nodemon services/test-rest/index.js",
     "dev:upload": "nodemon services/upload/index.js",
     "dev:crio": "nodemon services/crio/index.js",
     "dev:manage-users": "nodemon services/manage-users/index.js",
-    "dev:gateway": "wait-on tcp:4005 tcp:4004 tcp:4001 && nodemon ./whole/index.js",
+    "dev:gateway": "wait-on tcp:5050 tcp:4005 tcp:4004 tcp:4001 && nodemon ./whole/index.js",
     "format": "prettier --write \"**/*.+(js|md)\" --"
   },
   "repository": {

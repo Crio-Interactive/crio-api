@@ -27,7 +27,7 @@ module.exports = applyMiddleware(
       saveUser: isAuthenticated,
       updateUser: isAuthenticated,
       createFollowing: isAuthenticated,
-      updateThumbnail: isNotAuthenticated,
+      updateMetadata: isNotAuthenticated,
       createArtwork: isNotAuthenticated,
       deleteArtwork: isNotAuthenticated,
     },
