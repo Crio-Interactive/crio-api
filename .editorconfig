@@ -16,3 +16,4 @@ trim_trailing_whitespace = false
 indent_style = tab
 [*.less]
 indent_style = space
+

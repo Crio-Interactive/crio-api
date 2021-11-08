@@ -61,3 +61,4 @@ module.exports = {
     return queryInterface.dropTable('Artworks');
   }
 };
+
