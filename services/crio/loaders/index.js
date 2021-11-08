@@ -2,7 +2,7 @@
 const DataLoader = require('dataloader');
 
 const loaders = (models, user) => {
-  return {
+  const self = {
     userById: new DataLoader(ids =>
       models.User.findAll({
         where: {
@@ -55,8 +55,8 @@ const loaders = (models, user) => {
 
       return artworkIds.map(id => map[id]);
     }),
-
   };
+  return self;
 };
 
 module.exports = loaders;
