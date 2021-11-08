@@ -8,7 +8,7 @@ module.exports = {
         const result = await vimeoClient.post('/me/videos', {
           upload: {
             approach: 'tus',
-            size: 1,
+            size,
           },
         });
         return {
@@ -25,11 +25,16 @@ module.exports = {
   Mutation: {
     updateMetadata: async (_, { params }, { loaders, models }) => {
       try {
-        const { artworkId, title, description, image, mime, isThumbnail } = params;
+        const { artworkId, title, description, image, mime } = params;
         const artwork = await loaders.artworkById.load(artworkId);
-        if (isThumbnail) {
+        if (title && description) {
+          await vimeoClient.patch(artwork.videoUri, { name: title, description });
+          await models.Artwork.update({ title, description }, { where: { id: artworkId } });
+          return true;
+        }
+        if (image && mime) {
           const { data: { uri, link } } = await vimeoClient.post(artwork.pictures_uri);
-          const imageFile = new Buffer(image);
+          const imageFile = new Buffer.from(image);
           const { data: { status } } = await axios.put(link, imageFile, { headers: { 'Content-Type': mime } });
           if (status === 'success') {
             await vimeoClient.patch(uri, { active: true });
@@ -39,9 +44,6 @@ module.exports = {
           }
           return false;
         }
-        await vimeoClient.patch(artwork.videoUri, { name: title, description });
-        await models.Artwork.update({ title, description }, { where: { id: artworkId } });
-        return true;
       } catch (e) {
         return false;
       }
