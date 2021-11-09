@@ -13,6 +13,7 @@ then
     echo "export SUBDOMAIN_NAME=crio-qa-api"
     echo "export STACK_REGION=us-west-2"
     echo "export APP_NAME=crio-development"
+    echo "export VIMEO_ACCESS_TOKEN=230a1c36dd0fbf4ef7ed0c62a3513001"
   } >> "$BASH_ENV"
 elif [ "${CIRCLE_BRANCH}" == "staging" ]
 then
