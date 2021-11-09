@@ -14,6 +14,7 @@ module.exports = gql`
 
   type Query {
     getArtworks: [Artwork!]!
+    getUserArtworks(id: ID): [Artwork!]!
   }
 
   type Mutation {

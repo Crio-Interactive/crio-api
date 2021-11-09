@@ -1,12 +1,14 @@
 const { vimeoClient } = require('../config/httpClient');
 module.exports = {
   Query: {
-    getArtworks: async (_, {}, { user, loaders, models }) => {
-      const { id } = await loaders.userByUserId.load(user.attributes.sub);
-      return models.Artwork.findAll({
-        raw: true,
-        where: { userId: id },
-      });
+    getArtworks: async () => {},
+    getUserArtworks: async (_, { id }, { user, loaders }) => {
+      let userId = id;
+      if (!id) {
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        userId = id;
+      }
+      return loaders.artworksByUserId.load(userId);
     },
   },
   Mutation: {
