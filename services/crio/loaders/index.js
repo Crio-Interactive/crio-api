@@ -58,6 +58,7 @@ const loaders = (models, user) => {
     artworksByUserId: new DataLoader(async userIds =>
       models.Artwork.findAll({
         raw: true,
+        order: [['updatedAt', 'DESC']],
         include: {
           attributes: [],
           model: models.User,
