@@ -82,7 +82,7 @@ jobs:
                             },
                             {
             					"type": "mrkdwn",
-            					"text": "*Message*:\n $(git log --pretty=format:"%s" -n 1 $CIRCLE_SHA1)"
+            					"text": "*Message*:\n $(git log --pretty=format:'%s' -n 1 $CIRCLE_SHA1)"
             				},
             				{
             					"type": "mrkdwn",
