@@ -19,6 +19,7 @@
     "apollo-server-lambda": "^2.19.0",
     "aws-sdk": "^2.975.0",
     "axios": "^0.21.1",
+    "bluebird": "^3.7.2",
     "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
     "env-cmd": "^10.1.0",

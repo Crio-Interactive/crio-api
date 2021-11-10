@@ -1,4 +1,6 @@
+const BlueBird = require('bluebird');
 const { vimeoClient } = require('../config/httpClient');
+
 module.exports = {
   Query: {
     getArtworks: async () => {},
@@ -26,6 +28,37 @@ module.exports = {
           pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
         });
       } catch (e) {
+        return false;
+      }
+    },
+    updateArtworks: async (_, {}, { user, loaders, models }) => {
+      try {
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        const artworks = await models.Artwork.findAll({
+          raw: true,
+          include: {
+            attributes: [],
+            model: models.User,
+          },
+          where: {
+            userId: id,
+            status: ['uploading', 'transcode_starting', 'transcoding'],
+          },
+        });
+        await BlueBird.each(artworks, async item => {
+          try {
+            const { data } = await vimeoClient.get(item.videoUri);
+            if (item.status !== data.status || item.thumbnailUri !== data.pictures.base_link) {
+              await models.Artwork.update({ status: data.status, thumbnailUri: data.pictures.base_link }, {
+                where: { id: item.id },
+              });
+            }
+          } catch (e) {
+            return;
+          }
+        }, { concurrency: 5 });
+        return true;
+      } catch(e) {
         return false;
       }
     },

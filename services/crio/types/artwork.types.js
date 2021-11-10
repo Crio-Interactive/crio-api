@@ -24,6 +24,7 @@ module.exports = gql`
 
   type Mutation {
     createArtwork(videoUri: String!): Artwork
+    updateArtworks: Boolean
     deleteArtwork(params: DeletingParams!): Boolean
   }
 `;
