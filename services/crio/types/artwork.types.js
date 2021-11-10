@@ -12,6 +12,11 @@ module.exports = gql`
     pictures_uri: String!
   }
 
+  input DeletingParams {
+    artworkId: ID
+    videoUri: String
+  }
+
   type Query {
     getArtworks: [Artwork!]!
     getUserArtworks(id: ID): [Artwork!]!
@@ -19,6 +24,6 @@ module.exports = gql`
 
   type Mutation {
     createArtwork(videoUri: String!): Artwork
-    deleteArtwork(artworkId: ID!): Boolean
+    deleteArtwork(params: DeletingParams!): Boolean
   }
 `;

@@ -11,6 +11,8 @@ module.exports = {
             size,
           },
         });
+        console.log(process.env.VIMEO_ACCESS_TOKEN, 'VIMEO_ACCESS_TOKEN')
+
         return {
           uri: result.data.uri,
           upload_link: result.data.upload.upload_link,
@@ -21,29 +23,42 @@ module.exports = {
         return e;
       }
     },
+    getUploadImageLink: async (_, { artworkId }, { loaders }) => {
+      try {
+        const { pictures_uri } = await loaders.artworkById.load(artworkId);
+        const { data: { link } } = await vimeoClient.post(pictures_uri);
+
+        return link;
+      } catch (e) {
+        return e;
+      }
+    },
   },
   Mutation: {
-    updateMetadata: async (_, { params }, { loaders, models }) => {
+    updateMetadata: async (_, { params }, { loaders }) => {
       try {
         const { artworkId, title, description, image, mime } = params;
         const artwork = await loaders.artworkById.load(artworkId);
         if (title && description) {
           await vimeoClient.patch(artwork.videoUri, { name: title, description });
-          await models.Artwork.update({ title, description }, { where: { id: artworkId } });
+          await artwork.update({ title, description });
           return true;
         }
-        if (image && mime) {
-          const { data: { uri, link } } = await vimeoClient.post(artwork.pictures_uri);
-          const imageFile = new Buffer.from(image);
-          const { data: { status } } = await axios.put(link, imageFile, { headers: { 'Content-Type': mime } });
-          if (status === 'success') {
-            await vimeoClient.patch(uri, { active: true });
-            const videoData = await vimeoClient.get(artwork.videoUri);
-            await models.Artwork.update({ thumbnailUri: videoData.data.pictures.base_link});
-            return true;
-          }
-          return false;
-        }
+        const videoData = await vimeoClient.get(artwork.videoUri);
+        await artwork.update({ status: videoData.data.status, thumbnailUri: videoData.data.pictures.base_link});
+        return true;
+        // if (image && mime) {
+        //   const { data: { uri, link } } = await vimeoClient.post(artwork.pictures_uri);
+        //   const imageFile = new Buffer.from(image);
+        //   const { data: { status } } = await axios.put(link, imageFile, { headers: { 'Content-Type': mime } });
+        //   if (status === 'success') {
+        //     await vimeoClient.patch(uri, { active: true });
+        //     const videoData = await vimeoClient.get(artwork.videoUri);
+        //     await models.Artwork.update({ thumbnailUri: videoData.data.pictures.base_link});
+        //     return true;
+        //   }
+        //   return false;
+        // }
       } catch (e) {
         return false;
       }

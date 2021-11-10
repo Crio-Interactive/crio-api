@@ -18,6 +18,7 @@ module.exports = gql`
 
   type Query {
     getUploadUrl(size: Int!): UploadInfo!
+    getUploadImageLink(artworkId: ID!): String!
   }
 
   type Mutation {

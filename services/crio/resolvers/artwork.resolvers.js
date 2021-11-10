@@ -29,11 +29,17 @@ module.exports = {
         return false;
       }
     },
-    deleteArtwork: async (_, { artworkId }, { models }) => {
+    deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders }) => {
       try {
-        const artwork = await models.Artwork.findByPk(artworkId);
-        await vimeoClient.delete(artwork.videoUri);
-        await artwork.destroy();
+        let uri = videoUri;
+        if (artworkId) {
+          const artwork = await loaders.artworkById.load(artworkId);
+          uri = artwork.videoUri;
+          await artwork.destroy();
+        }
+        if (uri) {
+          await vimeoClient.delete(uri);
+        }
         return true;
       } catch(e) {
         return false;
