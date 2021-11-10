@@ -26,9 +26,9 @@ module.exports = {
     getUploadImageLink: async (_, { artworkId }, { loaders }) => {
       try {
         const { pictures_uri } = await loaders.artworkById.load(artworkId);
-        const { data: { link } } = await vimeoClient.post(pictures_uri);
+        const { data: { uri, link } } = await vimeoClient.post(pictures_uri);
 
-        return link;
+        return { uri, link };
       } catch (e) {
         return e;
       }
@@ -37,28 +37,20 @@ module.exports = {
   Mutation: {
     updateMetadata: async (_, { params }, { loaders }) => {
       try {
-        const { artworkId, title, description, image, mime } = params;
+        const { artworkId, title, description, image, mime, uri } = params;
         const artwork = await loaders.artworkById.load(artworkId);
         if (title && description) {
           await vimeoClient.patch(artwork.videoUri, { name: title, description });
           await artwork.update({ title, description });
           return true;
         }
-        const videoData = await vimeoClient.get(artwork.videoUri);
-        await artwork.update({ status: videoData.data.status, thumbnailUri: videoData.data.pictures.base_link});
-        return true;
-        // if (image && mime) {
-        //   const { data: { uri, link } } = await vimeoClient.post(artwork.pictures_uri);
-        //   const imageFile = new Buffer.from(image);
-        //   const { data: { status } } = await axios.put(link, imageFile, { headers: { 'Content-Type': mime } });
-        //   if (status === 'success') {
-        //     await vimeoClient.patch(uri, { active: true });
-        //     const videoData = await vimeoClient.get(artwork.videoUri);
-        //     await models.Artwork.update({ thumbnailUri: videoData.data.pictures.base_link});
-        //     return true;
-        //   }
-        //   return false;
-        // }
+        if (uri) {
+          await vimeoClient.patch(uri, { active: true });
+          const videoData = await vimeoClient.get(artwork.videoUri);
+          await models.Artwork.update({ status: videoData.data.status, thumbnailUri: videoData.data.pictures.base_link});
+          return true;
+        }
+        return false;
       } catch (e) {
         return false;
       }
