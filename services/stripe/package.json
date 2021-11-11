@@ -1,18 +1,14 @@
 {
-  "name": "test-rest",
+  "name": "stripe",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lambda.js",
   "scripts": {
-    "server": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-ws": "^5.0.2",
-    "ws": "^8.2.3"
+    "@tidepoollabs/node-lambda-logs": "^1.0.0"
   }
 }
