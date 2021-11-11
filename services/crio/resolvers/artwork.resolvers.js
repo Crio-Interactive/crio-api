@@ -45,20 +45,27 @@ module.exports = {
             status: ['uploading', 'transcode_starting', 'transcoding'],
           },
         });
-        await BlueBird.each(artworks, async item => {
-          try {
-            const { data } = await vimeoClient.get(item.videoUri);
-            if (item.status !== data.status || item.thumbnailUri !== data.pictures.base_link) {
-              await models.Artwork.update({ status: data.status, thumbnailUri: data.pictures.base_link }, {
-                where: { id: item.id },
-              });
+        await BlueBird.each(
+          artworks,
+          async item => {
+            try {
+              const { data } = await vimeoClient.get(item.videoUri);
+              if (item.status !== data.status || item.thumbnailUri !== data.pictures.base_link) {
+                await models.Artwork.update(
+                  { status: data.status, thumbnailUri: data.pictures.base_link },
+                  {
+                    where: { id: item.id },
+                  },
+                );
+              }
+            } catch (e) {
+              return;
             }
-          } catch (e) {
-            return;
-          }
-        }, { concurrency: 5 });
+          },
+          { concurrency: 5 },
+        );
         return true;
-      } catch(e) {
+      } catch (e) {
         return false;
       }
     },
@@ -74,7 +81,7 @@ module.exports = {
           await vimeoClient.delete(uri);
         }
         return true;
-      } catch(e) {
+      } catch (e) {
         return false;
       }
     },

@@ -55,4 +55,3 @@ module.exports = (sequelize, DataTypes) => {
   );
   return Artwork;
 };
-

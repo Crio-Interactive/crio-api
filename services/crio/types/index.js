@@ -3,10 +3,6 @@ const userTypes = require('./user.types');
 const uploadTypes = require('./upload.types');
 const artworkTypes = require('./artwork.types');
 
-const types = [
-  userTypes,
-  uploadTypes,
-  artworkTypes,
-];
+const types = [userTypes, uploadTypes, artworkTypes];
 
 module.exports = mergeTypeDefs(types);
