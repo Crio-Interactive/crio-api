@@ -1,6 +1,5 @@
 const { DB_USERNAME, DB_HOST, DB_PASSWORD } = require('../config/environment');
 
-
 module.exports = {
   development: {
     username: DB_USERNAME,

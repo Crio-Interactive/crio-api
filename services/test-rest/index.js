@@ -10,11 +10,10 @@ const port = 5050;
 const wsServer = new ws.Server({ server: server });
 
 wsServer.on('connection', socket => {
-  socket.on('message', (message) => {
+  socket.on('message', message => {
     socket.send('It works 😃 ✔️ 🚀 ' + message);
   });
 });
-
 
 // server.on('upgrade', (req, socket, head) => {
 //   wsServer.handleUpgrade(req, socket, head, (socket) => {

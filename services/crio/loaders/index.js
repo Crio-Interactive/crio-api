@@ -24,8 +24,11 @@ const loaders = (models, user) => {
     ),
     isFollowing: new DataLoader(async followingIds => {
       const { id } = await self.userByUserId.load(user.attributes.sub);
-      return models.Following.findAll({ where: { userId: id, followingId: followingIds } }).then(followings =>
-        followingIds.map(followingId => !!followings.find(following => following.followingId == followingId)),
+      return models.Following.findAll({ where: { userId: id, followingId: followingIds } }).then(
+        followings =>
+          followingIds.map(
+            followingId => !!followings.find(following => following.followingId == followingId),
+          ),
       );
     }),
     followingsByUserId: new DataLoader(userIds =>
@@ -41,7 +44,7 @@ const loaders = (models, user) => {
         },
       }).then(followings => userIds.map(userId => followings.find(user => user.userId == userId))),
     ),
-    artworkById: new DataLoader(async (artworkIds) => {
+    artworkById: new DataLoader(async artworkIds => {
       const result = await models.Artwork.findAll({
         where: {
           id: artworkIds,
@@ -49,9 +52,9 @@ const loaders = (models, user) => {
       });
 
       const map = result.reduce((acc, item) => {
-          acc[item.id] = item;
-          return acc;
-        }, {});
+        acc[item.id] = item;
+        return acc;
+      }, {});
 
       return artworkIds.map(id => map[id]);
     }),
@@ -66,7 +69,9 @@ const loaders = (models, user) => {
         where: {
           userId: userIds,
         },
-      }).then(artworks => userIds.map(userId => artworks.filter(artwork => artwork.userId == userId))),
+      }).then(artworks =>
+        userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
+      ),
     ),
   };
   return self;

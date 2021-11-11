@@ -6,7 +6,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -14,7 +14,7 @@ module.exports = {
           model: {
             tableName: 'Users',
           },
-          key: 'id'
+          key: 'id',
         },
         allowNull: false,
       },
@@ -46,19 +46,18 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deletedAt: {
         type: Sequelize.DATE,
       },
     });
   },
-  down: async (queryInterface) => {
+  down: async queryInterface => {
     return queryInterface.dropTable('Artworks');
-  }
+  },
 };
-

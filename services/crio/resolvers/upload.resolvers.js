@@ -11,7 +11,7 @@ module.exports = {
             size,
           },
         });
-        console.log(process.env.VIMEO_ACCESS_TOKEN, 'VIMEO_ACCESS_TOKEN')
+        console.log(process.env.VIMEO_ACCESS_TOKEN, 'VIMEO_ACCESS_TOKEN');
 
         return {
           uri: result.data.uri,
@@ -26,7 +26,9 @@ module.exports = {
     getUploadImageLink: async (_, { artworkId }, { loaders }) => {
       try {
         const { pictures_uri } = await loaders.artworkById.load(artworkId);
-        const { data: { uri, link } } = await vimeoClient.post(pictures_uri);
+        const {
+          data: { uri, link },
+        } = await vimeoClient.post(pictures_uri);
 
         return { uri, link };
       } catch (e) {
@@ -47,7 +49,10 @@ module.exports = {
         if (uri) {
           await vimeoClient.patch(uri, { active: true });
           const videoData = await vimeoClient.get(artwork.videoUri);
-          await models.Artwork.update({ status: videoData.data.status, thumbnailUri: videoData.data.pictures.base_link});
+          await models.Artwork.update({
+            status: videoData.data.status,
+            thumbnailUri: videoData.data.pictures.base_link,
+          });
           return true;
         }
         return false;

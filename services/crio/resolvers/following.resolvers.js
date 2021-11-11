@@ -13,7 +13,7 @@ module.exports = {
         where: { userId: id },
       });
     },
-    isFollowing: async (_, { followingId }, { loaders }) => loaders.isFollowing.load(followingId)
+    isFollowing: async (_, { followingId }, { loaders }) => loaders.isFollowing.load(followingId),
   },
   Mutation: {
     createFollowing: async (_, { followingId }, { user, loaders, models }) => {

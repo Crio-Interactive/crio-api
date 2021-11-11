@@ -6,8 +6,10 @@ module.exports = {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
     getCreatorUsers: async (_, {}, { models }) => {
-      const creators = await models.Creator.findAll({ attributes: ['email' ] });
-      return models.User.findAll({ where: { email: creators.map(({ dataValues }) => dataValues.email) } });
+      const creators = await models.Creator.findAll({ attributes: ['email'] });
+      return models.User.findAll({
+        where: { email: creators.map(({ dataValues }) => dataValues.email) },
+      });
     },
   },
   Mutation: {
