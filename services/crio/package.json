@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "npx sequelize-cli db:migrate",
+    "migrate": "env-cmd -f .env npx sequelize-cli db:migrate",
     "migrate:undo": "npx sequelize-cli db:migrate:undo"
   },
   "author": "",
@@ -19,8 +19,10 @@
     "apollo-server-lambda": "^2.19.0",
     "aws-sdk": "^2.975.0",
     "axios": "^0.21.1",
+    "bluebird": "^3.7.2",
     "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
+    "env-cmd": "^10.1.0",
     "graphql": "^15.5.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",

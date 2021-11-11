@@ -14,7 +14,7 @@ module.exports = {
     saveUser: async (_, {}, { user, models }) => {
       try {
         const attr = user.attributes;
-        const existingUser = await models.User.findOne({ where: { userId: attr.sub} });
+        const existingUser = await models.User.findOne({ where: { userId: attr.sub } });
         if (!existingUser) {
           return models.User.create({
             userId: attr.sub,
@@ -32,7 +32,10 @@ module.exports = {
     },
     updateUser: async (_, { attributes }, { user, models }) => {
       try {
-        const [, updatedUser] = await models.User.update(attributes, { where: { userId: user.attributes.sub }, returning: true });
+        const [, updatedUser] = await models.User.update(attributes, {
+          where: { userId: user.attributes.sub },
+          returning: true,
+        });
         return updatedUser?.[0].dataValues;
       } catch (e) {
         return e;
