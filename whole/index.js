@@ -1,5 +1,6 @@
 require('dotenv').config({ path: __dirname + '/.env' });
 const { ApolloServer } = require('apollo-server-express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const { ApolloGateway, RemoteGraphQLDataSource } = require('@apollo/gateway');
 const express = require('express');
 const awsHelper = require('./awsHelper');
@@ -8,6 +9,23 @@ const app = express();
 
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
+
+app.use(
+  '/rest',
+  createProxyMiddleware({
+    target: 'http://localhost:5050',
+    changeOrigin: true,
+  }),
+);
+
+app.use(
+  '/ws',
+  createProxyMiddleware({
+    target: 'ws://localhost:5050',
+    ws: true,
+    logLeve: 'debug',
+  }),
+);
 
 // Initialize an ApolloGateway instance and pass it an array of
 // your implementing service names and URLs
@@ -52,7 +70,5 @@ const server = new ApolloServer({
 server.applyMiddleware({ app });
 
 app.listen({ port: PORT }, () => {
-  console.log(
-    `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`,
-  );
+  console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
 });

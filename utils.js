@@ -5,9 +5,11 @@ const certificateManager = require('@aws-cdk/aws-certificatemanager');
 class Utils {
   static async getSecret(id) {
     const secretsmanager = new aws.SecretsManager();
-    const secret = await secretsmanager.getSecretValue({
-      SecretId: id
-    }).promise();
+    const secret = await secretsmanager
+      .getSecretValue({
+        SecretId: id,
+      })
+      .promise();
     return JSON.parse(secret.SecretString);
   }
   static async getStackOutputs(stackName, stackRegion) {
@@ -33,8 +35,7 @@ class Utils {
   }
 
   // region should be us-east-1 for cloudfront
-  static configureDomain(
-    context, domainName, subDomainName, region = 'us-east-1') {
+  static configureDomain(context, domainName, subDomainName, region = 'us-east-1') {
     const domain = subDomainName + '.' + domainName;
     const hostedZone = route53.HostedZone.fromLookup(context, 'Zone', {
       domainName,
@@ -48,12 +49,11 @@ class Utils {
         process.env.AWS_CERTIFICATE_ARN,
       );
     } else {
-      certificate = new certificateManager.DnsValidatedCertificate(context,
-        domainName, {
-          region,
-          domainName: `*.${domainName}`,
-          hostedZone: hostedZone,
-        });
+      certificate = new certificateManager.DnsValidatedCertificate(context, domainName, {
+        region,
+        domainName: `*.${domainName}`,
+        hostedZone: hostedZone,
+      });
     }
 
     return {

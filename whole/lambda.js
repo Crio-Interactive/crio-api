@@ -20,10 +20,7 @@ class LambdaGraphQLDataSource extends RemoteGraphQLDataSource {
     }
   }
 
-  async process({
-    request,
-    context,
-  }) {
+  async process({ request, context }) {
     const headers = (request.http && request.http.headers) || new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -56,10 +53,12 @@ class LambdaGraphQLDataSource extends RemoteGraphQLDataSource {
         },
       };
 
-      const lambdaResponse = await lambda.invoke({
-        FunctionName: this.functionName,
-        Payload: JSON.stringify(event, null, 2), // pass params
-      }).promise();
+      const lambdaResponse = await lambda
+        .invoke({
+          FunctionName: this.functionName,
+          Payload: JSON.stringify(event, null, 2), // pass params
+        })
+        .promise();
 
       const body = await this.didReceiveResponse(lambdaResponse, context);
 
@@ -71,11 +70,7 @@ class LambdaGraphQLDataSource extends RemoteGraphQLDataSource {
   }
 
   async didReceiveResponse(response) {
-    if (
-      response.StatusCode &&
-      response.StatusCode >= 200 &&
-      response.StatusCode < 300
-    ) {
+    if (response.StatusCode && response.StatusCode >= 200 && response.StatusCode < 300) {
       return this.parseBody(response);
     } else {
       throw await this.errorFromResponse(response);
@@ -87,7 +82,7 @@ class LambdaGraphQLDataSource extends RemoteGraphQLDataSource {
   }
 
   async parseBody(response) {
-    if (typeof response.Payload === "undefined") {
+    if (typeof response.Payload === 'undefined') {
       return {};
     }
     const payload = JSON.parse(response.Payload.toString());
@@ -114,13 +109,12 @@ class LambdaGraphQLDataSource extends RemoteGraphQLDataSource {
         // url: response.url,
         status: response.StatusCode,
         // statusText: response.statusText,
-        body
-      }
+        body,
+      },
     });
 
     return error;
   }
-
 }
 
 const serviceList = [
