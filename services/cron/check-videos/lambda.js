@@ -2,13 +2,14 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const logs = require('@tidepoollabs/node-lambda-logs');
 const sequelize = require('sequelize');
-const Artwork = require('../models/artwork');
 const { vimeoClient } = require('../config/httpClient');
 
 logs.init(process.env.SENTRY_DSN);
 
 const handler = async () => {
   try {
+    console.log('models', sequelize.models);
+    const { Artwork } = sequelize.models;
     const videosToCheck = await Artwork.findAll({
       where: {
         status: {
