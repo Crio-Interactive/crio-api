@@ -17,7 +17,7 @@ exports.handler = logs.wrapHandler(async function(event, context) {
 }, { captureTimeoutWarning: false });
 
 function formatResponse(body) {
-  const response = {
+  return {
     'statusCode': 200,
     'headers': {
       'Content-Type': 'application/json',
@@ -25,11 +25,10 @@ function formatResponse(body) {
     'isBase64Encoded': false,
     'body': body,
   };
-  return response;
-};
+}
 
 function formatError(error) {
-  const response = {
+  return  {
     'statusCode': error.statusCode,
     'headers': {
       'Content-Type': 'text/plain',
@@ -38,7 +37,6 @@ function formatError(error) {
     'isBase64Encoded': false,
     'body': error.code + ': ' + error.message,
   };
-  return response;
 }
 
 // Use SDK client
