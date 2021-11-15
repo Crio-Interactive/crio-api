@@ -25,5 +25,5 @@ const server = new ApolloServer({
 });
 
 server.listen({ port: PORT }).then(({ url }) => {
-  console.log(`🚀 Workouts server ready at ${url}`);
+  console.log(`🚀 Crio server ready at ${url}`);
 });
