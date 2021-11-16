@@ -24,6 +24,7 @@ module.exports = applyMiddleware(
       getUploadImageLink: isAuthenticated,
       getArtworks: isAuthenticated,
       getUserArtworks: isAuthenticated,
+      isSubscriber: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,
@@ -33,6 +34,7 @@ module.exports = applyMiddleware(
       updateArtworks: isAuthenticated,
       deleteArtwork: isAuthenticated,
       updateMetadata: isAuthenticated,
+      createSubscriber: isAuthenticated,
     },
   }),
 );
