@@ -40,6 +40,7 @@ const appStack = new AppStack(app, Utils.prefixByAppName('AppStack'), {
 
 const cronStack = new CronStack(app, Utils.prefixByAppName('CronStack'), {
   ...stackProps,
+  crioDb: rdsStack.crioDb,
   vpc: vpcStackEntity.vpc,
   s3Bucket: s3Stack.bucket,
   appLambdaFunctions: appStack.lambdaFunctions,
