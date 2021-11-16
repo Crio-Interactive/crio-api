@@ -17,18 +17,22 @@ const handler = async () => {
       },
       limit: 10,
     });
+    console.log('videosToCheck', videosToCheck);
     if (videosToCheck.length) {
       const requests = videosToCheck.map((vid) => vimeoClient.get(vid.videoUri));
       const results = await Promise.all(requests);
+      console.log('results', results);
       const available = results.filter(res => res.data.status.available).map(itm => itm.data.uri);
+      console.log('available', available);
       if (available.length) {
-        await Artwork.update({
+        const res = await Artwork.update({
           status: 'available',
         }, {
           where: {
             videoUri: available,
           },
         });
+        console.log('res', res);
       }
     }
     console.log('Successfully updated video statuses');
