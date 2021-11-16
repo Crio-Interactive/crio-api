@@ -21,7 +21,7 @@ const handler = async () => {
       const requests = videosToCheck.map((vid) => vimeoClient.get(vid.videoUri));
       const results = await Promise.all(requests);
       console.log('results', results);
-      const available = results.filter(res => res.data.status.available).map(itm => itm.data.uri);
+      const available = results.filter(res => res.data.status === 'available').map(itm => itm.data.uri);
       if (available.length) {
         const res = await Artwork.update({
           status: 'available',
