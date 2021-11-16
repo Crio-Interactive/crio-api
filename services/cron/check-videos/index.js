@@ -21,15 +21,19 @@ const handler = async () => {
       const requests = videosToCheck.map((vid) => vimeoClient.get(vid.videoUri));
       const results = await Promise.all(requests);
       console.log('results', results);
-      const available = results.filter(res => res.data.status === 'available').map(itm => itm.data.uri);
+      const available = results.filter(res => res.data.status === 'available');
       if (available.length) {
-        const res = await Artwork.update({
-          status: 'available',
-        }, {
-          where: {
-            videoUri: available,
-          },
+        const dbQueries = available.map((itm) => {
+          return Artwork.update({
+            status: 'available',
+            thumbnailUri: itm.data.pictures.base_link,
+          }, {
+            where: {
+              videoUri: itm.data.uri,
+            },
+          });
         });
+        const res = await Promise.all(dbQueries);
         console.log('res', res);
       }
     }
