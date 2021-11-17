@@ -25,14 +25,11 @@ module.exports = gql`
   type Query {
     me: UserInfo!
     getUser(id: ID!): UserInfo
-    getCreatorUsers: [UserInfo]
-    getFollowings: [UserInfo]
-    isFollowing(followingId: ID!): Boolean
+    getCreatorUsers: [UserInfo]!
   }
 
   type Mutation {
     saveUser: UserInfo!
     updateUser(attributes: UserAttributes!): UserInfo!
-    createFollowing(followingId: ID!): Boolean
   }
 `;

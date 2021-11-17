@@ -4,6 +4,7 @@ const userResolvers = require('./user.resolvers');
 const followingResolvers = require('./following.resolvers');
 const uploadResolvers = require('./upload.resolvers');
 const artworkResolvers = require('./artwork.resolvers');
+const subscriberResolvers = require('./subscriber.resolvers');
 
 const resolvers = [
   scalarResolvers,
@@ -11,6 +12,7 @@ const resolvers = [
   followingResolvers,
   uploadResolvers,
   artworkResolvers,
+  subscriberResolvers,
 ];
 
 module.exports = mergeResolvers(resolvers);

@@ -24,6 +24,7 @@ commands:
             cp ./docker/nonmigratable.Dockerfile ./services/cron/Dockerfile
             cp ./docker/nonmigratable.Dockerfile ./services/manage-users/Dockerfile
             cp ./docker/nonmigratable.Dockerfile ./services/upload/Dockerfile
+            cp ./docker/nonmigratable.Dockerfile ./services/stripe/Dockerfile
       - run: npm run deploy
   install-packages:
     steps:
