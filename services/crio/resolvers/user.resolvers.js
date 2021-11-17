@@ -23,8 +23,8 @@ module.exports = {
             fbUserId: user.username.substring(user.username.indexOf('_') + 1),
             email: attr.email,
             username: `${attr.given_name}_${attr.family_name}`,
-            firstName: attr.family_name,
-            lastName: attr.given_name,
+            firstName: attr.given_name,
+            lastName: attr.family_name,
           });
         }
         return existingUser;
