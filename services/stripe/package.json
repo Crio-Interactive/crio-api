@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@tidepoollabs/node-lambda-logs": "^1.0.0"
+    "@tidepoollabs/node-lambda-logs": "^1.0.0",
+    "stripe": "^8.189.0"
   }
 }

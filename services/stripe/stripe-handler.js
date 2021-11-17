@@ -11,7 +11,7 @@
 // 3) Run the server on http://localhost:4242
 //   node server.js
 
-const stripe = require('stripe');
+const stripeHandler = require('stripe');
 const express = require('express');
 const app = express();
 
@@ -24,7 +24,7 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    event = stripeHandler.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
@@ -37,11 +37,11 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
       // Then define and call a function to handle the event customer.subscription.updated
       break;
     case 'invoice.paid':
-      const invoice = event.data.object;
+      // const invoice = event.data.object;
       // Then define and call a function to handle the event invoice.paid
       break;
     case 'invoice.payment_failed':
-      const invoice = event.data.object;
+      // const invoice = event.data.object;
       // Then define and call a function to handle the event invoice.payment_failed
       break;
     // ... handle other event types
