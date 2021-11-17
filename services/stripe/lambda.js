@@ -9,8 +9,9 @@ exports.handler = logs.wrapHandler(async function(event, context) {
   console.log('## CONTEXT: ' + serialize(context));
   console.log('## EVENT: ' + serialize(event));
   try {
-    let accountSettings = await getAccountSettings();
-    return formatResponse(serialize(accountSettings.AccountUsage));
+    console.log('event', event);
+    console.log('context', context);
+    return formatResponse(true);
   } catch (error) {
     return formatError(error);
   }

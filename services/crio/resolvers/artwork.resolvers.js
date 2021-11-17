@@ -28,6 +28,7 @@ module.exports = {
           pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
         });
       } catch (e) {
+        console.log(e);
         return false;
       }
     },

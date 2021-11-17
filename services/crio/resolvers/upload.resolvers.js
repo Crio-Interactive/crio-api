@@ -11,7 +11,6 @@ module.exports = {
             size,
           },
         });
-        console.log(process.env.VIMEO_ACCESS_TOKEN, 'VIMEO_ACCESS_TOKEN');
 
         return {
           uri: result.data.uri,
