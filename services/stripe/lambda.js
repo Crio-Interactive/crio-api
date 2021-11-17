@@ -5,9 +5,9 @@ const lambda = new AWS.Lambda();
 logs.init(process.env.SENTRY_DSN);
 
 exports.handler = logs.wrapHandler(async function(event, context) {
-  console.log('## ENVIRONMENT VARIABLES: ' + serialize(process.env));
-  console.log('## CONTEXT: ' + serialize(context));
-  console.log('## EVENT: ' + serialize(event));
+  // console.log('## ENVIRONMENT VARIABLES: ' + serialize(process.env));
+  // console.log('## CONTEXT: ' + serialize(context));
+  console.log('## WebHook Event: ----> \n' + serialize(event));
   try {
     console.log('event', event);
     console.log('context', context);
