@@ -46,6 +46,12 @@ exports.handler = logs.wrapHandler(async function(request, context) {
                   id: paymentDetails.id,
                 }
               });
+              await DB.Voucher.upsert({
+                userId: paymentDetails.userId,
+                tier1: 0,
+                tier2: 0,
+                tier3: 0,
+              });
             }
           }
           break;
@@ -54,7 +60,7 @@ exports.handler = logs.wrapHandler(async function(request, context) {
           const invoice = event.data.object
           const periodStartDate = new Date(invoice.period_start * 1000);
           const periodEndDate = new Date(invoice.period_end * 1000);
-          const paymentDetails = await DB.Payment.findOne({
+          let paymentDetails = await DB.Payment.findOne({
             where: {
               customerEmail: invoice.customer_email,
             }
@@ -71,7 +77,7 @@ exports.handler = logs.wrapHandler(async function(request, context) {
               email: invoice.customer_email,
             });
             if (user) {
-              await DB.Payment.create({
+              paymentDetails = await DB.Payment.create({
                 userId: user.id,
                 customerEmail: user.email,
                 periodStart: periodStartDate,
@@ -81,6 +87,12 @@ exports.handler = logs.wrapHandler(async function(request, context) {
               });
             }
           }
+          await DB.Voucher.upsert({
+            userId: paymentDetails.userId,
+            tier1: 5,
+            tier2: 5,
+            tier3: 5,
+          });
           break;
         }
         case 'invoice.payment_failed': {
