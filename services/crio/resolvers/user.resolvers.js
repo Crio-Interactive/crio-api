@@ -1,6 +1,6 @@
 module.exports = {
   UserInfo: {
-    creator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.userId),
+    isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),

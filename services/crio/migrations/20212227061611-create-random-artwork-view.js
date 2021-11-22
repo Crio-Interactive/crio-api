@@ -15,9 +15,7 @@ module.exports = {
          "thumbnailUri",
          "title",
          "description"
-  FROM "Users"
-      INNER JOIN "Creators" ON "Users".email = "Creators"."email"
-      INNER JOIN "Artworks" ON "Users".id = "Artworks"."userId"
+  FROM "Users" INNER JOIN "Artworks" ON "Users".id = "Artworks"."userId"
   WHERE status='available'
 
   `),
