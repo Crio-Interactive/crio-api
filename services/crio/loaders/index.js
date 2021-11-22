@@ -31,19 +31,6 @@ const loaders = (models, user) => {
           ),
       );
     }),
-    followingsByUserId: new DataLoader(userIds =>
-      models.Following.findAll({
-        raw: true,
-        attributes: ['User.id', 'userId', 'User.firstName', 'User.lastName', 'User.username'],
-        include: {
-          attributes: [],
-          model: models.User,
-        },
-        where: {
-          userId: userIds,
-        },
-      }).then(followings => userIds.map(userId => followings.find(user => user.userId == userId))),
-    ),
     artworkById: new DataLoader(async artworkIds => {
       const result = await models.Artwork.findAll({
         where: {
