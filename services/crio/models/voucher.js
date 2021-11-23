@@ -15,9 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Voucher.init({
-    userid: {
-      allowNull: false,
+    userId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
     },
     tier1: {
       type: DataTypes.INTEGER,

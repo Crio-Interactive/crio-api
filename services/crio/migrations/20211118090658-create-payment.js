@@ -12,11 +12,23 @@ module.exports = {
         type:  Sequelize.INTEGER,
         allowNull: false,
         unique: true,
+        references: {
+          model: {
+            tableName: 'Users',
+          },
+          key: 'id',
+        },
       },
       customerEmail: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
+        references: {
+          model: {
+            tableName: 'Users',
+          },
+          key: 'email',
+        },
       },
       periodStart: {
         type: Sequelize.DATE,

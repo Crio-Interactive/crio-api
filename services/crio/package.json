@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "env-cmd -f .env npx sequelize-cli db:migrate",
-    "migrate:undo": "npx sequelize-cli db:migrate:undo"
+    "migrate:undo": "env-cmd -f .env npx sequelize-cli db:migrate:undo"
   },
   "author": "",
   "license": "ISC",
