@@ -1,11 +1,19 @@
 module.exports = {
   Query: {
-    // getFollowings: async (_, { id }, { loaders }) => loaders.followingsByUserId.load(id),
     getFollowings: async (_, {}, { user, loaders, models }) => {
       const { id } = await loaders.userByUserId.load(user.attributes.sub);
       return models.Following.findAll({
         raw: true,
-        attributes: ['User.id', 'userId', 'User.firstName', 'User.lastName', 'User.username'],
+        attributes: [
+          'User.id',
+          'userId',
+          'User.fbUserId',
+          'User.email',
+          'User.firstName',
+          'User.lastName',
+          'User.username',
+          'User.visibility',
+        ],
         include: {
           attributes: [],
           model: models.User,

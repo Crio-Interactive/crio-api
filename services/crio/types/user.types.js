@@ -20,6 +20,7 @@ module.exports = gql`
     firstName: String
     lastName: String
     visibility: [String]
+    isCreator: Boolean
   }
 
   type Query {
