@@ -11,7 +11,6 @@ exports.handler = logs.wrapHandler(async function(request, context) {
   // console.log('## ENVIRONMENT VARIABLES: ' + serialize(process.env));
   // console.log('## CONTEXT: ' + serialize(context));
   console.log('## WebHook Event: ----> \n' + request);
-  $input
   try {
     if (request.httpMethod === 'POST') {
       const result = await handler(request.headers, request.body);

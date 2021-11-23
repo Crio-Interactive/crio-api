@@ -1,9 +1,6 @@
-const stripe = require('stripe');
 const fromUnixTime = require('date-fns/fromUnixTime');
 const { addUnixTimeMonth } = require('./utils');
 const DB = require('./models');
-
-const stripeSecret = process.env.STRIPE_HOOK_SECRET_TEST;
 
 const createOrUpdateVoucher = async ({ userId, ...params }) => {
   const voucher = await DB.Voucher.findOne({
@@ -26,17 +23,7 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
 
 const handler = async (headers, body) => {
   try {
-    const sig = headers['Stripe-Signature'] || headers['stripe-signature'];
-    let event;
-    try {
-      event = stripe.webhooks.constructEvent(body, sig, stripeSecret);
-    } catch (err) {
-      return Promise.reject({
-        statusCode: 400,
-        code: 400,
-        message: `Webhook Error: ${err.message}`,
-      });
-    }
+    const event = typeof body === 'string' ? JSON.parse(body) : body;
 
     switch (event.type) {
       case 'invoice.paid': {
