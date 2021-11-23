@@ -13,11 +13,12 @@ module.exports = {
       return loaders.artworksByUserId.load(userId);
     },
     getRandomArtworksCount: async (_, {}, { models }) => models.RandomArtwork.count(),
-    getRandomArtworks: async (_, { params: { count, limit = 15, offset = 0 } }, { models }) => models.RandomArtwork.findAll({
+    getRandomArtworks: async (_, { params: { count, userId, limit = 15, offset = 0 } }, { models }) => models.RandomArtwork.findAll({
+      ...(userId ? { where: { userId } } : {}),
       order: [models.sequelize.literal(`id % ${count}`)],
       limit,
       offset,
-    })
+    }),
   },
   Mutation: {
     createArtwork: async (_, { videoUri }, { user, loaders, models }) => {

@@ -30,6 +30,7 @@ module.exports = gql`
 
   input paginationParams {
     count: Int!
+    userId: ID
     limit: Int
     offset: Int
   }
