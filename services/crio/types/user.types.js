@@ -11,6 +11,16 @@ module.exports = gql`
     visibility: [String]
   }
 
+  type Voucher {
+    tier1: Int
+    tier2: Int
+    tier3: Int
+  }
+
+  type Payment {
+    customerEmail: String
+  }
+
   type UserInfo {
     id: ID
     userId: String
@@ -21,6 +31,8 @@ module.exports = gql`
     lastName: String
     visibility: [String]
     isCreator: Boolean
+    vouchers: [Voucher]
+    payments: [Payment]
   }
 
   type Query {
