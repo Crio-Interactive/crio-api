@@ -1,6 +1,9 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
+  scalar Date
+  scalar JSON
+
   input UserAttributes {
     userId: String
     fbUserId: String
@@ -19,6 +22,10 @@ module.exports = gql`
 
   type Payment {
     customerEmail: String
+    periodStart: Date
+    periodEnd: Date
+    subscriptionStatus: String
+    lastEventSnapshot: JSON
   }
 
   type UserInfo {
