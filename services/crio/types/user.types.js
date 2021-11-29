@@ -38,8 +38,8 @@ module.exports = gql`
     lastName: String
     visibility: [String]
     isCreator: Boolean
-    vouchers: [Voucher]
-    payments: [Payment]
+    vouchers: Voucher
+    payment: Payment
   }
 
   type Query {

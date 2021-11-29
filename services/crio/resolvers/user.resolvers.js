@@ -1,8 +1,8 @@
 module.exports = {
   UserInfo: {
     isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
-    vouchers: async (parent, {}, { models }) => models.Voucher.findAll({ where: { userId: parent.id }}),
-    payments: async (parent, {}, { models }) => models.Payment.findAll({ where: { userId: parent.id }}),
+    vouchers: async (parent, {}, { models }) => models.Voucher.findOne({ where: { userId: parent.id }}),
+    payment: async (parent, {}, { models }) => models.Payment.findOne({ where: { userId: parent.id }}),
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
