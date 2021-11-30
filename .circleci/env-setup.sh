@@ -29,8 +29,8 @@ then
 elif [ "${CIRCLE_BRANCH}" == "master" ]
 then
   {
-    echo "export CLIENT_URL=https://crio.tlabs.app/"
-    echo "export SUBDOMAIN_NAME=crio-api"
+    echo "export CLIENT_URL=https://www.criointeractive.com/"
+    echo "export SUBDOMAIN_NAME=api"
     echo "export STACK_REGION=us-east-1"
     echo "export APP_NAME=crio-production"
     echo "export SENDGRID_VERIFIED_SENDER=info@criointeractive.com"
