@@ -15,7 +15,7 @@ module.exports = gql`
 
   type WorkDetail {
     id: ID!
-    artworkId: ID!
+    artworkId: ID
     userId: ID!
     fbUserId: String!
     name: String
@@ -33,6 +33,7 @@ module.exports = gql`
   input paginationParams {
     count: Int!
     userId: ID
+    artworkId: ID
     limit: Int
     offset: Int
   }
