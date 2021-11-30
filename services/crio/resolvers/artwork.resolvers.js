@@ -13,8 +13,8 @@ module.exports = {
       return loaders.artworksByUserId.load(userId);
     },
     getRandomArtworksCount: async (_, {}, { models }) => models.RandomArtwork.count(),
-    getRandomArtworks: async (_, { params: { count, userId, limit = 15, offset = 0 } }, { models }) => models.RandomArtwork.findAll({
-      ...(userId ? { where: { userId } } : {}),
+    getRandomArtworks: async (_, { params: { count, userId, artworkId, limit = 15, offset = 0 } }, { models }) => models.RandomArtwork.findAll({
+      ...(userId ? { where: { userId, artworkId: { [models.sequelize.Sequelize.Op.ne]: artworkId } } } : {}),
       order: [models.sequelize.literal(`id % ${count}`)],
       limit,
       offset,

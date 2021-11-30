@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   type Artwork {
     id: ID!
+    artworkId: ID!
     userId: ID!
     videoUri: String!
     thumbnailUri: String!
@@ -14,9 +15,10 @@ module.exports = gql`
 
   type WorkDetail {
     id: ID!
+    artworkId: ID
     userId: ID!
-    name: String!
     fbUserId: String!
+    name: String
     videoUri: String!
     thumbnailUri: String!
     title: String!
@@ -31,13 +33,14 @@ module.exports = gql`
   input paginationParams {
     count: Int!
     userId: ID
+    artworkId: ID
     limit: Int
     offset: Int
   }
 
   type Query {
     getArtworks: [Artwork!]!
-    getUserArtworks(id: ID): [Artwork!]!
+    getUserArtworks(id: ID): [WorkDetail!]!
     getRandomArtworksCount: Int!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
   }

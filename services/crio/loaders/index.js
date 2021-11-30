@@ -49,6 +49,17 @@ const loaders = (models, user) => {
       models.Artwork.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
+        attributes: [
+          'id',
+          ['id', 'artworkId'],
+          'userId',
+          'videoUri',
+          'thumbnailUri',
+          'title',
+          'description',
+          'status',
+          'User.fbUserId'
+        ],
         include: {
           attributes: [],
           model: models.User,

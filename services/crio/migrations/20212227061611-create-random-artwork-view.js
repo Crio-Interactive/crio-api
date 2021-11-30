@@ -5,6 +5,9 @@ module.exports = {
     CREATE VIEW "RandomArtworks" AS
     SELECT
       row_number() OVER () AS id,
+      "Artworks"."id" AS "artworkId",
+      "Artworks"."userId",
+      "fbUserId",
       CASE WHEN 'name'= ANY("visibility") THEN CONCAT("firstName", ' ', "lastName")
            WHEN 'username'= ANY("visibility") THEN "username"
            ELSE "Users"."email" END
@@ -14,8 +17,6 @@ module.exports = {
       "username",
       "email",
       "visibility",
-      "Artworks"."userId",
-      "fbUserId",
       "videoUri",
       "thumbnailUri",
       "title",
