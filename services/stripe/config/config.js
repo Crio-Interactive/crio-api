@@ -1,10 +1,10 @@
-const { DB_USERNAME, DB_HOST, DB_PASSWORD } = require('../config/environment');
+const { DB_USERNAME, DB_HOST, DB_PASSWORD, DB_DATABASE } = require('../config/environment');
 
 module.exports = {
   development: {
     username: DB_USERNAME,
     password: DB_PASSWORD,
-    database: 'crio_dev',
+    database: DB_DATABASE,
     host: DB_HOST,
     dialect: 'postgres',
     define: {
