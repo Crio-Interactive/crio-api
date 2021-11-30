@@ -6,14 +6,23 @@ const db = require('../models');
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-const handler = async () => {
+const checkStatus = async () => {
   try {
     const { Artwork } = db;
     const videosToCheck = await Artwork.findAll({
       where: {
-        status: {
-          [Op.not]: 'available',
-        }
+        [Op.or]: [
+          {
+            status: {
+              [Op.not]: 'available',
+            }
+          },
+          {
+            thumbnailUri: {
+              [Op.like]: `%/default%`,
+            }
+          }
+        ],
       },
       limit: 10,
     });
@@ -38,6 +47,14 @@ const handler = async () => {
       }
     }
     console.log('Successfully updated video statuses');
+  } catch (e) {
+    console.error('Error checking videos statuses', e);
+  }
+};
+
+const handler = async () => {
+  try {
+    await checkStatus();
   } catch (e) {
     console.error('Error checking videos statuses', e);
   }
