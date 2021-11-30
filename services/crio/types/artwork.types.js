@@ -23,7 +23,7 @@ module.exports = gql`
     thumbnailUri: String!
     title: String!
     description: String!
-    status: String!
+    status: String
   }
 
   input DeletingParams {
