@@ -1,6 +1,9 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
+  scalar Date
+  scalar JSON
+
   input UserAttributes {
     userId: String
     fbUserId: String
@@ -9,6 +12,20 @@ module.exports = gql`
     firstName: String
     lastName: String
     visibility: [String]
+  }
+
+  type Voucher {
+    tier1: Int
+    tier2: Int
+    tier3: Int
+  }
+
+  type Payment {
+    customerEmail: String
+    periodStart: Date
+    periodEnd: Date
+    subscriptionStatus: String
+    lastEventSnapshot: JSON
   }
 
   type UserInfo {
@@ -20,6 +37,15 @@ module.exports = gql`
     firstName: String
     lastName: String
     visibility: [String]
+    isCreator: Boolean
+    vouchers: Voucher
+    payment: Payment
+  }
+
+  input MailInfo {
+    tier: String!
+    creatorId: ID!
+    message: String!
   }
 
   type Query {
@@ -31,5 +57,6 @@ module.exports = gql`
   type Mutation {
     saveUser: UserInfo!
     updateUser(attributes: UserAttributes!): UserInfo!
+    contactCreator(mailInfo: MailInfo!): Boolean!
   }
 `;

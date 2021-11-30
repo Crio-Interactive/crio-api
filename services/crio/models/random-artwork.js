@@ -1,8 +1,7 @@
-'use strict';
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class RandomArtwork extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,44 +12,43 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  User.init(
+  RandomArtwork.init(
     {
       userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      name: {
         type: DataTypes.STRING,
-        unique: true,
+        allowNull: false,
       },
       fbUserId: {
         type: DataTypes.STRING,
       },
-      email: {
+      videoUri: {
         type: DataTypes.STRING,
-        validate: {
-          isEmail: {
-            msg: 'Please input valid email address',
-          },
-        },
+        unique: true,
+        allowNull: false,
       },
-      username: {
+      thumbnailUri: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+      },
+      title: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      firstName: {
-        type: DataTypes.STRING,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-      },
-      visibility: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        defaultValue: ['name', 'username', 'email'],
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: 'User',
-      timestamps: true,
-      paranoid: true,
+      modelName: 'RandomArtwork',
+      timestamps: false,
     },
   );
-  return User;
+  return RandomArtwork;
 };

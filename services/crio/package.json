@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "env-cmd -f .env npx sequelize-cli db:migrate",
+    "migrate": "npx sequelize-cli db:migrate",
     "migrate:undo": "npx sequelize-cli db:migrate:undo"
   },
   "author": "",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@apollo/federation": "^0.26.0",
     "@graphql-tools/merge": "^6.2.14",
+    "@sendgrid/mail": "^7.6.0",
     "@tidepoollabs/node-auth": "^1.0.3",
     "@tidepoollabs/node-lambda-logs": "^1.0.0",
     "apollo-server": "^2.21.0",

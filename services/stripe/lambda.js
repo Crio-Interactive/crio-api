@@ -1,50 +1,28 @@
-const logs = require('@tidepoollabs/node-lambda-logs');
+const path = require('path');
 const AWS = require('aws-sdk');
-const lambda = new AWS.Lambda();
+const logs = require('@tidepoollabs/node-lambda-logs');
+const handler = require('./handler');
+const { formatResponse, formatError } = require('./utils');
 
 logs.init(process.env.SENTRY_DSN);
+const lambda = new AWS.Lambda();
 
-exports.handler = logs.wrapHandler(async function(event, context) {
-  console.log('## ENVIRONMENT VARIABLES: ' + serialize(process.env));
-  console.log('## CONTEXT: ' + serialize(context));
-  console.log('## EVENT: ' + serialize(event));
+exports.handler = logs.wrapHandler(async function(request, context) {
+  // console.log('## ENVIRONMENT VARIABLES: ' + serialize(process.env));
+  // console.log('## CONTEXT: ' + serialize(context));
+  console.log('## WebHook Event: ----> \n' + request);
   try {
-    console.log('event', event);
-    console.log('context', context);
-    return formatResponse(true);
+    if (request.httpMethod === 'POST') {
+      const result = await handler(request.headers, request.body);
+      return formatResponse(result);
+    } else {
+      return Promise.reject({
+        statusCode: 403,
+        code: 403,
+        message: 'Method is not allowed',
+      });
+    }
   } catch (error) {
     return formatError(error);
   }
 }, { captureTimeoutWarning: false });
-
-function formatResponse(body) {
-  return {
-    'statusCode': 200,
-    'headers': {
-      'Content-Type': 'application/json',
-    },
-    'isBase64Encoded': false,
-    'body': body,
-  };
-}
-
-function formatError(error) {
-  return  {
-    'statusCode': error.statusCode,
-    'headers': {
-      'Content-Type': 'text/plain',
-      'x-amzn-ErrorType': error.code,
-    },
-    'isBase64Encoded': false,
-    'body': error.code + ': ' + error.message,
-  };
-}
-
-// Use SDK client
-function getAccountSettings() {
-  return lambda.getAccountSettings().promise();
-}
-
-function serialize(object) {
-  return JSON.stringify(object, null, 2);
-}

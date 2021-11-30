@@ -4,7 +4,7 @@
   "description": "cron jobs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon check-videos/test.js"
   },
   "author": "",
   "dependencies": {
@@ -15,5 +15,8 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.9.0"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
 }

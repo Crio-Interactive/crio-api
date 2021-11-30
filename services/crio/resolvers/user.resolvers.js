@@ -1,6 +1,10 @@
+const sendMail = require('../config/mail');
+
 module.exports = {
   UserInfo: {
-    creator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.userId),
+    isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
+    vouchers: async (parent, {}, { models }) => models.Voucher.findOne({ where: { userId: parent.id }}),
+    payment: async (parent, {}, { models }) => models.Payment.findOne({ where: { userId: parent.id }}),
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
@@ -40,6 +44,43 @@ module.exports = {
         });
         return updatedUser?.[0].dataValues;
       } catch (e) {
+        return e;
+      }
+    },
+    contactCreator: async (_, { mailInfo }, { user, models, loaders }) => {
+      try {
+        const fan = await loaders.userByUserId.load(user.attributes.sub);
+        const creator = await loaders.userById.load(mailInfo.creatorId);
+        const tierKey = `tier${mailInfo.tier}`;
+        const vouchers = await models.Voucher.findOne({
+          where: {
+            userId: fan.id,
+          }
+        });
+        if (vouchers[tierKey] <= 0) {
+          return Promise.reject('Not enough vouchers!');
+        }
+        const res = await sendMail({
+          to: creator.email,
+          subject: `Request for service: Tier ${mailInfo.tier}`,
+          cc: fan.email,
+          text: `
+            The Fan ${fan.email} messaged you -
+
+            ${mailInfo.message}
+
+            For reply, please, write to this email address - ${fan.email}!
+
+            Kind regards, Crio team.
+          `,
+        });
+        if (res) {
+          vouchers[tierKey] = vouchers[tierKey] - 1;
+          await vouchers.save();
+          return true;
+        }
+      } catch (e) {
+        console.log(JSON.stringify(e, null, 2));
         return e;
       }
     },

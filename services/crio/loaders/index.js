@@ -31,19 +31,6 @@ const loaders = (models, user) => {
           ),
       );
     }),
-    followingsByUserId: new DataLoader(userIds =>
-      models.Following.findAll({
-        raw: true,
-        attributes: ['User.id', 'userId', 'User.firstName', 'User.lastName', 'User.username'],
-        include: {
-          attributes: [],
-          model: models.User,
-        },
-        where: {
-          userId: userIds,
-        },
-      }).then(followings => userIds.map(userId => followings.find(user => user.userId == userId))),
-    ),
     artworkById: new DataLoader(async artworkIds => {
       const result = await models.Artwork.findAll({
         where: {
@@ -62,6 +49,21 @@ const loaders = (models, user) => {
       models.Artwork.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
+        attributes: [
+          'id',
+          ['id', 'artworkId'],
+          'userId',
+          'videoUri',
+          'thumbnailUri',
+          'title',
+          'description',
+          'status',
+          'User.fbUserId',
+          [models.sequelize.literal(`
+            CASE WHEN \'name\'= ANY("User"."visibility") THEN CONCAT("User"."firstName", \' \', "User"."lastName")
+                 WHEN \'username\'= ANY("User"."visibility") THEN "username"
+                 ELSE "User"."email" END`), 'name'],
+        ],
         include: {
           attributes: [],
           model: models.User,
