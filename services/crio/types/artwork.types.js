@@ -18,7 +18,7 @@ module.exports = gql`
     artworkId: ID
     userId: ID!
     fbUserId: String!
-    name: String
+    name: String!
     videoUri: String!
     thumbnailUri: String!
     title: String!
