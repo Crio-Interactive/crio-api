@@ -42,6 +42,12 @@ module.exports = gql`
     payment: Payment
   }
 
+  input MailInfo {
+    tier: String!
+    creatorId: ID!
+    message: String!
+  }
+
   type Query {
     me: UserInfo!
     getUser(id: ID!): UserInfo
@@ -51,5 +57,6 @@ module.exports = gql`
   type Mutation {
     saveUser: UserInfo!
     updateUser(attributes: UserAttributes!): UserInfo!
+    contactCreator(mailInfo: MailInfo!): Boolean!
   }
 `;
