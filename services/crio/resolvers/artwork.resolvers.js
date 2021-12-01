@@ -18,12 +18,12 @@ module.exports = {
       if (user) {
         creatorIds = await models.RandomArtwork.findAll({
           raw: true,
-          attributes: ['UserId'],
-          group: ['UserId'],
+          attributes: ['userId'],
+          group: ['userId'],
           order: [models.sequelize.literal('Random()')],
         });
       }
-      return { count, creatorIds: creatorIds.map(({ id }) => id) }
+      return { count, creatorIds: creatorIds.map(({ userId }) => userId) }
     },
     getRandomArtworks: async (_, { params: { count, userId, artworkId, limit = 15, offset = 0 } }, { models }) => models.RandomArtwork.findAll({
       ...(userId ? { where: { userId, artworkId: { [models.sequelize.Sequelize.Op.ne]: artworkId } } } : {}),
