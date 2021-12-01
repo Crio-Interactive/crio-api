@@ -12,7 +12,19 @@ module.exports = {
       }
       return loaders.artworksByUserId.load(userId);
     },
-    getRandomArtworksCount: async (_, {}, { models }) => models.RandomArtwork.count(),
+    getRandomArtworksInfo: async (_, {}, { user, models }) => {
+      const count = await models.RandomArtwork.count();
+      let creatorIds = [];
+      if (user) {
+        creatorIds = await models.RandomArtwork.findAll({
+          raw: true,
+          attributes: ['UserId'],
+          group: ['UserId'],
+          order: [models.sequelize.literal('Random()')],
+        });
+      }
+      return { count, creatorIds: creatorIds.map(({ id }) => id) }
+    },
     getRandomArtworks: async (_, { params: { count, userId, artworkId, limit = 15, offset = 0 } }, { models }) => models.RandomArtwork.findAll({
       ...(userId ? { where: { userId, artworkId: { [models.sequelize.Sequelize.Op.ne]: artworkId } } } : {}),
       order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],

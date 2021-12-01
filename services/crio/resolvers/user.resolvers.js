@@ -9,17 +9,6 @@ module.exports = {
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
-    getCreatorUserIds: async (_, {}, { models }) => {
-      const creators = await models.Creator.findAll({ attributes: ['email'] });
-      const ids = await models.User.findAll({
-        raw: true,
-        attributes: ['id'],
-        where: { email: creators.map(({ dataValues }) => dataValues.email) },
-        group: ['id'],
-        order: [models.sequelize.literal('Random()')],
-      });
-      return ids.map(({ id }) => id);
-    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, models }) => {
