@@ -38,11 +38,18 @@ module.exports = gql`
     offset: Int
   }
 
+
+  type feedArtworks {
+    artworks: [WorkDetail!]!
+    userArtworks: [WorkDetail!]!
+  }
+
   type Query {
     getArtworks: [Artwork!]!
     getUserArtworks(id: ID): [WorkDetail!]!
     getRandomArtworksCount: Int!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
+    getRandomArtworksForFeed(params: paginationParams!): feedArtworks!
   }
 
   type Mutation {

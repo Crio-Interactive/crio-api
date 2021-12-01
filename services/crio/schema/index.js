@@ -17,7 +17,7 @@ module.exports = applyMiddleware(
     Query: {
       me: isAuthenticated,
       getUser: isAuthenticated,
-      getCreatorUsers: isAuthenticated,
+      // getCreatorUserIds: isNotAuthenticated,
       getFollowings: isAuthenticated,
       isFollowing: isAuthenticated,
       getUploadUrl: isAuthenticated,
