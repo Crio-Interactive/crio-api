@@ -12,13 +12,38 @@ module.exports = {
       }
       return loaders.artworksByUserId.load(userId);
     },
-    getRandomArtworksCount: async (_, {}, { models }) => models.RandomArtwork.count(),
+    getRandomArtworksInfo: async (_, {}, { user, models }) => {
+      const count = await models.RandomArtwork.count();
+      let creatorIds = [];
+      if (user) {
+        creatorIds = await models.RandomArtwork.findAll({
+          raw: true,
+          attributes: ['userId'],
+          group: ['userId'],
+          order: [models.sequelize.literal('Random()')],
+        });
+      }
+      return { count, creatorIds: creatorIds.map(({ userId }) => userId) }
+    },
     getRandomArtworks: async (_, { params: { count, userId, artworkId, limit = 15, offset = 0 } }, { models }) => models.RandomArtwork.findAll({
       ...(userId ? { where: { userId, artworkId: { [models.sequelize.Sequelize.Op.ne]: artworkId } } } : {}),
-      order: [models.sequelize.literal(`id % ${count}`)],
+      order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],
       limit,
       offset,
     }),
+    getRandomArtworksForFeed: async (_, { params: { count, userId, offset = 0, limit = 15 } }, { models }) => {
+      const artworks = await models.RandomArtwork.findAll({
+        order: [models.sequelize.literal(`id % ${count}`)],
+        limit,
+        offset,
+      });
+      const userArtworks = await models.RandomArtwork.findAll({
+        where: { userId },
+        order: [models.sequelize.literal('Random()')],
+        limit: 16,
+      });
+      return { artworks, userArtworks };
+    }
   },
   Mutation: {
     createArtwork: async (_, { videoUri }, { user, loaders, models }) => {
