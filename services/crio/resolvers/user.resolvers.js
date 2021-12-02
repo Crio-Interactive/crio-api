@@ -45,12 +45,14 @@ module.exports = {
       try {
         const fan = await loaders.userByUserId.load(user.attributes.sub);
         const creator = await loaders.userById.load(mailInfo.creatorId);
+        console.log('fan creator', fan, creator);
         const tierKey = `tier${mailInfo.tier}`;
         const vouchers = await models.Voucher.findOne({
           where: {
             userId: fan.id,
           }
         });
+        console.log('vouchers', vouchers);
         if (vouchers[tierKey] <= 0) {
           return Promise.reject('Not enough vouchers!');
         }
@@ -68,6 +70,7 @@ module.exports = {
             Kind regards, Crio team.
           `,
         });
+        console.log('mailres', res);
         if (res) {
           vouchers[tierKey] = vouchers[tierKey] - 1;
           await vouchers.save();
