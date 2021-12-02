@@ -11,7 +11,6 @@ logs.init(process.env.SENTRY_DSN);
 const server = new ApolloServer({
   schema,
   plugins: [logs.apolloPlugin],
-  formatError: err => ({ message: err.message, status: err.status }),
   context: async ({ event }) => {
     const user = await getUserFromRequest(event);
     const modelLoaders = loaders(models, user);
