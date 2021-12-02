@@ -29,7 +29,7 @@ module.exports = {
                   FROM "RandomArtworks") AS artworks
           WHERE artworks.RowNumber = 1
           ORDER BY Random()
-          LIMIT 2
+          LIMIT 4
         `);
       }
       return { count, creatorIds, artworks };
