@@ -5,6 +5,7 @@ const { SENDGRID_API_KEY, SENDGRID_VERIFIED_SENDER, SENDGRID_CC_EMAILS } = requi
 sgMail.setApiKey(SENDGRID_API_KEY);
 
 const sendMail = async ({ to, subject, text, cc }) => {
+  console.log('SENDGRID_API_KEY', SENDGRID_API_KEY);
   return sgMail.send({
     to,
     from: SENDGRID_VERIFIED_SENDER,

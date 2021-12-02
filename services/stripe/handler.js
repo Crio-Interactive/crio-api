@@ -8,6 +8,7 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
       userId,
     }
   });
+  console.log('foundVoucher', voucher);
   if (voucher) {
     for (const key of Object.keys(params)) {
       voucher[key] = params[key];
@@ -31,15 +32,22 @@ const handler = async (headers, body) => {
         const periodDetails = invoice.lines?.data?.[0].period;
         const startDateStamp = periodDetails?.start || invoice.period_start;
         const endDateStamp = periodDetails?.end || addUnixTimeMonth(invoice.period_start, 1);
+        console.log('invoice', invoice);
+        console.log('periodDetails', periodDetails);
+        console.log('startDateStamp', startDateStamp);
+        console.log('endDateStamp', endDateStamp);
 
         const periodStartDate = fromUnixTime(startDateStamp);
         const periodEndDate = fromUnixTime(endDateStamp);
+
+        console.log('periods', periodStartDate, periodEndDate);
 
         let paymentDetails = await DB.Payment.findOne({
           where: {
             customerEmail: invoice.customer_email,
           },
         });
+        console.log('paymentDetails', paymentDetails);
         if (paymentDetails) {
           await DB.Payment.update({
             periodStart: periodStartDate,
@@ -51,12 +59,14 @@ const handler = async (headers, body) => {
               customerEmail: invoice.customer_email,
             },
           });
+          console.log('payment updated');
         } else {
           const user = await DB.User.findOne({
             where: {
               email: invoice.customer_email,
             },
           });
+          console.log('user ===>', user);
           if (user) {
             paymentDetails = await DB.Payment.create({
               userId: user.id,
@@ -66,6 +76,7 @@ const handler = async (headers, body) => {
               subscriptionStatus: 'active',
               lastEventSnapshot: invoice,
             });
+            console.log('created-paymentDetails', paymentDetails);
           }
         }
         if (paymentDetails) {
@@ -75,6 +86,7 @@ const handler = async (headers, body) => {
             tier2: 5,
             tier3: 5,
           });
+          console.log('voucher updated');
         }
         break;
       }

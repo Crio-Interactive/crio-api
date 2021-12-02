@@ -15,15 +15,24 @@ module.exports = {
     getRandomArtworksInfo: async (_, {}, { user, models }) => {
       const count = await models.RandomArtwork.count();
       let creatorIds = [];
+      let artworks = [];
       if (user) {
-        creatorIds = await models.RandomArtwork.findAll({
+        creatorIds = (await models.RandomArtwork.findAll({
           raw: true,
           attributes: ['userId'],
           group: ['userId'],
           order: [models.sequelize.literal('Random()')],
-        });
+        })).map(({ userId }) => userId);
+        [artworks] = await models.sequelize.query(`
+          SELECT  *
+          FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
+                  FROM "RandomArtworks") AS artworks
+          WHERE artworks.RowNumber = 1
+          ORDER BY Random()
+          LIMIT 2
+        `);
       }
-      return { count, creatorIds: creatorIds.map(({ userId }) => userId) }
+      return { count, creatorIds, artworks };
     },
     getRandomArtworks: async (_, { params: { count, userId, artworkId, limit = 15, offset = 0 } }, { models }) => models.RandomArtwork.findAll({
       ...(userId ? { where: { userId, artworkId: { [models.sequelize.Sequelize.Op.ne]: artworkId } } } : {}),
@@ -33,6 +42,7 @@ module.exports = {
     }),
     getRandomArtworksForFeed: async (_, { params: { count, userId, offset = 0, limit = 15 } }, { models }) => {
       const artworks = await models.RandomArtwork.findAll({
+        raw: true,
         order: [models.sequelize.literal(`id % ${count}`)],
         limit,
         offset,
@@ -42,7 +52,12 @@ module.exports = {
         order: [models.sequelize.literal('Random()')],
         limit: 16,
       });
-      return { artworks, userArtworks };
+
+      return {
+        topArtworks: artworks.slice(0, 8),
+        userArtworks,
+        artworks: artworks.length >= 8 + 15 ? artworks.slice(8) : undefined,
+      };
     }
   },
   Mutation: {
