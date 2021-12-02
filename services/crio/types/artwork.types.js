@@ -42,11 +42,13 @@ module.exports = gql`
   type randomArtworksInfo {
     count: Int!
     creatorIds: [ID!]!
+    artworks: [WorkDetail!]!
   }
 
   type feedArtworks {
-    artworks: [WorkDetail!]!
-    userArtworks: [WorkDetail!]!
+    topArtworks: [WorkDetail]
+    userArtworks: [WorkDetail]
+    artworks: [WorkDetail]
   }
 
   type Query {
