@@ -54,9 +54,9 @@ module.exports = {
       });
 
       return {
-        topArtworks: artworks.slice(0, 8),
+        topArtworks: offset ? undefined : artworks.slice(0, 8),
         userArtworks,
-        artworks: artworks.length >= 8 + 15 ? artworks.slice(8) : undefined,
+        artworks: offset ? artworks : artworks.slice(8),
       };
     }
   },
