@@ -44,24 +44,23 @@ module.exports = {
     contactCreator: async (_, { mailInfo }, { user, models, loaders }) => {
       try {
         const fan = await loaders.userByUserId.load(user.attributes.sub);
-        console.log('____fan____', fan);
         const creator = await loaders.userById.load(mailInfo.creatorId);
-        console.log('____creator', creator);
         const tierKey = `tier${mailInfo.tier}`;
         const vouchers = await models.Voucher.findOne({
           where: {
             userId: fan.id,
           }
         });
-        console.log('vouchers', vouchers);
         if (vouchers[tierKey] <= 0) {
           return Promise.reject('Not enough vouchers!');
         }
-        const res = await sendMail({
-          to: creator.email,
-          subject: `Request for service: Tier ${mailInfo.tier}`,
-          cc: fan.email,
-          text: `
+
+        try {
+          const res = await sendMail({
+            to: creator.email,
+            subject: `Request for service: Tier ${mailInfo.tier}`,
+            cc: fan.email,
+            text: `
             The Fan ${fan.email} messaged you -
 
             ${mailInfo.message}
@@ -70,12 +69,14 @@ module.exports = {
 
             Kind regards, Crio team.
           `,
-        });
-        console.log('mailres', res);
-        if (res) {
-          vouchers[tierKey] = vouchers[tierKey] - 1;
-          await vouchers.save();
-          return true;
+          });
+          if (res) {
+            vouchers[tierKey] = vouchers[tierKey] - 1;
+            await vouchers.save();
+            return true;
+          }
+        } catch (e) {
+          console.log('error sending email', e.response.body);
         }
       } catch (e) {
         console.log('error contactCreator', e);
