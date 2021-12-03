@@ -44,8 +44,9 @@ module.exports = {
     contactCreator: async (_, { mailInfo }, { user, models, loaders }) => {
       try {
         const fan = await loaders.userByUserId.load(user.attributes.sub);
+        console.log('____fan____', fan);
         const creator = await loaders.userById.load(mailInfo.creatorId);
-        console.log('fan creator', fan, creator);
+        console.log('____creator', creator);
         const tierKey = `tier${mailInfo.tier}`;
         const vouchers = await models.Voucher.findOne({
           where: {
@@ -77,7 +78,7 @@ module.exports = {
           return true;
         }
       } catch (e) {
-        console.log(JSON.stringify(e, null, 2));
+        console.log('error contactCreator', e);
         return e;
       }
     },
