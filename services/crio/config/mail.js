@@ -10,7 +10,7 @@ const sendMail = async ({ to, subject, text, cc }) => {
     from: SENDGRID_VERIFIED_SENDER,
     subject,
     text,
-    cc: [SENDGRID_CC_EMAILS, cc],
+    cc: [SENDGRID_CC_EMAILS, cc].filter(email => (email !== to)),
   });
 };
 

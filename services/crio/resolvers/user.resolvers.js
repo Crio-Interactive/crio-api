@@ -77,6 +77,7 @@ module.exports = {
           }
         } catch (e) {
           console.log('error sending email', e.response.body);
+          throw e;
         }
       } catch (e) {
         console.log('error contactCreator', e);
