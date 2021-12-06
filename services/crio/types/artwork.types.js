@@ -23,7 +23,7 @@ module.exports = gql`
     thumbnailUri: String!
     title: String!
     description: String!
-    status: String!
+    status: String
   }
 
   input DeletingParams {
@@ -39,11 +39,24 @@ module.exports = gql`
     offset: Int
   }
 
+  type randomArtworksInfo {
+    count: Int!
+    creatorIds: [ID!]!
+    artworks: [WorkDetail!]!
+  }
+
+  type feedArtworks {
+    topArtworks: [WorkDetail]
+    userArtworks: [WorkDetail]
+    artworks: [WorkDetail]
+  }
+
   type Query {
     getArtworks: [Artwork!]!
     getUserArtworks(id: ID): [WorkDetail!]!
-    getRandomArtworksCount: Int!
+    getRandomArtworksInfo: randomArtworksInfo!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
+    getRandomArtworksForFeed(params: paginationParams!): feedArtworks!
   }
 
   type Mutation {

@@ -9,12 +9,6 @@ module.exports = {
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
-    getCreatorUsers: async (_, {}, { models }) => {
-      const creators = await models.Creator.findAll({ attributes: ['email'] });
-      return models.User.findAll({
-        where: { email: creators.map(({ dataValues }) => dataValues.email) },
-      });
-    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, models }) => {
@@ -60,11 +54,13 @@ module.exports = {
         if (vouchers[tierKey] <= 0) {
           return Promise.reject('Not enough vouchers!');
         }
-        const res = await sendMail({
-          to: creator.email,
-          subject: `Request for service: Tier ${mailInfo.tier}`,
-          cc: fan.email,
-          text: `
+
+        try {
+          const res = await sendMail({
+            to: creator.email,
+            subject: `Request for service: Tier ${mailInfo.tier}`,
+            cc: fan.email,
+            text: `
             The Fan ${fan.email} messaged you -
 
             ${mailInfo.message}
@@ -73,14 +69,18 @@ module.exports = {
 
             Kind regards, Crio team.
           `,
-        });
-        if (res) {
-          vouchers[tierKey] = vouchers[tierKey] - 1;
-          await vouchers.save();
-          return true;
+          });
+          if (res) {
+            vouchers[tierKey] = vouchers[tierKey] - 1;
+            await vouchers.save();
+            return true;
+          }
+        } catch (e) {
+          console.log('error sending email', e.response.body);
+          throw e;
         }
       } catch (e) {
-        console.log(JSON.stringify(e, null, 2));
+        console.log('error contactCreator', e);
         return e;
       }
     },
