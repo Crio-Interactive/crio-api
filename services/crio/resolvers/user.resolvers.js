@@ -5,10 +5,15 @@ module.exports = {
     isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
     vouchers: async (parent, {}, { models }) => models.Voucher.findOne({ where: { userId: parent.id }}),
     payment: async (parent, {}, { models }) => models.Payment.findOne({ where: { userId: parent.id }}),
+    artworksCount: (parent, {}, { models }) => models.Artwork.count({ where: { userId: parent.id }}),
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
-    getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
+    getUser: async (_, { id }, { loaders, models }) => {
+      const user = await loaders.userById.load(id);
+      const artworksCount = await models.Artwork.count({ where: { userId: id }});
+      return { ...user.dataValues, artworksCount };
+    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, models }) => {

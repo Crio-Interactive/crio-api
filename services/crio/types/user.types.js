@@ -40,6 +40,7 @@ module.exports = gql`
     isCreator: Boolean
     vouchers: Voucher
     payment: Payment
+    artworksCount: Int
   }
 
   input MailInfo {
