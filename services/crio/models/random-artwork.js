@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       fbUserId: {
         type: DataTypes.STRING,
       },
+      artworkId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       videoUri: {
         type: DataTypes.STRING,
         unique: true,

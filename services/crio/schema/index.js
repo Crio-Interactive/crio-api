@@ -34,7 +34,7 @@ module.exports = applyMiddleware(
       deleteArtwork: isAuthenticated,
       updateMetadata: isAuthenticated,
       createSubscriber: isAuthenticated,
-      contactCreator: isNotAuthenticated,
+      contactCreator: isAuthenticated,
     },
   }),
 );
