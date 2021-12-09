@@ -26,6 +26,7 @@ module.exports = gql`
     periodEnd: Date
     subscriptionStatus: String
     lastEventSnapshot: JSON
+    subscriptionCancel: Boolean
   }
 
   type UserInfo {
