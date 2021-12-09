@@ -90,9 +90,10 @@ module.exports = {
         return e;
       }
     },
-    cancelSubscription: async (_, { email }) => {
+    cancelSubscription: async (_, {}, { user, loaders, models }) => {
       try {
-        await sendMail({
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        const res = await sendMail({
           to: SENDGRID_CC_EMAILS,
           subject: 'Request for cancel subscription',
           text: `
@@ -103,7 +104,12 @@ module.exports = {
           Kind regards, Crio team.
         `,
         });
-        return true;
+        if (res) {
+          const { id } = await loaders.userByUserId.load(user.attributes.sub);
+          console.log(id)
+          await models.Payment.update({ subscriptionCancel: true }, { where: { userId: id } });
+          return true;
+        }
       } catch (e) {
         console.log('error sending cancel subscription email', e.response.body);
         throw e;
