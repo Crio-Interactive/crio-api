@@ -1,4 +1,5 @@
 const sendMail = require('../config/mail');
+const { SENDGRID_CC_EMAILS } = require('../config/environment');
 
 module.exports = {
   UserInfo: {
@@ -89,5 +90,24 @@ module.exports = {
         return e;
       }
     },
+    cancelSubscription: async (_, { email }) => {
+      try {
+        await sendMail({
+          to: SENDGRID_CC_EMAILS,
+          subject: 'Request for cancel subscription',
+          text: `
+          The Fan ${email} request to cancel the subscription.
+
+          For reply, please, write to this email address - ${email}!
+
+          Kind regards, Crio team.
+        `,
+        });
+        return true;
+      } catch (e) {
+        console.log('error sending cancel subscription email', e.response.body);
+        throw e;
+      }
+    }
   },
 };
