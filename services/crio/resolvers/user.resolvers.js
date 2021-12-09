@@ -92,7 +92,8 @@ module.exports = {
     },
     cancelSubscription: async (_, {}, { user, loaders, models }) => {
       try {
-        const res = await sendMail({
+          const { id, email } = await loaders.userByUserId.load(user.attributes.sub);
+          const res = await sendMail({
           to: SENDGRID_CC_EMAILS,
           subject: 'Request for cancel subscription',
           text: `
@@ -104,7 +105,6 @@ module.exports = {
         `,
         });
         if (res) {
-          const { id } = await loaders.userByUserId.load(user.attributes.sub);
           await models.Payment.update({ subscriptionCancel: true }, { where: { userId: id } });
           return true;
         }
