@@ -75,15 +75,6 @@ const loaders = (models, user) => {
         userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
       ),
     ),
-    isSubscriber: new DataLoader(async subscriberIds => {
-      const { id } = await self.userByUserId.load(user.attributes.sub);
-      return models.Subscriber.findAll({ where: { userId: id, subscriberId: subscriberIds } }).then(
-        subscribers =>
-          subscriberIds.map(
-            subscriberId => !!subscribers.find(subscriber => subscriber.subscriberId == subscriberId),
-          ),
-      );
-    }),
   };
   return self;
 };

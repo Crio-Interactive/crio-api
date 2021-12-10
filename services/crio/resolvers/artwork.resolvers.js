@@ -56,7 +56,7 @@ module.exports = {
       return {
         topArtworks: offset ? undefined : artworks.slice(0, 8),
         userArtworks,
-        artworks: offset ? artworks : artworks.slice(8),
+        artworks: offset ? artworks : artworks.length < 8 + 15 ? undefined : artworks.slice(8),
       };
     }
   },

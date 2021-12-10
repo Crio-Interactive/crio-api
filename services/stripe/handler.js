@@ -82,9 +82,9 @@ const handler = async (headers, body) => {
         if (paymentDetails) {
           await createOrUpdateVoucher({
             userId: paymentDetails.userId,
-            tier1: 5,
-            tier2: 5,
-            tier3: 5,
+            tier1: 1,
+            tier2: 2,
+            tier3: 2,
           });
           console.log('voucher updated');
         }

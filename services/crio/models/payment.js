@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    subscriptionCancel: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     lastEventSnapshot: {
       type: DataTypes.JSONB,
       allowNull: false,
