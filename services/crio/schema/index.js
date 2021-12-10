@@ -23,6 +23,7 @@ module.exports = applyMiddleware(
       getUploadImageLink: isAuthenticated,
       getArtworks: isAuthenticated,
       getUserArtworks: isAuthenticated,
+      getRandomArtworksForFeed: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,
