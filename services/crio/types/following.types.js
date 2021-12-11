@@ -11,6 +11,7 @@ module.exports = gql`
   type FollowingInfo {
     id: ID!
     userId: ID!
+    providerType: String!
     fbUserId: String!
     name: String!
     email: String!

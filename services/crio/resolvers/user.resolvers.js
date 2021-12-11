@@ -22,9 +22,11 @@ module.exports = {
         const attr = user.attributes;
         const existingUser = await models.User.findOne({ where: { userId: attr.sub } });
         if (!existingUser) {
+          const identity = JSON.parse(attr.identities)[0];
           return models.User.create({
             userId: attr.sub,
-            fbUserId: user.username.substring(user.username.indexOf('_') + 1),
+            providerType: identity.providerType,
+            fbUserId: identity.userId,
             email: attr.email,
             username: `${attr.given_name}_${attr.family_name}`,
             firstName: attr.given_name,

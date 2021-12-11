@@ -13,8 +13,13 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true,
       },
+      providerType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       fbUserId: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,

@@ -6,6 +6,7 @@ module.exports = gql`
 
   input UserAttributes {
     userId: String
+    providerType: String
     fbUserId: String
     email: String
     username: String
@@ -32,7 +33,8 @@ module.exports = gql`
   type UserInfo {
     id: ID
     userId: String
-    fbUserId: String
+    providerType: String!
+    fbUserId: String!
     email: String
     username: String
     firstName: String

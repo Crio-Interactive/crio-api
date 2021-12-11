@@ -22,8 +22,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      providerType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       fbUserId: {
         type: DataTypes.STRING,
+        allowNull: false,
       },
       artworkId: {
         type: DataTypes.INTEGER,
