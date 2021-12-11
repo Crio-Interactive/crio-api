@@ -29,7 +29,7 @@ module.exports = {
                   FROM "RandomArtworks") AS artworks
           WHERE artworks.RowNumber = 1
           ORDER BY Random()
-          LIMIT 2
+          LIMIT 4
         `);
       }
       return { count, creatorIds, artworks };
@@ -56,7 +56,7 @@ module.exports = {
       return {
         topArtworks: offset ? undefined : artworks.slice(0, 8),
         userArtworks,
-        artworks: offset ? artworks : artworks.slice(8),
+        artworks: offset ? artworks : artworks.length < 8 + 15 ? undefined : artworks.slice(8),
       };
     }
   },

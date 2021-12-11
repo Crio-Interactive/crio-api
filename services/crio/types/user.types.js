@@ -26,6 +26,7 @@ module.exports = gql`
     periodEnd: Date
     subscriptionStatus: String
     lastEventSnapshot: JSON
+    subscriptionCancel: Boolean
   }
 
   type UserInfo {
@@ -40,6 +41,7 @@ module.exports = gql`
     isCreator: Boolean
     vouchers: Voucher
     payment: Payment
+    artworksCount: Int
   }
 
   input MailInfo {
@@ -57,5 +59,6 @@ module.exports = gql`
     saveUser: UserInfo!
     updateUser(attributes: UserAttributes!): UserInfo!
     contactCreator(mailInfo: MailInfo!): Boolean!
+    cancelSubscription: Boolean!
   }
 `;

@@ -1,14 +1,20 @@
 const sendMail = require('../config/mail');
+const { SENDGRID_CC_EMAILS } = require('../config/environment');
 
 module.exports = {
   UserInfo: {
     isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
     vouchers: async (parent, {}, { models }) => models.Voucher.findOne({ where: { userId: parent.id }}),
     payment: async (parent, {}, { models }) => models.Payment.findOne({ where: { userId: parent.id }}),
+    artworksCount: (parent, {}, { models }) => models.Artwork.count({ where: { userId: parent.id }}),
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
-    getUser: async (_, { id }, { loaders }) => loaders.userById.load(id),
+    getUser: async (_, { id }, { loaders, models }) => {
+      const user = await loaders.userById.load(id);
+      const artworksCount = await models.Artwork.count({ where: { userId: id }});
+      return { ...user.dataValues, artworksCount };
+    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, models }) => {
@@ -84,5 +90,28 @@ module.exports = {
         return e;
       }
     },
+    cancelSubscription: async (_, {}, { user, loaders, models }) => {
+      try {
+          const { id, email } = await loaders.userByUserId.load(user.attributes.sub);
+          const res = await sendMail({
+          to: SENDGRID_CC_EMAILS,
+          subject: 'Request for cancel subscription',
+          text: `
+          The Fan ${email} request to cancel the subscription.
+
+          For reply, please, write to this email address - ${email}!
+
+          Kind regards, Crio team.
+        `,
+        });
+        if (res) {
+          await models.Payment.update({ subscriptionCancel: true }, { where: { userId: id } });
+          return true;
+        }
+      } catch (e) {
+        console.log('error sending cancel subscription email', e.response.body);
+        throw e;
+      }
+    }
   },
 };
