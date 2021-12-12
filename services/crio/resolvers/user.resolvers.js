@@ -17,16 +17,16 @@ module.exports = {
     },
   },
   Mutation: {
-    saveUser: async (_, {}, { user, models }) => {
+    saveUser: async (_, {}, { user, loaders, models }) => {
       try {
         const attr = user.attributes;
-        const existingUser = await models.User.findOne({ where: { userId: attr.sub } });
+        const existingUser = await loaders.userByUserId.load(attr.sub);
         if (!existingUser) {
           const identity = JSON.parse(attr.identities)[0];
           return models.User.create({
             userId: attr.sub,
             providerType: identity.providerType,
-            fbUserId: identity.userId,
+            providerUserId: identity.userId,
             email: attr.email,
             username: `${attr.given_name}_${attr.family_name}`,
             firstName: attr.given_name,

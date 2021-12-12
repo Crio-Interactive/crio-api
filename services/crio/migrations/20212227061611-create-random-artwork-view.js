@@ -8,7 +8,7 @@ module.exports = {
       "Artworks"."id" AS "artworkId",
       "Artworks"."userId",
       "providerType",
-      "fbUserId",
+      "providerUserId",
       CASE WHEN 'name'= ANY("visibility") THEN CONCAT("firstName", ' ', "lastName")
            WHEN 'username'= ANY("visibility") THEN "username"
            ELSE "Users"."email" END

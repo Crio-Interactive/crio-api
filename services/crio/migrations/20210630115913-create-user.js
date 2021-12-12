@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      fbUserId: {
+      providerUserId: {
         type: Sequelize.STRING,
         allowNull: false,
       },

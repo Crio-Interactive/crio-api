@@ -12,7 +12,7 @@ module.exports = gql`
     id: ID!
     userId: ID!
     providerType: String!
-    fbUserId: String!
+    providerUserId: String!
     name: String!
     email: String!
     username: String!
