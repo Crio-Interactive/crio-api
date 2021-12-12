@@ -53,12 +53,12 @@ module.exports = gql`
   }
 
   type Query {
-    me: UserInfo!
+    me: UserInfo
     getUser(id: ID!): UserInfo
   }
 
   type Mutation {
-    saveUser: UserInfo!
+    saveUser: Boolean!
     updateUser(attributes: UserAttributes!): UserInfo!
     contactCreator(mailInfo: MailInfo!): Boolean!
     cancelSubscription: Boolean!

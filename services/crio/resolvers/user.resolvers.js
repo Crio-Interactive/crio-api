@@ -23,7 +23,7 @@ module.exports = {
         const existingUser = await loaders.userByUserId.load(attr.sub);
         if (!existingUser) {
           const identity = JSON.parse(attr.identities)[0];
-          return models.User.create({
+          await models.User.create({
             userId: attr.sub,
             providerType: identity.providerType,
             providerUserId: identity.userId,
@@ -33,7 +33,7 @@ module.exports = {
             lastName: attr.family_name,
           });
         }
-        return existingUser;
+        return true;
       } catch (e) {
         return e;
       }
