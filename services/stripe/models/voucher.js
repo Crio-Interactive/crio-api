@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Voucher.init({
     userId: {
-      allowNull: false,
       type: DataTypes.INTEGER,
+      allowNull: false,
       unique: true,
     },
     tier1: {
@@ -38,5 +38,6 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
     paranoid: true,
   });
+
   return Voucher;
 };

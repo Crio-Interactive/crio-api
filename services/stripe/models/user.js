@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: {
         type: DataTypes.STRING,
+        allowNull: false,
         unique: true,
       },
       providerType: {
@@ -29,6 +30,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       email: {
         type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
         validate: {
           isEmail: {
             msg: 'Please input valid email address',
@@ -47,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       visibility: {
         type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false,
         defaultValue: ['name', 'username', 'email'],
       },
     },
@@ -57,5 +61,6 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
     },
   );
+
   return User;
 };

@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Payment.init({
     userId: {
-      type:  DataTypes.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
     },
@@ -40,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     subscriptionCancel: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
     },
     lastEventSnapshot: {
       type: DataTypes.JSONB,
@@ -52,5 +51,6 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
     paranoid: true,
   });
+
   return Payment;
 };

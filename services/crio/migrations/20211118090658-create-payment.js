@@ -3,32 +3,32 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Payments', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true,
+        allowNull: false,
       },
       userId: {
         type:  Sequelize.INTEGER,
-        allowNull: false,
-        unique: true,
         references: {
           model: {
             tableName: 'Users',
           },
           key: 'id',
         },
+        allowNull: false,
+        unique: true,
       },
       customerEmail: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
         references: {
           model: {
             tableName: 'Users',
           },
           key: 'email',
         },
+        allowNull: false,
+        unique: true,
       },
       periodStart: {
         type: Sequelize.DATE,
@@ -42,17 +42,20 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      subscriptionCancel: {
+        type: Sequelize.BOOLEAN,
+      },
       lastEventSnapshot: {
         type: Sequelize.JSONB,
         allowNull: false,
       },
       createdAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
       },
       updatedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
       },
       deletedAt: {
         type: Sequelize.DATE,

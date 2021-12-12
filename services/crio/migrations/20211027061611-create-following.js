@@ -4,13 +4,13 @@ module.exports = {
   up: (queryInterface, Sequelize) =>
     queryInterface.createTable('Followings', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
       userId: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: 'Users',
@@ -30,15 +30,14 @@ module.exports = {
         allowNull: false,
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
       },
       deletedAt: {
-        allowNull: true,
         type: Sequelize.DATE,
       },
     }),

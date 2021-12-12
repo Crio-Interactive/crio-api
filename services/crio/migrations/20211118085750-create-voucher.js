@@ -3,21 +3,21 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Vouchers', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true,
+        allowNull: false,
       },
       userId: {
-        allowNull: false,
         type: Sequelize.INTEGER,
-        unique: true,
         references: {
           model: {
             tableName: 'Users',
           },
           key: 'id',
         },
+        allowNull: false,
+        unique: true,
       },
       tier1: {
         type: Sequelize.INTEGER,
@@ -32,12 +32,12 @@ module.exports = {
         allowNull: false,
       },
       createdAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
       },
       updatedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
       },
       deletedAt: {
         type: Sequelize.DATE,
