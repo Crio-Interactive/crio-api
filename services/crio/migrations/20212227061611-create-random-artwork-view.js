@@ -7,6 +7,7 @@ module.exports = {
       row_number() OVER () AS id,
       "Artworks"."id" AS "artworkId",
       "Artworks"."userId",
+      "providerType",
       "fbUserId",
       CASE WHEN 'name'= ANY("visibility") THEN CONCAT("firstName", ' ', "lastName")
            WHEN 'username'= ANY("visibility") THEN "username"

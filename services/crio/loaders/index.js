@@ -58,6 +58,7 @@ const loaders = (models, user) => {
           'title',
           'description',
           'status',
+          'User.providerType',
           'User.fbUserId',
           [models.sequelize.literal(`
             CASE WHEN \'name\'= ANY("User"."visibility") THEN CONCAT("User"."firstName", \' \', "User"."lastName")

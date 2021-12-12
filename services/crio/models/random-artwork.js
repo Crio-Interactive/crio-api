@@ -1,3 +1,4 @@
+'use strict';
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -22,8 +23,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      providerType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       fbUserId: {
         type: DataTypes.STRING,
+        allowNull: false,
       },
       artworkId: {
         type: DataTypes.INTEGER,
@@ -54,5 +60,6 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     },
   );
+
   return RandomArtwork;
 };

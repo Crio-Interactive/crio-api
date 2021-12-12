@@ -33,6 +33,7 @@ module.exports = {
           {
             id: current.id,
             userId: current.userId,
+            providerType: current.providerType,
             fbUserId: current.fbUserId,
             name: current.name,
             email: current.email,

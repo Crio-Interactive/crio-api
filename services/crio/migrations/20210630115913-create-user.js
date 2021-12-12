@@ -4,20 +4,28 @@ module.exports = {
   up: (queryInterface, Sequelize) =>
     queryInterface.createTable('Users', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
       userId: {
         type: Sequelize.STRING,
+        allowNull: false,
         unique: true,
       },
+      providerType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       fbUserId: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
       username: {
         type: Sequelize.STRING,
@@ -29,16 +37,20 @@ module.exports = {
       lastName: {
         type: Sequelize.STRING,
       },
-      createdAt: {
+      visibility: {
+        type: DataTypes.ARRAY(Sequelize.STRING),
         allowNull: false,
+        defaultValue: ['name', 'username', 'email'],
+      },
+      createdAt: {
         type: Sequelize.DATE,
+        allowNull: false,
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
       },
       deletedAt: {
-        allowNull: true,
         type: Sequelize.DATE,
       },
     }),
