@@ -36,5 +36,6 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
     },
   );
+
   return Creator;
 };

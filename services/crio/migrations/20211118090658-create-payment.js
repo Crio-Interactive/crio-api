@@ -42,6 +42,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      subscriptionCancel: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       lastEventSnapshot: {
         type: Sequelize.JSONB,
         allowNull: false,

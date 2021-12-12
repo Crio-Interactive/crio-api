@@ -23,6 +23,7 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
+        unique: true,
       },
       username: {
         type: Sequelize.STRING,
@@ -33,6 +34,11 @@ module.exports = {
       },
       lastName: {
         type: Sequelize.STRING,
+      },
+      visibility: {
+        type: DataTypes.ARRAY(Sequelize.STRING),
+        allowNull: false,
+        defaultValue: ['name', 'username', 'email'],
       },
       createdAt: {
         allowNull: false,
