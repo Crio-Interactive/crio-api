@@ -21,13 +21,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       videoUri: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
+        unique: true,
       },
       thumbnailUri: {
         type: DataTypes.STRING,
+        allowNull: false,
         unique: true,
-        allowNull: true,
       },
       title: {
         type: DataTypes.STRING,
