@@ -15,11 +15,11 @@ module.exports = {
         unique: true,
       },
       providerType: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       fbUserId: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       email: {
@@ -38,7 +38,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       visibility: {
-        type: DataTypes.ARRAY(Sequelize.STRING),
+        type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
         defaultValue: ['name', 'username', 'email'],
       },
