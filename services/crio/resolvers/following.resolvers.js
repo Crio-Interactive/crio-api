@@ -34,7 +34,7 @@ module.exports = {
             id: current.id,
             userId: current.userId,
             providerType: current.providerType,
-            fbUserId: current.fbUserId,
+            providerUserId: current.providerUserId,
             name: current.name,
             email: current.email,
             firstName: current.firstName,
