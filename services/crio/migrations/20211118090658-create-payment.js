@@ -43,7 +43,7 @@ module.exports = {
         allowNull: false,
       },
       subscriptionCancel: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
       },
       lastEventSnapshot: {
         type: Sequelize.JSONB,
