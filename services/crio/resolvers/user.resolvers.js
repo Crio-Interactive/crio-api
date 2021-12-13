@@ -32,7 +32,7 @@ module.exports = {
             providerType: identity.providerType,
             providerUserId: identity.userId,
             email: attr.email,
-            username: `${attr.given_name}_${attr.family_name}`.toLowerCase,
+            username: `${attr.given_name}_${attr.family_name}`.toLowerCase(),
             firstName: attr.given_name,
             lastName: attr.family_name,
             avatar,
