@@ -37,6 +37,9 @@ module.exports = {
       lastName: {
         type: Sequelize.STRING,
       },
+      avatar: {
+        type: Sequelize.STRING,
+      },
       visibility: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,

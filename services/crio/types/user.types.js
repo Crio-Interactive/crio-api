@@ -39,6 +39,7 @@ module.exports = gql`
     username: String
     firstName: String
     lastName: String
+    avatar: String
     visibility: [String]
     isCreator: Boolean
     vouchers: Voucher
