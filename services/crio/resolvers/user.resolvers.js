@@ -23,14 +23,19 @@ module.exports = {
         const existingUser = await loaders.userByUserId.load(attr.sub);
         if (!existingUser) {
           const identity = JSON.parse(attr.identities)[0];
+          let avatar;
+          if (identity.providerType === 'Google') {
+            avatar = attr.picture.substring('https://lh3.googleusercontent.com/'.length, attr.picture.indexOf('s96-c'));
+          }
           await models.User.create({
             userId: attr.sub,
             providerType: identity.providerType,
             providerUserId: identity.userId,
             email: attr.email,
-            username: `${attr.given_name}_${attr.family_name}`,
+            username: `${attr.given_name}_${attr.family_name}`.toLowerCase,
             firstName: attr.given_name,
             lastName: attr.family_name,
+            avatar,
           });
         }
         return true;

@@ -48,6 +48,9 @@ module.exports = (sequelize, DataTypes) => {
       lastName: {
         type: DataTypes.STRING,
       },
+      avatar: {
+        type: DataTypes.STRING,
+      },
       visibility: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,

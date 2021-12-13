@@ -19,6 +19,7 @@ module.exports = gql`
     userId: ID!
     providerType: String!
     providerUserId: String!
+    avatar: String
     name: String!
     videoUri: String!
     thumbnailUri: String!
