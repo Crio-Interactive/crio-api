@@ -45,7 +45,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       thumbnailUri: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
       },
       title: {

@@ -15,6 +15,10 @@ module.exports = gql`
     visibility: [String]
   }
 
+  type response {
+    error: String
+  }
+
   type Voucher {
     tier1: Int
     tier2: Int
@@ -59,7 +63,7 @@ module.exports = gql`
   }
 
   type Mutation {
-    saveUser: Boolean!
+    saveUser: response!
     updateUser(attributes: UserAttributes!): UserInfo!
     contactCreator(mailInfo: MailInfo!): Boolean!
     cancelSubscription: Boolean!
