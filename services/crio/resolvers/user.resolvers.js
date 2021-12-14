@@ -20,7 +20,19 @@ module.exports = {
     saveUser: async (_, {}, { user, loaders, models }) => {
       try {
         const attr = user.attributes;
-        const existingUser = await loaders.userByUserId.load(attr.sub);
+        if (!attr.email) {
+          return { error: 'You need to use a Facebook account associated with an email' };
+        }
+        let existingUser = await models.User.count({
+          where: {
+            email: attr.email,
+            userId: { [models.sequelize.Sequelize.Op.ne]: attr.sub },
+          }
+        });
+        if (existingUser) {
+          return { error: `${attr.email} email address is already registered` };
+        }
+        existingUser = await loaders.userByUserId.load(attr.sub);
         if (!existingUser) {
           const identity = JSON.parse(attr.identities)[0];
           let avatar;
@@ -38,7 +50,7 @@ module.exports = {
             avatar,
           });
         }
-        return true;
+        return {};
       } catch (e) {
         return e;
       }
