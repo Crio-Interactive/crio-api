@@ -54,6 +54,7 @@ const handler = async (headers, body) => {
             periodEnd: periodEndDate,
             subscriptionStatus: 'active',
             lastEventSnapshot: invoice,
+            subscriptionCancel: false,
           }, {
             where: {
               customerEmail: invoice.customer_email,
