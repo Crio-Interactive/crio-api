@@ -40,6 +40,7 @@ module.exports = {
             firstName: current.firstName,
             lastName: current.lastName,
             username: current.username,
+            avatar: current.avatar,
             visibility: current.visibility,
             artworks: [artwork],
           }
