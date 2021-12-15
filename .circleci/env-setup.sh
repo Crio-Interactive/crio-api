@@ -34,7 +34,7 @@ then
     echo "export STACK_REGION=us-east-1"
     echo "export APP_NAME=crio-production"
     echo "export SENDGRID_VERIFIED_SENDER=info@criointeractive.com"
-    echo "export SENDGRID_CC_EMAILS=narine@tidepoollabs.com"
+    echo "export SENDGRID_CC_EMAILS=klodi.beqiri@criointeractive.com"
   } >> "$BASH_ENV"
 else
   #should not be executed
