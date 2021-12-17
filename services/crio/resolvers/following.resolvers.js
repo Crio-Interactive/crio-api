@@ -18,8 +18,7 @@ module.exports = {
 
       return followings.reduce((acc, current) => {
         const artwork = {
-          videoUri: current.videoUri,
-          thumbnailUri: current.thumbnailUri,
+          videoId: current.videoId,
           title: current.title,
           description: current.description,
         };

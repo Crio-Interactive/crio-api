@@ -38,13 +38,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      videoUri: {
+      videoId: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false,
-      },
-      thumbnailUri: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
       title: {

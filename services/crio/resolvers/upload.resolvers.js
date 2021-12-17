@@ -16,7 +16,6 @@ module.exports = {
           uri: result.data.uri,
           upload_link: result.data.upload.upload_link,
           status: result.data.status,
-          pictures_uri: result.data.metadata.connections.pictures.uri,
         };
       } catch (e) {
         return e;
@@ -24,11 +23,8 @@ module.exports = {
     },
     getUploadImageLink: async (_, { artworkId }, { loaders }) => {
       try {
-        const { pictures_uri } = await loaders.artworkById.load(artworkId);
-        const {
-          data: { uri, link },
-        } = await vimeoClient.post(pictures_uri);
-
+        const { videoId } = await loaders.artworkById.load(artworkId);
+        const { data: { uri, link } } = await vimeoClient.post(`/videos/${videoId}/pictures`);
         return { uri, link };
       } catch (e) {
         return e;
@@ -38,20 +34,15 @@ module.exports = {
   Mutation: {
     updateMetadata: async (_, { params }, { loaders }) => {
       try {
-        const { artworkId, title, description, image, mime, uri } = params;
+        const { artworkId, title, description, uri } = params;
         const artwork = await loaders.artworkById.load(artworkId);
         if (title && description) {
-          await vimeoClient.patch(artwork.videoUri, { name: title, description });
+          await vimeoClient.patch(`/videos/${artwork.videoId}`, { name: title, description });
           await artwork.update({ title, description });
           return true;
         }
         if (uri) {
           await vimeoClient.patch(uri, { active: true });
-          const videoData = await vimeoClient.get(artwork.videoUri);
-          await models.Artwork.update({
-            status: videoData.data.status,
-            thumbnailUri: videoData.data.pictures.base_link,
-          });
           return true;
         }
         return false;
