@@ -34,7 +34,7 @@ module.exports = gql`
   }
 
   input paginationParams {
-    count: Int!
+    count: Int
     userId: ID
     artworkId: ID
     limit: Int
