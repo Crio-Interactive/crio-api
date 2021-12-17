@@ -19,7 +19,8 @@ module.exports = {
       "email",
       "avatar",
       "visibility",
-      "videoId",
+      "videoUri",
+      "thumbnailUri",
       "title",
       "description"
     FROM "Users" INNER JOIN "Artworks" ON "Users".id = "Artworks"."userId"

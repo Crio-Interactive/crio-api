@@ -2,7 +2,8 @@ const { gql } = require('apollo-server');
 
 module.exports = gql`
   type Work {
-    videoId: String!
+    videoUri: String!
+    thumbnailUri: String!
     title: String!
     description: String!
   }

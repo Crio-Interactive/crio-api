@@ -18,10 +18,14 @@ module.exports = {
         },
         allowNull: false,
       },
-      videoId: {
+      videoUri: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
+      },
+      thumbnailUri: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       title: {
         type: Sequelize.STRING,
@@ -32,6 +36,10 @@ module.exports = {
         allowNull: false,
       },
       status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      pictures_uri: {
         type: Sequelize.STRING,
         allowNull: false,
       },

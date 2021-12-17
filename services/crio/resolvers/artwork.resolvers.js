@@ -61,32 +61,72 @@ module.exports = {
     }
   },
   Mutation: {
-    createArtwork: async (_, { videoId }, { user, loaders, models }) => {
+    createArtwork: async (_, { videoUri }, { user, loaders, models }) => {
       try {
-        const videoData = await vimeoClient.get(`/videos/${videoId}`);
+        const videoData = await vimeoClient.get(videoUri);
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         return models.Artwork.create({
           userId: id,
-          videoId,
+          videoUri,
+          thumbnailUri: videoData?.data?.pictures?.base_link,
           title: videoData?.data?.name,
           description: 'No description',
           status: videoData?.data?.status,
+          pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
         });
       } catch (e) {
         console.log(e);
         return false;
       }
     },
-    deleteArtwork: async (_, { params: { artworkId, videoId } }, { loaders }) => {
+    updateArtworks: async (_, {}, { user, loaders, models }) => {
       try {
-        let id = videoId;
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        const artworks = await models.Artwork.findAll({
+          raw: true,
+          include: {
+            attributes: [],
+            model: models.User,
+          },
+          where: {
+            userId: id,
+            status: ['uploading', 'transcode_starting', 'transcoding'],
+          },
+        });
+        await BlueBird.each(
+          artworks,
+          async item => {
+            try {
+              const { data } = await vimeoClient.get(item.videoUri);
+              if (item.status !== data.status || item.thumbnailUri !== data.pictures.base_link) {
+                await models.Artwork.update(
+                  { status: data.status, thumbnailUri: data.pictures.base_link },
+                  {
+                    where: { id: item.id },
+                  },
+                );
+              }
+            } catch (e) {
+              return;
+            }
+          },
+          { concurrency: 5 },
+        );
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+    deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders }) => {
+      try {
+        let uri = videoUri;
         if (artworkId) {
           const artwork = await loaders.artworkById.load(artworkId);
-          id = artwork.videoId;
+          uri = artwork.videoUri;
           await artwork.destroy();
         }
-        if (id) {
-          await vimeoClient.delete(`/videos/${id}`);
+        if (uri) {
+          await vimeoClient.delete(uri);
         }
         return true;
       } catch (e) {

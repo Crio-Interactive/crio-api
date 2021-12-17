@@ -5,10 +5,12 @@ module.exports = gql`
     id: ID!
     artworkId: ID!
     userId: ID!
-    videoId: String!
+    videoUri: String!
+    thumbnailUri: String!
     title: String!
     description: String!
     status: String!
+    pictures_uri: String!
   }
 
   type WorkDetail {
@@ -19,7 +21,8 @@ module.exports = gql`
     providerUserId: String!
     avatar: String
     name: String!
-    videoId: String!
+    videoUri: String!
+    thumbnailUri: String!
     title: String!
     description: String!
     status: String
@@ -27,7 +30,7 @@ module.exports = gql`
 
   input DeletingParams {
     artworkId: ID
-    videoId: String
+    videoUri: String
   }
 
   input paginationParams {
@@ -59,7 +62,7 @@ module.exports = gql`
   }
 
   type Mutation {
-    createArtwork(videoId: String!): Artwork
+    createArtwork(videoUri: String!): Artwork
     updateArtworks: Boolean
     deleteArtwork(params: DeletingParams!): Boolean
   }

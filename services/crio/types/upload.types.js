@@ -5,6 +5,7 @@ module.exports = gql`
     uri: String!
     upload_link: String!
     status: String!
+    pictures_uri: String!
   }
 
   type UploadImageInfo {
@@ -14,6 +15,8 @@ module.exports = gql`
 
   input ThumbnailParams {
     artworkId: ID!
+    image: String
+    mime: String
     title: String
     description: String
     uri: String

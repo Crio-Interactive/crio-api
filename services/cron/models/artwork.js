@@ -19,10 +19,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      videoId: {
+      videoUri: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+      },
+      thumbnailUri: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       title: {
         type: DataTypes.STRING,
@@ -33,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      pictures_uri: {
         type: DataTypes.STRING,
         allowNull: false,
       },
