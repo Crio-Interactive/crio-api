@@ -16,8 +16,8 @@ module.exports = gql`
     name: String!
     email: String!
     username: String!
-    firstName: String!
-    lastName: String!
+    firstName: String
+    lastName: String
     avatar: String
     visibility: [String!]!
     artworks: [Work!]!
@@ -25,6 +25,7 @@ module.exports = gql`
 
   type Query {
     getFollowings: [FollowingInfo]!
+    getFollowingsCount: Int!
     isFollowing(followingId: ID!): Boolean!
   }
 
