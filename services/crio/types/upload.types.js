@@ -15,8 +15,6 @@ module.exports = gql`
 
   input ThumbnailParams {
     artworkId: ID!
-    image: String
-    mime: String
     title: String
     description: String
     uri: String

@@ -68,7 +68,7 @@ module.exports = {
         return models.Artwork.create({
           userId: id,
           videoUri,
-          thumbnailUri: videoData?.data?.pictures?.base_link,
+          thumbnailUri: 'https://i.vimeocdn.com/video/default',
           title: videoData?.data?.name,
           description: 'No description',
           status: videoData?.data?.status,
