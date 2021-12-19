@@ -47,7 +47,11 @@ module.exports = {
         ];
       }, []);
     },
-    isFollowing: async (_, { followingId }, { loaders }) => loaders.isFollowing.load(followingId),
+    getFollowingsCount: async (_, {}, { user, loaders, models }) => {
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        return models.Following.count({ where: { followingId: id } });
+    },
+    isFollowing: (_, { followingId }, { loaders }) => loaders.isFollowing.load(followingId),
   },
   Mutation: {
     createFollowing: async (_, { followingId }, { user, loaders, models }) => {
