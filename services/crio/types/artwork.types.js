@@ -34,7 +34,7 @@ module.exports = gql`
   }
 
   input paginationParams {
-    count: Int!
+    count: Int
     userId: ID
     artworkId: ID
     limit: Int
@@ -54,7 +54,7 @@ module.exports = gql`
   }
 
   type Query {
-    getArtworks: [Artwork!]!
+    getArtwork(artworkId: ID!): Artwork!
     getUserArtworks(id: ID): [WorkDetail!]!
     getRandomArtworksInfo: randomArtworksInfo!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!

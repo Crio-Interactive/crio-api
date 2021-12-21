@@ -45,6 +45,13 @@ const loaders = (models, user) => {
 
       return artworkIds.map(id => map[id]);
     }),
+    artworkById: new DataLoader(ids =>
+      models.Artwork.findAll({
+        where: {
+          id: ids,
+        },
+      }).then(artworks => ids.map(id => artworks.find(artwork => artwork.id == id))),
+    ),
     artworksByUserId: new DataLoader(async userIds =>
       models.Artwork.findAll({
         raw: true,
