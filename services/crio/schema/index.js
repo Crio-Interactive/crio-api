@@ -22,7 +22,7 @@ module.exports = applyMiddleware(
       isFollowing: isAuthenticated,
       getUploadUrl: isAuthenticated,
       getUploadImageLink: isAuthenticated,
-      getArtworks: isAuthenticated,
+      getArtwork: isAuthenticated,
       getUserArtworks: isAuthenticated,
       getRandomArtworksForFeed: isAuthenticated,
     },
