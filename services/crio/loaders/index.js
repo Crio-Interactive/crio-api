@@ -31,20 +31,6 @@ const loaders = (models, user) => {
           ),
       );
     }),
-    artworkById: new DataLoader(async artworkIds => {
-      const result = await models.Artwork.findAll({
-        where: {
-          id: artworkIds,
-        },
-      });
-
-      const map = result.reduce((acc, item) => {
-        acc[item.id] = item;
-        return acc;
-      }, {});
-
-      return artworkIds.map(id => map[id]);
-    }),
     artworkById: new DataLoader(ids =>
       models.Artwork.findAll({
         where: {
