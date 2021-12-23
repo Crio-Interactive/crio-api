@@ -49,6 +49,7 @@ module.exports = gql`
     vouchers: Voucher
     payment: Payment
     artworksCount: Int
+    followersCount: Int
   }
 
   input MailInfo {

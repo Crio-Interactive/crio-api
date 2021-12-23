@@ -25,7 +25,7 @@ module.exports = gql`
 
   type Query {
     getFollowings: [FollowingInfo]!
-    getFollowingsCount: Int!
+    getFollowersCount: Int!
     isFollowing(followingId: ID!): Boolean!
   }
 

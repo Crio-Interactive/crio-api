@@ -47,7 +47,7 @@ module.exports = {
         ];
       }, []);
     },
-    getFollowingsCount: async (_, {}, { user, loaders, models }) => {
+    getFollowersCount: async (_, {}, { user, loaders, models }) => {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         return models.Following.count({ where: { followingId: id } });
     },

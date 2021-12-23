@@ -18,7 +18,7 @@ module.exports = applyMiddleware(
       me: isAuthenticated,
       getUser: isAuthenticated,
       getFollowings: isAuthenticated,
-      getFollowingsCount: isAuthenticated,
+      getFollowersCount: isAuthenticated,
       isFollowing: isAuthenticated,
       getUploadUrl: isAuthenticated,
       getUploadImageLink: isAuthenticated,
