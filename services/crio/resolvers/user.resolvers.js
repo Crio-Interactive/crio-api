@@ -13,7 +13,8 @@ module.exports = {
     getUser: async (_, { id }, { loaders, models }) => {
       const user = await loaders.userById.load(id);
       const artworksCount = await models.Artwork.count({ where: { userId: id }});
-      return { ...user.dataValues, artworksCount };
+      const followersCount = await models.Following.count({ where: { followingId: id } });
+      return { ...user.dataValues, artworksCount, followersCount };
     },
   },
   Mutation: {
