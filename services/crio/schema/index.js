@@ -16,14 +16,12 @@ module.exports = applyMiddleware(
   shield({
     Query: {
       me: isAuthenticated,
-      getUser: isAuthenticated,
       getFollowings: isAuthenticated,
       getFollowersCount: isAuthenticated,
-      isFollowing: isAuthenticated,
+      // isFollowing: isAuthenticated,
       getUploadUrl: isAuthenticated,
       getUploadImageLink: isAuthenticated,
       getArtwork: isAuthenticated,
-      getUserArtworks: isAuthenticated,
       getRandomArtworksForFeed: isAuthenticated,
     },
     Mutation: {
