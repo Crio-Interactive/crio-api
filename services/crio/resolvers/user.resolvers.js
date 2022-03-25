@@ -51,10 +51,7 @@ module.exports = {
             providerType: identity.providerType,
             providerUserId: identity.userId,
             email: attr.email,
-            username: `${attr.email.substring(
-              0,
-              attr.email.indexOf('@'),
-            )}_${new Date().valueOf()}`.toLowerCase(),
+            username: `${attr.email.substring(0, attr.email.indexOf('@'))}`.toLowerCase(),
             firstName: attr.given_name,
             lastName: attr.family_name,
             avatar,
