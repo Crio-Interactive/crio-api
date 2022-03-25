@@ -61,13 +61,7 @@ const loaders = (models, user) => {
           'User.providerType',
           'User.providerUserId',
           'User.avatar',
-          [
-            models.sequelize.literal(`
-            CASE WHEN \'name\'= ANY("User"."visibility") THEN CONCAT("User"."firstName", \' \', "User"."lastName")
-                 WHEN \'username\'= ANY("User"."visibility") THEN "username"
-                 ELSE "User"."email" END`),
-            'name',
-          ],
+          [models.sequelize.Sequelize.col('username'), 'name'],
         ],
         include: {
           attributes: [],
