@@ -4,16 +4,19 @@ const { SENDGRID_CC_EMAILS } = require('../config/environment');
 module.exports = {
   UserInfo: {
     isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
-    vouchers: async (parent, {}, { models }) => models.Voucher.findOne({ where: { userId: parent.id }}),
-    payment: async (parent, {}, { models }) => models.Payment.findOne({ where: { userId: parent.id }}),
-    artworksCount: (parent, {}, { models }) => models.Artwork.count({ where: { userId: parent.id }}),
+    vouchers: async (parent, {}, { models }) =>
+      models.Voucher.findOne({ where: { userId: parent.id } }),
+    payment: async (parent, {}, { models }) =>
+      models.Payment.findOne({ where: { userId: parent.id } }),
+    artworksCount: (parent, {}, { models }) =>
+      models.Artwork.count({ where: { userId: parent.id } }),
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
-    getUser: async (_, { id }, { loaders, models }) => {
-      const user = await loaders.userById.load(id);
-      const artworksCount = await models.Artwork.count({ where: { userId: id }});
-      const followersCount = await models.Following.count({ where: { followingId: id } });
+    getUser: async (_, { username }, { loaders, models }) => {
+      const user = await loaders.userByUsername.load(username);
+      const artworksCount = await models.Artwork.count({ where: { userId: user.id } });
+      const followersCount = await models.Following.count({ where: { followingId: user.id } });
       return { ...user.dataValues, artworksCount, followersCount };
     },
   },
@@ -28,7 +31,7 @@ module.exports = {
           where: {
             email: attr.email,
             userId: { [models.sequelize.Sequelize.Op.ne]: attr.sub },
-          }
+          },
         });
         if (existingUser) {
           return { error: `${attr.email} email address is already registered` };
@@ -38,14 +41,20 @@ module.exports = {
           const identity = JSON.parse(attr.identities)[0];
           let avatar;
           if (identity.providerType === 'Google') {
-            avatar = attr.picture.substring('https://lh3.googleusercontent.com/'.length, attr.picture.indexOf('s96-c'));
+            avatar = attr.picture.substring(
+              'https://lh3.googleusercontent.com/'.length,
+              attr.picture.indexOf('s96-c'),
+            );
           }
           await models.User.create({
             userId: attr.sub,
             providerType: identity.providerType,
             providerUserId: identity.userId,
             email: attr.email,
-            username: `${attr.given_name}_${attr.family_name}`.toLowerCase(),
+            username: `${attr.email.substring(
+              0,
+              attr.email.indexOf('@'),
+            )}_${new Date().valueOf()}`.toLowerCase(),
             firstName: attr.given_name,
             lastName: attr.family_name,
             avatar,
@@ -70,12 +79,12 @@ module.exports = {
     contactCreator: async (_, { mailInfo }, { user, models, loaders }) => {
       try {
         const fan = await loaders.userByUserId.load(user.attributes.sub);
-        const creator = await loaders.userById.load(mailInfo.creatorId);
+        const creator = await loaders.userByUsername.load(mailInfo.creatorUsername);
         const tierKey = `tier${mailInfo.tier}`;
         const vouchers = await models.Voucher.findOne({
           where: {
             userId: fan.id,
-          }
+          },
         });
         if (vouchers[tierKey] <= 0) {
           return Promise.reject('Not enough vouchers!');
@@ -112,8 +121,8 @@ module.exports = {
     },
     cancelSubscription: async (_, {}, { user, loaders, models }) => {
       try {
-          const { id, email } = await loaders.userByUserId.load(user.attributes.sub);
-          const res = await sendMail({
+        const { id, email } = await loaders.userByUserId.load(user.attributes.sub);
+        const res = await sendMail({
           to: SENDGRID_CC_EMAILS,
           subject: 'Request for cancel subscription',
           text: `
@@ -132,6 +141,6 @@ module.exports = {
         console.log('error sending cancel subscription email', e.response.body);
         throw e;
       }
-    }
+    },
   },
 };

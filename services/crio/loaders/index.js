@@ -17,6 +17,13 @@ const loaders = (models, user) => {
         },
       }).then(users => userIds.map(userId => users.find(user => user.userId == userId))),
     ),
+    userByUsername: new DataLoader(usernames =>
+      models.User.findAll({
+        where: {
+          username: usernames,
+        },
+      }).then(users => usernames.map(username => users.find(user => user.username == username))),
+    ),
     isCreator: new DataLoader(emails =>
       models.Creator.findAll({ where: { email: emails } }).then(users =>
         emails.map(email => !!users.find(user => user.email == email)),
@@ -54,10 +61,13 @@ const loaders = (models, user) => {
           'User.providerType',
           'User.providerUserId',
           'User.avatar',
-          [models.sequelize.literal(`
+          [
+            models.sequelize.literal(`
             CASE WHEN \'name\'= ANY("User"."visibility") THEN CONCAT("User"."firstName", \' \', "User"."lastName")
                  WHEN \'username\'= ANY("User"."visibility") THEN "username"
-                 ELSE "User"."email" END`), 'name'],
+                 ELSE "User"."email" END`),
+            'name',
+          ],
         ],
         include: {
           attributes: [],
