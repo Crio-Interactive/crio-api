@@ -26,10 +26,10 @@ module.exports = gql`
   type Query {
     getFollowings: [FollowingInfo]!
     getFollowersCount: Int!
-    isFollowing(followingId: ID!): Boolean!
+    isFollowing(followingUsername: String!): Boolean!
   }
 
   type Mutation {
-    createFollowing(followingId: ID!): Boolean!
+    createFollowing(followingUsername: String!): Boolean!
   }
 `;

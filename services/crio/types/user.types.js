@@ -54,13 +54,13 @@ module.exports = gql`
 
   input MailInfo {
     tier: String!
-    creatorId: ID!
+    creatorUsername: ID!
     message: String!
   }
 
   type Query {
     me: UserInfo
-    getUser(id: ID!): UserInfo
+    getUser(username: String!): UserInfo
   }
 
   type Mutation {

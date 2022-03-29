@@ -43,20 +43,24 @@ module.exports = {
             avatar: current.avatar,
             visibility: current.visibility,
             artworks: [artwork],
-          }
+          },
         ];
       }, []);
     },
     getFollowersCount: async (_, {}, { user, loaders, models }) => {
-        const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        return models.Following.count({ where: { followingId: id } });
+      const { id } = await loaders.userByUserId.load(user.attributes.sub);
+      return models.Following.count({ where: { followingId: id } });
     },
-    isFollowing: (_, { followingId }, { loaders }) => loaders.isFollowing.load(followingId),
+    isFollowing: async (_, { followingUsername }, { loaders }) => {
+      const { id } = await loaders.userByUsername.load(followingUsername);
+      return loaders.isFollowing.load(id);
+    },
   },
   Mutation: {
-    createFollowing: async (_, { followingId }, { user, loaders, models }) => {
+    createFollowing: async (_, { followingUsername }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        const { id: followingId } = await loaders.userByUsername.load(followingUsername);
         const isFollowing = await loaders.isFollowing.load(followingId);
         if (isFollowing) {
           await models.Following.destroy({ where: { userId: id, followingId } });
