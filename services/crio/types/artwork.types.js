@@ -54,7 +54,7 @@ module.exports = gql`
   }
 
   type Query {
-    getArtwork(artworkId: ID!): Artwork!
+    getArtwork(artworkId: ID!): WorkDetail
     getUserArtworks(username: String): [WorkDetail!]!
     getRandomArtworksInfo: randomArtworksInfo!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
