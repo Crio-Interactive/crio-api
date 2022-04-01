@@ -103,7 +103,7 @@ module.exports = {
         });
       } catch (e) {
         console.log(e);
-        return false;
+        return e;
       }
     },
     deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders }) => {
