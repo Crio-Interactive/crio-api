@@ -27,13 +27,19 @@ module.exports = {
         if (!attr.email) {
           return { error: 'You need to use a Facebook account associated with an email' };
         }
-        let existingUser = await models.User.count({
+        let existingUser = await models.User.findOne({
           where: {
             email: attr.email,
             userId: { [models.sequelize.Sequelize.Op.ne]: attr.sub },
           },
         });
         if (existingUser) {
+          const identity = JSON.parse(attr.identities)[0];
+          console.log(identity);
+          if (identity.userId === existingUser.providerUserId) {
+            await models.User.update({ userId: attr.sub }, { where: { id: existingUser.id } });
+            return {};
+          }
           return { error: `${attr.email} email address is already registered` };
         }
         existingUser = await loaders.userByUserId.load(attr.sub);

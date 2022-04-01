@@ -10,6 +10,7 @@ module.exports = {
     define: {
       paranoid: true,
     },
+    logging: false,
   },
   test: {
     username: 'root',
