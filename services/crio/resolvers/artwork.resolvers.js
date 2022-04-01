@@ -80,8 +80,18 @@ module.exports = {
   Mutation: {
     createArtwork: async (_, { videoUri }, { user, loaders, models }) => {
       try {
+        console.log('Creating artwork for: ', videoUri, vimeoClient);
         const videoData = await vimeoClient.get(videoUri);
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        console.log('Creating....................', {
+          userId: id,
+          videoUri,
+          thumbnailUri: videoData?.data?.pictures?.base_link,
+          title: videoData?.data?.name,
+          description: 'No description',
+          status: videoData?.data?.status,
+          pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
+        });
         return models.Artwork.create({
           userId: id,
           videoUri,
