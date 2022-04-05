@@ -47,7 +47,9 @@ module.exports = {
         }
         if (uri) {
           await vimeoClient.patch(uri, { active: true });
-          const videoData = await vimeoClient.get(`${artwork.videoUri}/pictures?fields=base_link,active`);
+          const videoData = await vimeoClient.get(
+            `${artwork.videoUri}/pictures?fields=base_link,active`,
+          );
           await artwork.update({
             thumbnailUri: videoData.data.data.find(({ active }) => active === true)?.base_link,
           });
@@ -55,7 +57,7 @@ module.exports = {
         }
         return false;
       } catch (e) {
-        return false;
+        return e;
       }
     },
   },

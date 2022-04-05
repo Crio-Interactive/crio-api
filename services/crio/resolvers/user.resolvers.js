@@ -35,7 +35,6 @@ module.exports = {
         });
         if (existingUser) {
           const identity = JSON.parse(attr.identities)[0];
-          console.log(identity);
           if (identity.userId === existingUser.providerUserId) {
             await models.User.update({ userId: attr.sub }, { where: { id: existingUser.id } });
             return {};

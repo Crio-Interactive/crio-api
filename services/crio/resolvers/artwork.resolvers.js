@@ -92,8 +92,7 @@ module.exports = {
           pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
         });
       } catch (e) {
-        console.log(e);
-        return false;
+        return e;
       }
     },
     deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders }) => {
@@ -109,7 +108,7 @@ module.exports = {
         }
         return true;
       } catch (e) {
-        return false;
+        return e;
       }
     },
   },
