@@ -36,13 +36,16 @@ module.exports = {
     },
   },
   Mutation: {
-    updateMetadata: async (_, { params }, { loaders }) => {
+    updateMetadata: async (_, { params }, { loaders, models }) => {
       try {
-        const { artworkId, title, description, uri } = params;
+        const { artworkId, title, description, accessibility, uri } = params;
         const artwork = await loaders.artworkById.load(artworkId);
         if (title && description) {
           await vimeoClient.patch(artwork.videoUri, { name: title, description });
-          await artwork.update({ title, description });
+          await models.Artwork.update(
+            { title, description, accessibility },
+            { where: { id: artworkId } },
+          );
           return true;
         }
         if (uri) {
@@ -50,9 +53,10 @@ module.exports = {
           const videoData = await vimeoClient.get(
             `${artwork.videoUri}/pictures?fields=base_link,active`,
           );
-          await artwork.update({
-            thumbnailUri: videoData.data.data.find(({ active }) => active === true)?.base_link,
-          });
+          await models.Artwork.update(
+            { thumbnailUri: videoData.data.data.find(({ active }) => active === true)?.base_link },
+            { where: { id: artworkId } },
+          );
           return true;
         }
         return false;

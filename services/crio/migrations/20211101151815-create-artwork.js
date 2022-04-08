@@ -1,4 +1,6 @@
 'use strict';
+const { ACCESSIBILITY } = require('../constants');
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.createTable('Artworks', {
@@ -34,6 +36,10 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
         allowNull: false,
+      },
+      accessibility: {
+        type: Sequelize.ENUM,
+        values: Object.values(ACCESSIBILITY),
       },
       status: {
         type: Sequelize.STRING,

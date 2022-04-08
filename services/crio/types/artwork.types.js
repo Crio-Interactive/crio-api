@@ -26,6 +26,7 @@ module.exports = gql`
     title: String!
     description: String!
     status: String
+    accessibility: Accessibility!
   }
 
   input DeletingParams {
