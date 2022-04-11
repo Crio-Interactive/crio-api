@@ -40,6 +40,7 @@ module.exports = {
       accessibility: {
         type: Sequelize.ENUM,
         values: Object.values(ACCESSIBILITY),
+        default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
       status: {
         type: Sequelize.STRING,

@@ -95,13 +95,13 @@ module.exports = {
         return e;
       }
     },
-    deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders }) => {
+    deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders, models }) => {
       try {
         let uri = videoUri;
         if (artworkId) {
           const artwork = await loaders.artworkById.load(artworkId);
           uri = artwork.videoUri;
-          await artwork.destroy();
+          await models.Artwork.destroy({ where: { id: artworkId } });
         }
         if (uri) {
           await vimeoClient.delete(uri);

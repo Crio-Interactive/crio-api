@@ -1,4 +1,4 @@
 module.exports = {
-  SUBSCRIBED: 'subscribed',
+  SUBSCRIBER_ONLY: 'subscriber_only',
   EVERYONE: 'everyone',
 };

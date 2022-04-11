@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+const { ACCESSIBILITY } = require('../constants');
 
 module.exports = (sequelize, DataTypes) => {
   class RandomArtwork extends Model {
@@ -54,6 +55,11 @@ module.exports = (sequelize, DataTypes) => {
       description: {
         type: DataTypes.TEXT,
         allowNull: false,
+      },
+      accessibility: {
+        type: DataTypes.ENUM,
+        values: Object.values(ACCESSIBILITY),
+        default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
     },
     {

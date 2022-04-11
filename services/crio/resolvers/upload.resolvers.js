@@ -41,7 +41,9 @@ module.exports = {
         const { artworkId, title, description, accessibility, uri } = params;
         const artwork = await loaders.artworkById.load(artworkId);
         if (title && description) {
-          await vimeoClient.patch(artwork.videoUri, { name: title, description });
+          if (title !== artwork.title || description !== artwork.description) {
+            await vimeoClient.patch(artwork.videoUri, { name: title, description });
+          }
           await models.Artwork.update(
             { title, description, accessibility },
             { where: { id: artworkId } },
