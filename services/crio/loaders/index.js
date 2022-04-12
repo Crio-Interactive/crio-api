@@ -47,6 +47,7 @@ const loaders = (models, user) => {
           ['id', 'artworkId'],
           'userId',
           'videoUri',
+          'pictures_uri',
           'thumbnailUri',
           'title',
           'description',
