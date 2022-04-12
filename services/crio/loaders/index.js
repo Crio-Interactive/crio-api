@@ -50,6 +50,7 @@ const loaders = (models, user) => {
           'thumbnailUri',
           'title',
           'description',
+          'accessibility',
           'status',
           'User.providerType',
           'User.providerUserId',
