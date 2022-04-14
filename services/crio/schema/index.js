@@ -18,10 +18,8 @@ module.exports = applyMiddleware(
       me: isAuthenticated,
       getFollowings: isAuthenticated,
       getFollowersCount: isAuthenticated,
-      // isFollowing: isAuthenticated,
       getUploadUrl: isAuthenticated,
       getUploadImageLink: isAuthenticated,
-      getArtwork: isAuthenticated,
       getRandomArtworksForFeed: isAuthenticated,
     },
     Mutation: {

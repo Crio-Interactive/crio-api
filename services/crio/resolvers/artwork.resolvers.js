@@ -80,18 +80,8 @@ module.exports = {
   Mutation: {
     createArtwork: async (_, { videoUri }, { user, loaders, models }) => {
       try {
-        console.log('Creating artwork for: ', videoUri, vimeoClient);
         const videoData = await vimeoClient.get(videoUri);
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        console.log('Creating....................', {
-          userId: id,
-          videoUri,
-          thumbnailUri: videoData?.data?.pictures?.base_link,
-          title: videoData?.data?.name,
-          description: 'No description',
-          status: videoData?.data?.status,
-          pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
-        });
         return models.Artwork.create({
           userId: id,
           videoUri,
@@ -102,24 +92,23 @@ module.exports = {
           pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
         });
       } catch (e) {
-        console.log(e);
         return e;
       }
     },
-    deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders }) => {
+    deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders, models }) => {
       try {
         let uri = videoUri;
         if (artworkId) {
           const artwork = await loaders.artworkById.load(artworkId);
           uri = artwork.videoUri;
-          await artwork.destroy();
+          await models.Artwork.destroy({ where: { id: artworkId } });
         }
         if (uri) {
           await vimeoClient.delete(uri);
         }
         return true;
       } catch (e) {
-        return false;
+        return e;
       }
     },
   },

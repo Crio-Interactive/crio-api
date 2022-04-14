@@ -40,6 +40,28 @@ const loaders = (models, user) => {
     }),
     artworkById: new DataLoader(ids =>
       models.Artwork.findAll({
+        raw: true,
+        order: [['updatedAt', 'DESC']],
+        attributes: [
+          'id',
+          ['id', 'artworkId'],
+          'userId',
+          'videoUri',
+          'pictures_uri',
+          'thumbnailUri',
+          'title',
+          'description',
+          'accessibility',
+          'status',
+          'User.providerType',
+          'User.providerUserId',
+          'User.avatar',
+          [models.sequelize.Sequelize.col('username'), 'name'],
+        ],
+        include: {
+          attributes: [],
+          model: models.User,
+        },
         where: {
           id: ids,
         },
@@ -57,6 +79,7 @@ const loaders = (models, user) => {
           'thumbnailUri',
           'title',
           'description',
+          'accessibility',
           'status',
           'User.providerType',
           'User.providerUserId',

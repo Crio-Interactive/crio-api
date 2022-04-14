@@ -2,6 +2,7 @@ const { gql } = require('apollo-server');
 
 module.exports = gql`
   type Work {
+    artworkId: ID!
     videoUri: String!
     thumbnailUri: String!
     title: String!

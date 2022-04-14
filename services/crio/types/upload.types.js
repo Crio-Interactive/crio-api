@@ -17,6 +17,7 @@ module.exports = gql`
     artworkId: ID!
     title: String
     description: String
+    accessibility: Accessibility
     uri: String
   }
 
