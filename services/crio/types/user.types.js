@@ -48,6 +48,8 @@ module.exports = gql`
     payment: Payment
     artworksCount: Int
     followersCount: Int
+    followingsCount: Int
+    isFollowing: Boolean
   }
 
   input MailInfo {
