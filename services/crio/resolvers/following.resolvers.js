@@ -42,7 +42,6 @@ module.exports = {
             lastName: current.lastName,
             username: current.username,
             avatar: current.avatar,
-            visibility: current.visibility,
             artworks: [artwork],
           },
         ];

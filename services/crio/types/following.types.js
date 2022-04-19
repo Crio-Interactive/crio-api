@@ -20,7 +20,6 @@ module.exports = gql`
     firstName: String
     lastName: String
     avatar: String
-    visibility: [String!]!
     artworks: [Work!]!
   }
 
