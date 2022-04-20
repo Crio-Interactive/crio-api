@@ -40,7 +40,8 @@ module.exports = {
       try {
         const { artworkId, title, description, accessibility, uri } = params;
         const artwork = await loaders.artworkById.load(artworkId);
-        if (artwork.userId !== user.id) {
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        if (artwork.userId !== id) {
           throw new Error(`An artwork does not belong to you`);
         }
         if (title && description) {
