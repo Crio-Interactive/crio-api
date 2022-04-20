@@ -16,7 +16,6 @@ module.exports = {
       "username",
       "email",
       "avatar",
-      "visibility",
       "videoUri",
       "thumbnailUri",
       "title",
