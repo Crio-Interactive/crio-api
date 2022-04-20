@@ -15,11 +15,11 @@ module.exports = {
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
-    getUser: async (_, { username }, { loaders, models }) => {
+    getUser: async (_, { username }, { user: loggedInUser, loaders, models }) => {
       const user = await loaders.userByUsername.load(username);
       const artworksCount = await models.Artwork.count({ where: { userId: user.id } });
       const followersCount = await models.Following.count({ where: { followingId: user.id } });
-      const isFollowing = loaders.isFollowing.load(user.id);
+      const isFollowing = loggedInUser ? await loaders.isFollowing.load(user.id) : false;
       return { ...user.dataValues, artworksCount, followersCount, isFollowing };
     },
   },
