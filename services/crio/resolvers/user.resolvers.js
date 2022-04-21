@@ -10,6 +10,8 @@ module.exports = {
       models.Payment.findOne({ where: { userId: parent.id } }),
     artworksCount: (parent, {}, { models }) =>
       models.Artwork.count({ where: { userId: parent.id } }),
+    followersCount: (parent, {}, { models }) =>
+      models.Following.count({ where: { followingId: parent.id } }),
     followingsCount: (parent, {}, { models }) =>
       models.Following.count({ where: { userId: parent.id } }),
   },
@@ -18,9 +20,10 @@ module.exports = {
     getUser: async (_, { username }, { user: loggedInUser, loaders, models }) => {
       const user = await loaders.userByUsername.load(username);
       const artworksCount = await models.Artwork.count({ where: { userId: user.id } });
-      const followersCount = await models.Following.count({ where: { followingId: user.id } });
+      const followersCount = await models.Following.count({ where: { userId: user.id } });
+      const followingsCount = await models.Following.count({ where: { followingId: user.id } });
       const isFollowing = loggedInUser ? await loaders.isFollowing.load(user.id) : false;
-      return { ...user.dataValues, artworksCount, followersCount, isFollowing };
+      return { ...user.dataValues, artworksCount, followersCount, followingsCount, isFollowing };
     },
   },
   Mutation: {
