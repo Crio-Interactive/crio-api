@@ -12,6 +12,7 @@ module.exports = gql`
     username: String
     firstName: String
     lastName: String
+    about: String
   }
 
   type response {
@@ -43,6 +44,7 @@ module.exports = gql`
     firstName: String
     lastName: String
     avatar: String
+    about: String
     isCreator: Boolean
     vouchers: Voucher
     payment: Payment
