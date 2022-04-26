@@ -16,7 +16,6 @@ module.exports = applyMiddleware(
   shield({
     Query: {
       me: isAuthenticated,
-      getFollowings: isAuthenticated,
       getFollowersCount: isAuthenticated,
       getUploadUrl: isAuthenticated,
       getUploadImageLink: isAuthenticated,
