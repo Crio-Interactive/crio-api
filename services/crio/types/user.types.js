@@ -12,7 +12,7 @@ module.exports = gql`
     username: String
     firstName: String
     lastName: String
-    visibility: [String]
+    about: String
   }
 
   type response {
@@ -44,12 +44,14 @@ module.exports = gql`
     firstName: String
     lastName: String
     avatar: String
-    visibility: [String]
+    about: String
     isCreator: Boolean
     vouchers: Voucher
     payment: Payment
     artworksCount: Int
     followersCount: Int
+    followingsCount: Int
+    isFollowing: Boolean
   }
 
   input MailInfo {

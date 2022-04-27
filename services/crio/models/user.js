@@ -51,10 +51,8 @@ module.exports = (sequelize, DataTypes) => {
       avatar: {
         type: DataTypes.STRING,
       },
-      visibility: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false,
-        defaultValue: ['name', 'username', 'email'],
+      about: {
+        type: DataTypes.TEXT,
       },
     },
     {

@@ -41,11 +41,6 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING,
       },
-      visibility: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        allowNull: false,
-        defaultValue: ['name', 'username', 'email'],
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

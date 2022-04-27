@@ -1,13 +1,20 @@
 module.exports = {
   Query: {
-    getFollowings: async (_, {}, { user, loaders, models }) => {
-      const { id } = await loaders.userByUserId.load(user.attributes.sub);
+    getFollowings: async (_, { username }, { user, loaders, models }) => {
+      let userId;
+      if (username) {
+        const { id } = await loaders.userByUsername.load(username);
+        userId = id;
+      } else {
+        const { id: loggedInUserId } = await loaders.userByUserId.load(user.attributes.sub);
+        userId = loggedInUserId;
+      }
       const [followings] = await models.sequelize.query(`
         SELECT "RandomArtworks".*
         FROM "Followings" INNER JOIN "RandomArtworks"
           ON "Followings"."followingId" = "RandomArtworks"."userId"
           AND "Followings"."deletedAt" IS NULL
-        WHERE "Followings"."userId" = ${id}
+        WHERE "Followings"."userId" = ${userId}
           AND (
             SELECT count(*)
             FROM "RandomArtworks" AS "Works"
@@ -42,7 +49,6 @@ module.exports = {
             lastName: current.lastName,
             username: current.username,
             avatar: current.avatar,
-            visibility: current.visibility,
             artworks: [artwork],
           },
         ];
