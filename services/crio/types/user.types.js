@@ -46,12 +46,12 @@ module.exports = gql`
     avatar: String
     about: String
     isCreator: Boolean
-    vouchers: Voucher
     payment: Payment
     artworksCount: Int
     followersCount: Int
     followingsCount: Int
     isFollowing: Boolean
+    followings: [ID]
   }
 
   input MailInfo {

@@ -16,30 +16,42 @@ module.exports = {
       }
       return loaders.artworksByUserId.load(userId);
     },
-    getRandomArtworksInfo: async (_, {}, { user, models }) => {
+    getRandomArtworksInfo: async (_, {}, { models }) => {
       const count = await models.RandomArtwork.count();
-      let creatorIds = [];
-      let artworks = [];
-      if (user) {
-        creatorIds = (
-          await models.RandomArtwork.findAll({
-            raw: true,
-            attributes: ['userId'],
-            group: ['userId'],
-            order: [models.sequelize.literal('Random()')],
-          })
-        ).map(({ userId }) => userId);
-        [artworks] = await models.sequelize.query(`
-          SELECT  *
-          FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
-                  FROM "RandomArtworks") AS artworks
-          WHERE artworks.RowNumber = 1
-          ORDER BY Random()
-          LIMIT 4
-        `);
-      }
-      return { count, creatorIds, artworks };
+      const [artworks] = await models.sequelize.query(`
+        SELECT  *
+        FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
+                FROM "RandomArtworks") AS artworks
+        WHERE artworks.RowNumber = 1
+        ORDER BY Random()
+        LIMIT 4
+      `);
+      return { count, artworks };
     },
+    // getRandomArtworksInfo: async (_, {}, { user, models }) => {
+    //   const count = await models.RandomArtwork.count();
+    //   let creatorIds = [];
+    //   let artworks = [];
+    //   if (user) {
+    //     creatorIds = (
+    //       await models.RandomArtwork.findAll({
+    //         raw: true,
+    //         attributes: ['userId'],
+    //         group: ['userId'],
+    //         order: [models.sequelize.literal('Random()')],
+    //       })
+    //     ).map(({ userId }) => userId);
+    //     [artworks] = await models.sequelize.query(`
+    //       SELECT  *
+    //       FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
+    //               FROM "RandomArtworks") AS artworks
+    //       WHERE artworks.RowNumber = 1
+    //       ORDER BY Random()
+    //       LIMIT 4
+    //     `);
+    //   }
+    //   return { count, creatorIds, artworks };
+    // },
     getRandomArtworks: async (
       _,
       { params: { count, userId, artworkId, limit = 15, offset = 0 } },
@@ -52,6 +64,7 @@ module.exports = {
         order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],
         limit,
         offset,
+        logging: true,
       }),
     getRandomArtworksForFeed: async (
       _,
