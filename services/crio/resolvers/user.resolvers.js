@@ -4,16 +4,16 @@ const { SENDGRID_CC_EMAILS } = require('../config/environment');
 module.exports = {
   UserInfo: {
     isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
-    vouchers: async (parent, {}, { models }) =>
-      models.Voucher.findOne({ where: { userId: parent.id } }),
     payment: async (parent, {}, { models }) =>
       models.Payment.findOne({ where: { userId: parent.id } }),
     artworksCount: (parent, {}, { models }) =>
       models.Artwork.count({ where: { userId: parent.id } }),
     followersCount: (parent, {}, { models }) =>
       models.Following.count({ where: { followingId: parent.id } }),
-    followingsCount: (parent, {}, { models }) =>
-      models.Following.count({ where: { userId: parent.id } }),
+    followings: async (parent, {}, { models }) => {
+      const followings = await models.Following.findAll({ where: { userId: parent.id } });
+      return followings ? followings.map(({ followingId }) => followingId) : [];
+    },
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),

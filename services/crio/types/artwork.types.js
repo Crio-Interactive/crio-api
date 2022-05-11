@@ -44,7 +44,7 @@ module.exports = gql`
 
   type randomArtworksInfo {
     count: Int!
-    creatorIds: [ID!]!
+    creatorIds: [ID!]
     artworks: [WorkDetail!]!
   }
 
