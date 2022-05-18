@@ -59,12 +59,10 @@ module.exports = gql`
     getUserArtworks(username: String): [WorkDetail!]!
     getRandomArtworksInfo: randomArtworksInfo!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
-    getRandomArtworksForFeed(params: paginationParams!): feedArtworks!
   }
 
   type Mutation {
     createArtwork(videoUri: String!): Artwork
-    updateArtworks: Boolean
     deleteArtwork(params: DeletingParams!): Boolean
   }
 `;
