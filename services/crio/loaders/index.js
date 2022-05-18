@@ -97,6 +97,35 @@ const loaders = (models, user) => {
         userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
       ),
     ),
+    productById: new DataLoader(ids =>
+      models.Product.findAll({
+        raw: true,
+        order: [['updatedAt', 'DESC']],
+        attributes: [
+          'id',
+          ['id', 'productId'],
+          'userId',
+          'User.providerType',
+          'User.providerUserId',
+          'User.avatar',
+          'type',
+          'title',
+          'description',
+          'price',
+          'limit',
+          'accessibility',
+          'thumbnail',
+          [models.sequelize.Sequelize.col('username'), 'name'],
+        ],
+        include: {
+          attributes: [],
+          model: models.User,
+        },
+        where: {
+          id: ids,
+        },
+      }).then(products => ids.map(id => products.find(product => product.id == id))),
+    ),
     productsByUserId: new DataLoader(async userIds =>
       models.Product.findAll({
         raw: true,

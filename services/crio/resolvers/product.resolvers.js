@@ -15,6 +15,21 @@ module.exports = {
       }
       return loaders.productsByUserId.load(userId);
     },
+    getMoreProducts: async (_, { params: { userId, productId } }, { models }) => {
+      const userProducts = models.RandomProduct.findAll({
+        where: productId
+          ? { userId, productId: { [models.sequelize.Sequelize.Op.ne]: productId } }
+          : { userId },
+        order: [models.sequelize.literal('Random()')],
+        limit: 3,
+      });
+      const products = models.RandomProduct.findAll({
+        where: { userId: { [models.sequelize.Sequelize.Op.ne]: userId } },
+        order: [models.sequelize.literal('Random()')],
+        limit: 4,
+      });
+      return { userProducts, products };
+    },
     getRandomProductsInfo: async (_, {}, { models }) => {
       const count = await models.RandomProduct.count();
       const [products] = await models.sequelize.query(`
@@ -62,13 +77,14 @@ module.exports = {
     },
     updateProduct: async (_, { attributes }, { user, loaders, models }) => {
       try {
-        const product = await loaders.artworkById.load(attributes.id);
+        const product = await loaders.productById.load(attributes.id);
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         if (product.userId !== id) {
           throw new Error('A product does not belong to you');
         }
         await models.Product.update(
           {
+            userId: product.userId,
             type: attributes.type,
             title: attributes.title,
             description: attributes.description,

@@ -46,11 +46,17 @@ module.exports = gql`
     products: [ProductDetail!]!
   }
 
+  type MoreProducts {
+    userProducts: [ProductDetail!]!
+    products: [ProductDetail!]!
+  }
+
   type Query {
     getProduct(productId: ID!): ProductDetail
     getUserProducts(username: String): [ProductDetail!]!
     getRandomProductsInfo: randomProductsInfo!
     getRandomProducts(params: paginationParams!): [ProductDetail]!
+    getMoreProducts(params: paginationParams!): MoreProducts!
   }
 
   type Mutation {
