@@ -60,7 +60,7 @@ module.exports = {
     createProduct: async (_, { attributes }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        await models.Product.create({
+        console.log({
           userId: id,
           type: attributes.type,
           title: attributes.title,
@@ -69,6 +69,16 @@ module.exports = {
           limit: attributes.limit,
           accessibility: attributes.accessibility,
           thumbnail: attributes.thumbnail,
+        });
+        await models.Product.create({
+          userId: id,
+          type: attributes.type,
+          title: attributes.title,
+          description: attributes.description,
+          price: attributes.price,
+          limit: attributes.limit,
+          accessibility: attributes.accessibility,
+          thumbnail: attributes.thumbnail || null,
         });
         return true;
       } catch (e) {
