@@ -46,6 +46,7 @@ const loaders = (models, user) => {
           'id',
           ['id', 'artworkId'],
           'userId',
+          'username',
           'videoUri',
           'pictures_uri',
           'thumbnailUri',
@@ -56,7 +57,6 @@ const loaders = (models, user) => {
           'User.providerType',
           'User.providerUserId',
           'User.avatar',
-          [models.sequelize.Sequelize.col('username'), 'name'],
         ],
         include: {
           attributes: [],
@@ -75,6 +75,7 @@ const loaders = (models, user) => {
           'id',
           ['id', 'artworkId'],
           'userId',
+          'username',
           'videoUri',
           'thumbnailUri',
           'title',
@@ -84,7 +85,6 @@ const loaders = (models, user) => {
           'User.providerType',
           'User.providerUserId',
           'User.avatar',
-          [models.sequelize.Sequelize.col('username'), 'name'],
         ],
         include: {
           attributes: [],
@@ -105,6 +105,7 @@ const loaders = (models, user) => {
           'id',
           ['id', 'productId'],
           'userId',
+          'username',
           'User.providerType',
           'User.providerUserId',
           'User.avatar',
@@ -115,7 +116,6 @@ const loaders = (models, user) => {
           'limit',
           'accessibility',
           'thumbnail',
-          [models.sequelize.Sequelize.col('username'), 'name'],
         ],
         include: {
           attributes: [],
@@ -134,6 +134,7 @@ const loaders = (models, user) => {
           'id',
           ['id', 'productId'],
           'userId',
+          'username',
           'User.providerType',
           'User.providerUserId',
           'User.avatar',
@@ -144,7 +145,6 @@ const loaders = (models, user) => {
           'limit',
           'accessibility',
           'thumbnail',
-          [models.sequelize.Sequelize.col('username'), 'name'],
         ],
         include: {
           attributes: [],

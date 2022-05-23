@@ -17,10 +17,10 @@ module.exports = gql`
     id: ID!
     artworkId: ID
     userId: ID!
+    username: String!
     providerType: String!
     providerUserId: String!
     avatar: String
-    name: String!
     videoUri: String!
     thumbnailUri: String!
     title: String!

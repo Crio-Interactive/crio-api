@@ -15,10 +15,10 @@ module.exports = gql`
   type ProductDetail {
     productId: ID!
     userId: ID!
+    username: String!
     providerType: String!
     providerUserId: String!
     avatar: String
-    name: String!
     type: String!
     title: String!
     description: String
