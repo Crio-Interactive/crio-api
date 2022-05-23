@@ -15,8 +15,9 @@ module.exports = {
       }
       return loaders.artworksByUserId.load(userId);
     },
-    getRandomArtworksInfo: async (_, {}, { models }) => {
-      const count = await models.RandomArtwork.count();
+    getRandomInfo: async (_, {}, { models }) => {
+      const productsCount = await models.RandomProduct.count();
+      const artworksCount = await models.RandomArtwork.count();
       const [artworks] = await models.sequelize.query(`
         SELECT  *
         FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
@@ -25,7 +26,7 @@ module.exports = {
         ORDER BY Random()
         LIMIT 4
       `);
-      return { count, artworks };
+      return { productsCount, artworksCount, artworks };
     },
     getRandomArtworks: async (
       _,

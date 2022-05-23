@@ -42,9 +42,9 @@ module.exports = gql`
     offset: Int
   }
 
-  type randomArtworksInfo {
-    count: Int!
-    creatorIds: [ID!]
+  type randomInfo {
+    productsCount: Int!
+    artworksCount: Int!
     artworks: [WorkDetail!]!
   }
 
@@ -57,7 +57,7 @@ module.exports = gql`
   type Query {
     getArtwork(artworkId: ID!): WorkDetail
     getUserArtworks(username: String): [WorkDetail!]!
-    getRandomArtworksInfo: randomArtworksInfo!
+    getRandomInfo: randomInfo!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
   }
 
