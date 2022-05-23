@@ -1,6 +1,35 @@
 // https://github.com/graphql/dataloader
 const DataLoader = require('dataloader');
 
+const attributes = [
+  'userId',
+  'User.username',
+  'User.providerType',
+  'User.providerUserId',
+  'User.avatar',
+  'title',
+  'description',
+  'accessibility',
+];
+
+const artworkAttributes = [
+  ...attributes,
+  ['id', 'artworkId'],
+  'status',
+  'videoUri',
+  'pictures_uri',
+  'thumbnailUri',
+];
+
+const productAttributes = [
+  ...attributes,
+  ['id', 'productId'],
+  'type',
+  'price',
+  'limit',
+  'thumbnail',
+];
+
 const loaders = (models, user) => {
   const self = {
     userById: new DataLoader(ids =>
@@ -42,22 +71,7 @@ const loaders = (models, user) => {
       models.Artwork.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: [
-          'id',
-          ['id', 'artworkId'],
-          'userId',
-          'username',
-          'videoUri',
-          'pictures_uri',
-          'thumbnailUri',
-          'title',
-          'description',
-          'accessibility',
-          'status',
-          'User.providerType',
-          'User.providerUserId',
-          'User.avatar',
-        ],
+        attributes: artworkAttributes,
         include: {
           attributes: [],
           model: models.User,
@@ -71,21 +85,7 @@ const loaders = (models, user) => {
       models.Artwork.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: [
-          'id',
-          ['id', 'artworkId'],
-          'userId',
-          'username',
-          'videoUri',
-          'thumbnailUri',
-          'title',
-          'description',
-          'accessibility',
-          'status',
-          'User.providerType',
-          'User.providerUserId',
-          'User.avatar',
-        ],
+        attributes: artworkAttributes,
         include: {
           attributes: [],
           model: models.User,
@@ -101,22 +101,7 @@ const loaders = (models, user) => {
       models.Product.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: [
-          'id',
-          ['id', 'productId'],
-          'userId',
-          'username',
-          'User.providerType',
-          'User.providerUserId',
-          'User.avatar',
-          'type',
-          'title',
-          'description',
-          'price',
-          'limit',
-          'accessibility',
-          'thumbnail',
-        ],
+        attributes: productAttributes,
         include: {
           attributes: [],
           model: models.User,
@@ -130,22 +115,7 @@ const loaders = (models, user) => {
       models.Product.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: [
-          'id',
-          ['id', 'productId'],
-          'userId',
-          'username',
-          'User.providerType',
-          'User.providerUserId',
-          'User.avatar',
-          'type',
-          'title',
-          'description',
-          'price',
-          'limit',
-          'accessibility',
-          'thumbnail',
-        ],
+        attributes: productAttributes,
         include: {
           attributes: [],
           model: models.User,
