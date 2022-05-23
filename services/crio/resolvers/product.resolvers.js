@@ -103,7 +103,7 @@ module.exports = {
             accessibility: attributes.accessibility,
             thumbnail: attributes.thumbnail,
           },
-          { where: { id: attributes.id } },
+          { where: { id: product.id } },
         );
         return true;
       } catch (e) {

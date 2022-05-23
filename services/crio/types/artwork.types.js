@@ -14,7 +14,6 @@ module.exports = gql`
   }
 
   type WorkDetail {
-    id: ID!
     artworkId: ID
     userId: ID!
     username: String!

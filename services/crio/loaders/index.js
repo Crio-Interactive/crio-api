@@ -119,7 +119,7 @@ const loaders = (models, user) => {
     productsByUserId: new DataLoader(async userIds =>
       models.Product.findAll({
         raw: true,
-        order: [['updatedAt', 'DESC']],
+        order: [['id', 'DESC']],
         attributes: productAttributes,
         include: {
           attributes: [],
