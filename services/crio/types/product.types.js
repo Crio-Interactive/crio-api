@@ -6,7 +6,7 @@ module.exports = gql`
     type: String!
     title: String!
     description: String
-    price: Float!
+    price: Float
     limit: Int
     accessibility: Accessibility!
     thumbnail: String
@@ -22,7 +22,7 @@ module.exports = gql`
     type: String!
     title: String!
     description: String
-    price: Float!
+    price: Float
     limit: Int
     accessibility: Accessibility!
     thumbnail: String

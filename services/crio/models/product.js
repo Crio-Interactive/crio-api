@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       price: {
         type: DataTypes.FLOAT,
-        allowNull: false,
       },
       limit: {
         type: DataTypes.SMALLINT,

@@ -79,12 +79,12 @@ const loaders = (models, user) => {
         where: {
           id: ids,
         },
-      }).then(artworks => ids.map(id => artworks.find(artwork => artwork.id == id))),
+      }).then(artworks => ids.map(id => artworks.find(artwork => artwork.artworkId == id))),
     ),
     artworksByUserId: new DataLoader(async userIds =>
       models.Artwork.findAll({
         raw: true,
-        order: [['updatedAt', 'DESC']],
+        order: [['id', 'DESC']],
         attributes: artworkAttributes,
         include: {
           attributes: [],
@@ -109,7 +109,12 @@ const loaders = (models, user) => {
         where: {
           id: ids,
         },
-      }).then(products => ids.map(id => products.find(product => product.id == id))),
+        logging: true,
+      }).then(
+        products =>
+          console.log(ids, products) ||
+          ids.map(id => products.find(product => product.productId == id)),
+      ),
     ),
     productsByUserId: new DataLoader(async userIds =>
       models.Product.findAll({
