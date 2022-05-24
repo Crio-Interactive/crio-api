@@ -94,40 +94,28 @@ module.exports = {
         return e;
       }
     },
-    contactCreator: async (_, { mailInfo }, { user, models, loaders }) => {
+    contactCreator: async (_, { mailInfo }, { user, loaders }) => {
       try {
         const fan = await loaders.userByUserId.load(user.attributes.sub);
-        const creator = await loaders.userByUsername.load(mailInfo.creatorUsername);
-        const tierKey = `tier${mailInfo.tier}`;
-        const vouchers = await models.Voucher.findOne({
-          where: {
-            userId: fan.id,
-          },
-        });
-        if (vouchers[tierKey] <= 0) {
-          return Promise.reject('Not enough vouchers!');
-        }
+        const product = await loaders.productById.load(mailInfo.productId);
+        const creator = await loaders.userById.load(product.userId);
 
         try {
           const res = await sendMail({
             to: creator.email,
-            subject: `Request for service: Tier ${mailInfo.tier}`,
+            subject: `Message for service: ${product.title}`,
             cc: fan.email,
             text: `
             The Fan ${fan.email} messaged you -
 
             ${mailInfo.message}
 
-            For reply, please, write to this email address - ${fan.email}!
+            For reply, please, write to this email address - ${fan.email}
 
             Kind regards, Crio team.
           `,
           });
-          if (res) {
-            vouchers[tierKey] = vouchers[tierKey] - 1;
-            await vouchers.save();
-            return true;
-          }
+          return true;
         } catch (e) {
           console.log('error sending email', e.response.body);
           throw e;

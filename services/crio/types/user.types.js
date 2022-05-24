@@ -56,8 +56,7 @@ module.exports = gql`
   }
 
   input MailInfo {
-    tier: String!
-    creatorUsername: ID!
+    productId: ID!
     message: String!
   }
 
