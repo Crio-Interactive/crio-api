@@ -62,6 +62,6 @@ module.exports = gql`
   type Mutation {
     createProduct(attributes: Product!): Boolean
     updateProduct(attributes: Product!): Boolean
-    deleteProduct(params: DeletingParams!): Boolean
+    deleteProduct(productId: ID!): Boolean
   }
 `;

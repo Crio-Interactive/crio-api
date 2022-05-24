@@ -101,17 +101,23 @@ module.exports = {
             price: attributes.price,
             limit: attributes.limit,
             accessibility: attributes.accessibility,
-            thumbnail: attributes.thumbnail,
+            thumbnail: attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnail,
           },
-          { where: { id: product.id } },
+          { where: { id: attributes.id } },
         );
         return true;
       } catch (e) {
         return e;
       }
     },
-    deleteProduct: async () => {
+    deleteProduct: async (_, { productId }, { user, loaders, models }) => {
       try {
+        const product = await loaders.productById.load(productId);
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        if (product.userId !== id) {
+          throw new Error('A product does not belong to you');
+        }
+        await models.Product.destroy({ where: { id: productId } });
         return true;
       } catch (e) {
         return e;

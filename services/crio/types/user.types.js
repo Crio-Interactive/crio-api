@@ -47,6 +47,7 @@ module.exports = gql`
     about: String
     isCreator: Boolean
     payment: Payment
+    productsCount: Int
     artworksCount: Int
     followersCount: Int
     followingsCount: Int
