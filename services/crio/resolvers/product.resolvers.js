@@ -2,7 +2,7 @@ const { vimeoClient } = require('../config/httpClient');
 
 module.exports = {
   Query: {
-    getProduct: async (_, { productId }, { loaders }) => loaders.ProductById.load(productId),
+    getProduct: async (_, { productId }, { loaders }) => loaders.productById.load(productId),
     getUserProducts: async (_, { username }, { user, loaders }) => {
       let userId;
       if (username) {

@@ -106,7 +106,7 @@ module.exports = {
             subject: `Message for service: ${product.title}`,
             cc: fan.email,
             text: `
-            The Fan ${fan.email} messaged you -
+            The Fan ${fan.username} messaged you -
 
             ${mailInfo.message}
 
