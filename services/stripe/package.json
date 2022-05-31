@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@tidepoollabs/node-lambda-logs": "^1.0.0",
+    "cors": "^2.8.5",
     "date-fns": "^2.26.0",
     "dotenv": "^10.0.0",
     "pg": "^8.7.1",

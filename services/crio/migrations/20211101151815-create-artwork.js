@@ -1,5 +1,5 @@
 'use strict';
-const { ACCESSIBILITY } = require('../constants');
+const { ACCESSIBILITY } = require('../../constants');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {

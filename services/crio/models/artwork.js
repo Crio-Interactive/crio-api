@@ -1,5 +1,5 @@
 const { Model } = require('sequelize');
-const { ACCESSIBILITY } = require('../constants');
+const { ACCESSIBILITY } = require('../../constants');
 
 module.exports = (sequelize, DataTypes) => {
   class Artwork extends Model {

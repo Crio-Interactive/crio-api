@@ -6,7 +6,7 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
   const voucher = await DB.Voucher.findOne({
     where: {
       userId,
-    }
+    },
   });
   console.log('foundVoucher', voucher);
   if (voucher) {
@@ -49,17 +49,20 @@ const handler = async (headers, body) => {
         });
         console.log('paymentDetails', paymentDetails);
         if (paymentDetails) {
-          await DB.Payment.update({
-            periodStart: periodStartDate,
-            periodEnd: periodEndDate,
-            subscriptionStatus: 'active',
-            lastEventSnapshot: invoice,
-            subscriptionCancel: false,
-          }, {
-            where: {
-              customerEmail: invoice.customer_email,
+          await DB.Payment.update(
+            {
+              periodStart: periodStartDate,
+              periodEnd: periodEndDate,
+              subscriptionStatus: 'active',
+              lastEventSnapshot: invoice,
+              subscriptionCancel: false,
             },
-          });
+            {
+              where: {
+                customerEmail: invoice.customer_email,
+              },
+            },
+          );
           console.log('payment updated');
         } else {
           const user = await DB.User.findOne({
@@ -99,14 +102,17 @@ const handler = async (headers, body) => {
           },
         });
         if (paymentDetails) {
-          await DB.Payment.update({
-            subscriptionStatus: 'unpaid',
-            lastEventSnapshot: invoice,
-          }, {
-            where: {
-              customerEmail: invoice.customer_email,
+          await DB.Payment.update(
+            {
+              subscriptionStatus: 'unpaid',
+              lastEventSnapshot: invoice,
             },
-          });
+            {
+              where: {
+                customerEmail: invoice.customer_email,
+              },
+            },
+          );
           await createOrUpdateVoucher({
             userId: paymentDetails.userId,
             tier1: 0,
@@ -126,4 +132,14 @@ const handler = async (headers, body) => {
   }
 };
 
-module.exports = handler;
+const getProduct = async productId => {
+  console.log('getProduct-getProduct');
+  const product = await DB.Product.findOne({ where: { productId: 29 }, logging: true });
+  console.log('product-product', product);
+  return product;
+};
+
+module.exports = {
+  handler,
+  getProduct,
+};
