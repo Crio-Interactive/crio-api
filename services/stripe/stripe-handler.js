@@ -1,6 +1,8 @@
 require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
 var cors = require('cors');
+
+const { CLIENT_URL } = require('./config/environment');
 const { getProduct, handler } = require('./handler');
 const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
@@ -20,21 +22,24 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
 });
 
 app.post('/create-checkout-session', async (req, res) => {
-  console.log(req.params);
-  const x = await getProduct(29);
-  console.log(x, 4444);
-  return;
-  const product = await stripe.products.create({
-    name: 'SUCCESS',
-    images: [
-      'https://crio-in-staging-bucket.s3.us-west-2.amazonaws.com/43/products/thumbnail-1653891364603',
-    ],
-    url: 'http://localhost:3000/product/29',
+  const { productId } = req.body;
+  if (!productId) {
+    return;
+  }
+  const product = await getProduct(productId);
+  const { id } = await stripe.products.create({
+    name: product.title,
+    images: product.thumbnail
+      ? [
+          `https://crio-in-staging-bucket.s3.us-west-2.amazonaws.com/${product.userId}/products/thumbnail-${product.thumbnail}`,
+        ]
+      : [],
+    url: `${CLIENT_URL}pricing`,
   });
 
   const price = await stripe.prices.create({
-    product: product.id,
-    unit_amount: 2000,
+    product: id,
+    unit_amount: product.price * 100,
     currency: 'usd',
   });
   const session = await stripe.checkout.sessions.create({
@@ -45,8 +50,8 @@ app.post('/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: `http://localhost:3000/product/29`,
-    cancel_url: `http://localhost:3000/product/29`,
+    success_url: `${CLIENT_URL}product/${productId}`,
+    cancel_url: `${CLIENT_URL}product/${productId}`,
   });
 
   res.json({ url: session.url });

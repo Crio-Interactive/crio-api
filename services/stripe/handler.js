@@ -132,12 +132,7 @@ const handler = async (headers, body) => {
   }
 };
 
-const getProduct = async productId => {
-  console.log('getProduct-getProduct');
-  const product = await DB.Product.findOne({ where: { productId: 29 }, logging: true });
-  console.log('product-product', product);
-  return product;
-};
+const getProduct = async id => DB.Product.findOne({ where: { id } });
 
 module.exports = {
   handler,
