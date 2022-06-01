@@ -10,6 +10,7 @@ const variables = {
   DB_DATABASE: process.env.DB_DATABASE,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   CLIENT_URL: process.env.CLIENT_URL,
+  STRIPE_API_KEY: process.env.STRIPE_API_KEY,
 };
 
 module.exports = variables;

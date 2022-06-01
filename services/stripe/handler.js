@@ -124,6 +124,10 @@ const handler = async (headers, body) => {
         }
         break;
       }
+      case 'checkout.session.completed': {
+        const invoice = event.data.object;
+        console.log(invoice);
+      }
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
