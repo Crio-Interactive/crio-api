@@ -26,6 +26,8 @@ const handler = async (headers, body) => {
   try {
     const event = typeof body === 'string' ? JSON.parse(body) : body;
 
+    console.log(event.type, 'event.type');
+
     switch (event.type) {
       case 'invoice.paid': {
         const invoice = event.data.object;
