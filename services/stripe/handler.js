@@ -136,6 +136,7 @@ const handler = async (headers, body) => {
 
 const getProduct = async id => DB.Product.findOne({ where: { id } });
 
-module.exports = handler;
-module.exports.getProduct = getProduct;
-module.exports.handler = handler;
+module.exports = {
+  handler,
+  getProduct,
+};
