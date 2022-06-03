@@ -110,13 +110,13 @@ module.exports = {
             subject: `Message for service: ${product.title}`,
             cc: fan.email,
             text: `
-            The Fan ${fan.username} messaged you -
+The Fan ${fan.username} messaged you -
 
-            ${mailInfo.message}
+${mailInfo.message}
 
-            For reply, please, write to this email address - ${fan.email}
+For reply, please, write to this email address - ${fan.email}
 
-            Kind regards, Crio team.
+Kind regards, Crio team.
           `,
           });
           return true;
@@ -136,11 +136,11 @@ module.exports = {
           to: SENDGRID_CC_EMAILS,
           subject: 'Request for cancel subscription',
           text: `
-          The Fan ${email} request to cancel the subscription.
+The Fan ${email} request to cancel the subscription.
 
-          For reply, please, write to this email address - ${email}!
+For reply, please, write to this email address - ${email}!
 
-          Kind regards, Crio team.
+Kind regards, Crio team.
         `,
         });
         if (res) {
