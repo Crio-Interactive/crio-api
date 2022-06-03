@@ -16,6 +16,10 @@ module.exports = {
       const followings = await models.Following.findAll({ where: { userId: parent.id } });
       return followings ? followings.map(({ followingId }) => followingId) : [];
     },
+    boughtProducts: async (parent, {}, { models }) => {
+      const products = await models.ProductCustomer.findAll({ where: { userId: parent.id } });
+      return products ? products.map(({ productId }) => productId) : [];
+    },
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),

@@ -22,7 +22,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
 });
 
 app.post('/create-checkout-session', async (req, res) => {
-  const { productId } = req.body;
+  const { productId, userId } = req.body;
   if (!productId) {
     return;
   }
@@ -52,6 +52,7 @@ app.post('/create-checkout-session', async (req, res) => {
     mode: 'payment',
     success_url: `${CLIENT_URL}product/${productId}`,
     cancel_url: `${CLIENT_URL}product/${productId}`,
+    metadata: { productId, userId },
   });
 
   res.json({ url: session.url });

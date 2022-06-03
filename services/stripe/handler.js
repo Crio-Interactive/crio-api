@@ -8,7 +8,7 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
       userId,
     },
   });
-  console.log('foundVoucher', voucher);
+
   if (voucher) {
     for (const key of Object.keys(params)) {
       voucher[key] = params[key];
@@ -19,6 +19,39 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
       userId,
       ...params,
     });
+  }
+};
+
+const getProduct = async id => DB.Product.findOne({ where: { id } });
+
+const createProductCustomer = async attributes => {
+  const productId = attributes.metadata.productId;
+  const transaction = await DB.sequelize.transaction();
+  try {
+    const product = await getProduct(productId);
+    DB.ProductCustomer.create(
+      {
+        userId: attributes.metadata.userId,
+        productId,
+        customerEmail: attributes.customer_details.email,
+        customerName: attributes.customer_details.name,
+        status: attributes.status,
+        eventSnapshot: attributes,
+      },
+      { transaction },
+    );
+
+    console.log(product, product.limit);
+    if (product.limit) {
+      await DB.Product.update(
+        { limit: product.limit - 1 },
+        { where: { id: productId }, transaction },
+      );
+    }
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    console.log(e, 'Can not create customer');
   }
 };
 
@@ -126,7 +159,8 @@ const handler = async (headers, body) => {
       }
       case 'checkout.session.completed': {
         const invoice = event.data.object;
-        console.log(invoice);
+        createProductCustomer(invoice);
+        break;
       }
       default:
         console.log(`Unhandled event type ${event.type}`);
@@ -137,8 +171,6 @@ const handler = async (headers, body) => {
     return Promise.reject(error);
   }
 };
-
-const getProduct = async id => DB.Product.findOne({ where: { id } });
 
 module.exports = {
   handler,
