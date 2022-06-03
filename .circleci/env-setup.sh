@@ -15,7 +15,7 @@ then
     echo "export APP_NAME=crio-development"
     echo "export SENDGRID_VERIFIED_SENDER=info@criointeractive.com"
     echo "export SENDGRID_CC_EMAILS=narine@tidepoollabs.com"
-    echo "export STRIPE_API_KEY=sk_test_51JtbBcK5TIczT4JnkNsBiF16V27oKyEsJswywaefL0TC1qEx4XAVjAZ1BthkuNGb1EusNepWlHQCekl4w5uRmYyW00BLmQkq0M"
+    echo "export STRIPE_API_KEY=$STRIPE_API_KEY_DEVELOP"
   } >> "$BASH_ENV"
 elif [ "${CIRCLE_BRANCH}" == "staging" ]
 then
@@ -26,7 +26,7 @@ then
     echo "export APP_NAME=crio-in-staging"
     echo "export SENDGRID_VERIFIED_SENDER=info@criointeractive.com"
     echo "export SENDGRID_CC_EMAILS=narine@tidepoollabs.com"
-    echo "export STRIPE_API_KEY=sk_test_51JtbBcK5TIczT4JnkNsBiF16V27oKyEsJswywaefL0TC1qEx4XAVjAZ1BthkuNGb1EusNepWlHQCekl4w5uRmYyW00BLmQkq0M"
+    echo "export STRIPE_API_KEY=$STRIPE_API_KEY_STAGING"
   } >> "$BASH_ENV"
 elif [ "${CIRCLE_BRANCH}" == "master" ]
 then
@@ -37,7 +37,7 @@ then
     echo "export APP_NAME=crio-in-production"
     echo "export SENDGRID_VERIFIED_SENDER=info@criointeractive.com"
     echo "export SENDGRID_CC_EMAILS=klodi.beqiri@criointeractive.com"
-    echo "export STRIPE_API_KEY=sk_test_51JtbBcK5TIczT4JnkNsBiF16V27oKyEsJswywaefL0TC1qEx4XAVjAZ1BthkuNGb1EusNepWlHQCekl4w5uRmYyW00BLmQkq0M"
+    echo "export STRIPE_API_KEY=$STRIPE_API_KEY_MASTER"
   } >> "$BASH_ENV"
 else
   #should not be executed
