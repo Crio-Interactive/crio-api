@@ -60,7 +60,10 @@ module.exports = {
       if (!productId) {
         return;
       }
-      const loggedInUser = await loaders.userByUserId.load(user.attributes.sub);
+      let loggedInUser;
+      if (user?.attributes?.sub) {
+        loggedInUser = await loaders.userByUserId.load(user.attributes.sub);
+      }
       const product = await loaders.productById.load(productId);
 
       const { id } = await stripe.products.create({
