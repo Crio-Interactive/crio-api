@@ -22,13 +22,11 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
   }
 };
 
-const getProduct = async id => DB.Product.findOne({ where: { id } });
-
 const createProductCustomer = async attributes => {
   const productId = attributes.metadata.productId;
   const transaction = await DB.sequelize.transaction();
   try {
-    const product = await getProduct(productId);
+    const product = await DB.Product.findOne({ where: { id: productId } });
     DB.ProductCustomer.create(
       {
         userId: attributes.metadata.userId,
@@ -170,7 +168,4 @@ const handler = async (headers, body) => {
   }
 };
 
-module.exports = {
-  handler,
-  getProduct,
-};
+module.exports = handler;
