@@ -4,7 +4,22 @@ const { SENDGRID_API_KEY, SENDGRID_CC_EMAILS, SENDGRID_VERIFIED_SENDER } = requi
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
-const sendMail = async ({ to, subject, text, cc }) =>
+const sendMail = async ({ to, subject, text, cc }) => {
+  console.log('Sending Email Params: ', {
+    to,
+    subject,
+    text,
+    cc,
+    SENDGRID_VERIFIED_SENDER,
+    SENDGRID_CC_EMAILS,
+  });
+  console.log('Send Params: ', {
+    to,
+    from: SENDGRID_VERIFIED_SENDER,
+    subject,
+    text,
+    cc: [SENDGRID_CC_EMAILS, cc].filter(email => email !== to),
+  });
   sgMail.send({
     to,
     from: SENDGRID_VERIFIED_SENDER,
@@ -12,5 +27,6 @@ const sendMail = async ({ to, subject, text, cc }) =>
     text,
     cc: [SENDGRID_CC_EMAILS, cc].filter(email => email !== to),
   });
+};
 
 module.exports = sendMail;
