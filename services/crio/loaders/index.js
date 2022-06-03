@@ -109,12 +109,7 @@ const loaders = (models, user) => {
         where: {
           id: ids,
         },
-        logging: true,
-      }).then(
-        products =>
-          console.log(ids, products) ||
-          ids.map(id => products.find(product => product.productId == id)),
-      ),
+      }).then(products => ids.map(id => products.find(product => product.productId == id))),
     ),
     productsByUserId: new DataLoader(async userIds =>
       models.Product.findAll({

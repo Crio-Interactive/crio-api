@@ -1,7 +1,7 @@
 const path = require('path');
 const AWS = require('aws-sdk');
 const logs = require('@tidepoollabs/node-lambda-logs');
-const handler = require('./handler');
+const { handler } = require('./handler');
 const { formatResponse, formatError } = require('./utils');
 
 logs.init(process.env.SENTRY_DSN);

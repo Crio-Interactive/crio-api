@@ -53,6 +53,7 @@ module.exports = gql`
     followingsCount: Int
     isFollowing: Boolean
     followings: [ID]
+    boughtProducts: [ID]
   }
 
   input MailInfo {
