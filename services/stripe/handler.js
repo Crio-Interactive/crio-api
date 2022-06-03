@@ -41,7 +41,6 @@ const createProductCustomer = async attributes => {
       { transaction },
     );
 
-    console.log(product, product.limit);
     if (product.limit) {
       await DB.Product.update(
         { limit: product.limit - 1 },
@@ -158,8 +157,7 @@ const handler = async (headers, body) => {
         break;
       }
       case 'checkout.session.completed': {
-        const invoice = event.data.object;
-        createProductCustomer(invoice);
+        await createProductCustomer(event.data.object);
         break;
       }
       default:
