@@ -51,12 +51,17 @@ module.exports = gql`
     products: [ProductDetail!]!
   }
 
+  type StripeCheckoutSession {
+    url: String!
+  }
+
   type Query {
     getProduct(productId: ID!): ProductDetail
     getUserProducts(username: String): [ProductDetail!]!
     getRandomProductsInfo: randomProductsInfo!
     getRandomProducts(params: paginationParams!): [ProductDetail]!
     getMoreProducts(params: paginationParams!): MoreProducts!
+    getStripeCheckoutSession(productId: ID!): StripeCheckoutSession!
   }
 
   type Mutation {

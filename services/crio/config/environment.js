@@ -1,5 +1,5 @@
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env')});
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const variables = {
   VIMEO_ACCESS_TOKEN: process.env.VIMEO_ACCESS_TOKEN,
@@ -11,6 +11,8 @@ const variables = {
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   SENDGRID_VERIFIED_SENDER: process.env.SENDGRID_VERIFIED_SENDER,
   SENDGRID_CC_EMAILS: process.env.SENDGRID_CC_EMAILS,
+  CLIENT_URL: process.env.CLIENT_URL,
+  STRIPE_API_KEY: process.env.STRIPE_API_KEY,
 };
 
 module.exports = variables;
