@@ -9,7 +9,7 @@
 if [ "${CIRCLE_BRANCH}" == "develop" ]
 then
   {
-    echo "export CLIENT_URL=https://crio-qa.criointeractive.com/"
+    echo "export CLIENT_URL=$CLIENT_URL_DEVELOP"
     echo "export SUBDOMAIN_NAME=crio-qa-api"
     echo "export STACK_REGION=us-west-2"
     echo "export APP_NAME=crio-development"
@@ -20,7 +20,7 @@ then
 elif [ "${CIRCLE_BRANCH}" == "staging" ]
 then
   {
-    echo "export CLIENT_URL=https://crio-staging.criointeractive.com/"
+    echo "export CLIENT_URL=$CLIENT_URL_STAGING"
     echo "export SUBDOMAIN_NAME=crio-staging-api"
     echo "export STACK_REGION=us-west-2"
     echo "export APP_NAME=crio-in-staging"
@@ -31,7 +31,7 @@ then
 elif [ "${CIRCLE_BRANCH}" == "master" ]
 then
   {
-    echo "export CLIENT_URL=https://www.criointeractive.com/"
+    echo "export CLIENT_URL=$CLIENT_URL_MASTER"
     echo "export SUBDOMAIN_NAME=api"
     echo "export STACK_REGION=us-east-1"
     echo "export APP_NAME=crio-in-production"
