@@ -24,7 +24,7 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
 
 const createProductCustomer = async attributes => {
   const productId = attributes.metadata.productId;
-  const transaction = await DB.sequelize.transaction();
+  // const transaction = await DB.sequelize.transaction();
   try {
     const product = await DB.Product.findOne({ where: { id: productId } });
     DB.ProductCustomer.create(
@@ -36,18 +36,14 @@ const createProductCustomer = async attributes => {
         status: attributes.status,
         eventSnapshot: attributes,
       },
-      { transaction },
+      // { transaction },
     );
-
-    if (product.limit) {
-      await DB.Product.update(
-        { limit: product.limit - 1 },
-        { where: { id: productId }, transaction },
-      );
+    if (product.limit > 0) {
+      await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
     }
-    await transaction.commit();
+    // await transaction.commit();
   } catch (e) {
-    await transaction.rollback();
+    // await transaction.rollback();
     console.log(e, 'Can not create customer');
   }
 };
