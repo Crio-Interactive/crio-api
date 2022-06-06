@@ -19,6 +19,7 @@ module.exports = applyMiddleware(
       getFollowersCount: isAuthenticated,
       getUploadUrl: isAuthenticated,
       getUploadImageLink: isAuthenticated,
+      getPaymentMethod: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,
@@ -32,6 +33,7 @@ module.exports = applyMiddleware(
       deleteProduct: isAuthenticated,
       contactCreator: isAuthenticated,
       cancelSubscription: isAuthenticated,
+      updatePaymentMethod: isAuthenticated,
     },
   }),
 );

@@ -127,6 +127,21 @@ const loaders = (models, user) => {
         userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
       ),
     ),
+    paymentMethodByUserId: new DataLoader(async userIds =>
+      models.PaymentMethod.findAll({
+        raw: true,
+        order: [['id', 'DESC']],
+        include: {
+          attributes: [],
+          model: models.User,
+        },
+        where: {
+          userId: userIds,
+        },
+      }).then(paymentMethods =>
+        userIds.map(userId => paymentMethods.find(paymentMethod => paymentMethod.userId == userId)),
+      ),
+    ),
   };
   return self;
 };

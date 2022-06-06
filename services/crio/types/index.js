@@ -5,7 +5,16 @@ const followingTypes = require('./following.types');
 const uploadTypes = require('./upload.types');
 const artworkTypes = require('./artwork.types');
 const productTypes = require('./product.types');
+const paymentMethodTypes = require('./payment-method.types');
 
-const types = [enumTypes, userTypes, followingTypes, uploadTypes, artworkTypes, productTypes];
+const types = [
+  enumTypes,
+  userTypes,
+  followingTypes,
+  uploadTypes,
+  artworkTypes,
+  productTypes,
+  paymentMethodTypes,
+];
 
 module.exports = mergeTypeDefs(types);
