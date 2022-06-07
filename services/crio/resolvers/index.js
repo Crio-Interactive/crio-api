@@ -5,7 +5,7 @@ const followingResolvers = require('./following.resolvers');
 const uploadResolvers = require('./upload.resolvers');
 const artworkResolvers = require('./artwork.resolvers');
 const productResolvers = require('./product.resolvers');
-const paymentMethodResolvers = require('./payment-method.resolvers');
+const stripeConnectResolvers = require('./stripe-connect.resolvers');
 
 const resolvers = [
   scalarResolvers,
@@ -14,7 +14,7 @@ const resolvers = [
   uploadResolvers,
   artworkResolvers,
   productResolvers,
-  paymentMethodResolvers,
+  stripeConnectResolvers,
 ];
 
 module.exports = mergeResolvers(resolvers);

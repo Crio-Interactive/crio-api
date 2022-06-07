@@ -54,6 +54,7 @@ module.exports = gql`
     isFollowing: Boolean
     followings: [ID]
     boughtProducts: [ID]
+    hasStripeAccount: Boolean
   }
 
   input MailInfo {
