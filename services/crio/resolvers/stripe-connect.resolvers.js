@@ -9,6 +9,9 @@ module.exports = {
   Query: {
     getConnectAccount: async (_, {}, { user, loaders }) => {
       const { username, stripeAccountId } = await loaders.userByUserId.load(user.attributes.sub);
+      if (!stripeAccountId) {
+        return {};
+      }
       try {
         const account = await retrieveAccount(stripeAccountId);
         return {
@@ -28,6 +31,7 @@ module.exports = {
         let accountId = stripeAccountId;
         if (!stripeAccountId) {
           const account = await createAccount(username, email);
+          console.log(account.id);
           accountId = account.id;
           await models.User.update({ stripeAccountId: account.id }, { where: { id } });
         }
