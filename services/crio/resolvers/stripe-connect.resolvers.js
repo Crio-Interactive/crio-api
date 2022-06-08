@@ -51,6 +51,11 @@ module.exports = {
         console.log(`Cannot get login link for user ${username}`, e);
       }
     },
+    deleteStripeAccount: async (_, {}, { user, loaders, models }) => {
+      const { id } = await loaders.userByUserId.load(user.attributes.sub);
+      await models.User.update({ stripeAccountId: null }, { where: { id } });
+      return true;
+    },
   },
   Mutation: {},
 };

@@ -14,5 +14,6 @@ module.exports = gql`
     getConnectAccount: ConnectAccount!
     getConnectOnboardingLink: Link!
     getConnectLoginLink: Link!
+    deleteStripeAccount: Boolean!
   }
 `;
