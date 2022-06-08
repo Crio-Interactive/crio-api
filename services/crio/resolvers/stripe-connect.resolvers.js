@@ -11,7 +11,10 @@ module.exports = {
       const { username, stripeAccountId } = await loaders.userByUserId.load(user.attributes.sub);
       try {
         const account = await retrieveAccount(stripeAccountId);
-        return { details_submitted: account?.details_submitted };
+        return {
+          charges_enabled: account?.charges_enabled,
+          details_submitted: account?.details_submitted,
+        };
       } catch (e) {
         console.log(`Cannot retrieve account for user ${username}`, e);
         return e;
