@@ -4,12 +4,12 @@ const stripe = require('stripe')(STRIPE_API_KEY);
 module.exports = {
   createAccount: (username, email) =>
     stripe.accounts.create({
-      country: 'US',
+      // country: 'US',
       type: 'express',
-      capabilities: {
-        card_payments: { requested: true },
-        transfers: { requested: true },
-      },
+      // capabilities: {
+      //   card_payments: { requested: true },
+      //   transfers: { requested: true },
+      // },
       email,
       business_type: 'individual',
       business_profile: { url: `${CLIENT_URL}profile/${username}` },
