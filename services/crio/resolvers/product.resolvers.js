@@ -1,6 +1,9 @@
-const { CLIENT_URL, STRIPE_API_KEY } = require('../config/environment');
-const stripe = require('stripe')(STRIPE_API_KEY);
-const { retrieveAccount } = require('../utils/stripe.helper');
+const {
+  createCheckoutSession,
+  createPrice,
+  createProduct,
+  retrieveAccount,
+} = require('../utils/stripe.helper');
 
 module.exports = {
   Query: {
@@ -58,59 +61,41 @@ module.exports = {
         offset,
       }),
     getStripeCheckoutSession: async (_, { productId }, { user, loaders }) => {
-      if (!productId) {
-        return;
-      }
-      let loggedInUser;
-      if (user?.attributes?.sub) {
-        loggedInUser = await loaders.userByUserId.load(user.attributes.sub);
-      }
-      const product = await loaders.productById.load(productId);
-      const { stripeAccountId } = await loaders.userById.load(product.userId);
+      try {
+        if (!productId) {
+          return;
+        }
+        let loggedInUser;
+        if (user?.attributes?.sub) {
+          loggedInUser = await loaders.userByUserId.load(user.attributes.sub);
+        }
+        const product = await loaders.productById.load(productId);
+        const { stripeAccountId } = await loaders.userById.load(product.userId);
 
-      if (!stripeAccountId) {
-        return new Error('Creator payouts are off. Please contact Support.');
+        if (!stripeAccountId) {
+          return new Error('Creator payouts are off. Please contact Support.');
+        }
+        const { charges_enabled } = await retrieveAccount(stripeAccountId);
+        if (!charges_enabled) {
+          return new Error('Creator payouts are off. Please contact Support.');
+        }
+
+        const { id } = await createProduct(product.userId, product.title, product.thumbnail);
+        const price = await createPrice(id, product.price);
+
+        const session = await createCheckoutSession(
+          loggedInUser?.id,
+          productId,
+          price.id,
+          stripeAccountId,
+          ((product.price * 10) / 100) * 100,
+        );
+
+        return { url: session.url };
+      } catch (e) {
+        console.log('Error creating Checkout Session ', e);
+        return e;
       }
-      const { charges_enabled } = await retrieveAccount(stripeAccountId);
-      if (!charges_enabled) {
-        return new Error('Creator payouts are off. Please contact Support.');
-      }
-
-      const { id } = await stripe.products.create({
-        name: product.title,
-        images: product.thumbnail
-          ? [
-              `https://crio-in-staging-bucket.s3.us-west-2.amazonaws.com/${product.userId}/products/thumbnail-${product.thumbnail}`,
-            ]
-          : [],
-        url: `${CLIENT_URL}pricing`,
-      });
-      const price = await stripe.prices.create({
-        product: id,
-        unit_amount: product.price * 100,
-        currency: 'usd',
-      });
-
-      const session = await stripe.checkout.sessions.create({
-        line_items: [
-          {
-            price: price.id,
-            quantity: 1,
-          },
-        ],
-        mode: 'payment',
-        success_url: `${CLIENT_URL}product/${productId}`,
-        cancel_url: `${CLIENT_URL}product/${productId}`,
-        metadata: { productId, userId: loggedInUser?.id },
-        payment_intent_data: {
-          application_fee_amount: ((product.price * 10) / 100) * 100,
-          transfer_data: {
-            destination: stripeAccountId,
-          },
-        },
-      });
-
-      return { url: session.url };
     },
   },
   Mutation: {

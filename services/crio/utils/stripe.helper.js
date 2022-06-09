@@ -4,7 +4,6 @@ const stripe = require('stripe')(STRIPE_API_KEY);
 module.exports = {
   createAccount: (username, email) =>
     stripe.accounts.create({
-      // country: 'US',
       type: 'express',
       // capabilities: {
       //   card_payments: { requested: true },
@@ -24,4 +23,39 @@ module.exports = {
     }),
   createLoginLink: account => stripe.accounts.createLoginLink(account),
   retrieveAccount: account => stripe.accounts.retrieve(account),
+  createProduct: (userId, title, thumbnail) =>
+    stripe.products.create({
+      name: title,
+      images: thumbnail
+        ? [
+            `https://crio-in-staging-bucket.s3.us-west-2.amazonaws.com/${userId}/products/thumbnail-${thumbnail}`,
+          ]
+        : [],
+      url: `${CLIENT_URL}pricing`,
+    }),
+  createPrice: (id, price) =>
+    stripe.prices.create({
+      product: id,
+      unit_amount: price * 100,
+      currency: 'usd',
+    }),
+  createCheckoutSession: (userId, productId, priceId, stripeAccountId, fee) =>
+    stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${CLIENT_URL}product/${productId}`,
+      cancel_url: `${CLIENT_URL}product/${productId}`,
+      metadata: { productId, userId },
+      payment_intent_data: {
+        application_fee_amount: fee,
+        transfer_data: {
+          destination: stripeAccountId,
+        },
+      },
+    }),
 };
