@@ -65,8 +65,11 @@ module.exports = {
         loggedInUser = await loaders.userByUserId.load(user.attributes.sub);
       }
       const product = await loaders.productById.load(productId);
-      // const { stripeAccountId } = await loaders.userById.load(product.userId);
+      const { stripeAccountId } = await loaders.userById.load(product.userId);
 
+      if (!stripeAccountId) {
+        return new Error('Creator payouts are off. Please contact Support.');
+      }
       const { id } = await stripe.products.create({
         name: product.title,
         images: product.thumbnail
@@ -82,6 +85,13 @@ module.exports = {
         currency: 'usd',
       });
 
+      console.log({
+        application_fee_amount: ((product.price * 10) / 100) * 100,
+        transfer_data: {
+          destination: stripeAccountId,
+        },
+      });
+
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
@@ -93,12 +103,12 @@ module.exports = {
         success_url: `${CLIENT_URL}product/${productId}`,
         cancel_url: `${CLIENT_URL}product/${productId}`,
         metadata: { productId, userId: loggedInUser?.id },
-        // payment_intent_data: {
-        //   application_fee_amount: (product.price * 100) % 10,
-        //   transfer_data: {
-        //     destination: stripeAccountId,
-        //   },
-        // },
+        payment_intent_data: {
+          application_fee_amount: ((product.price * 10) / 100) * 100,
+          transfer_data: {
+            destination: stripeAccountId,
+          },
+        },
       });
 
       return { url: session.url };
