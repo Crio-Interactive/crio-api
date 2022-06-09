@@ -1,5 +1,6 @@
 const { CLIENT_URL, STRIPE_API_KEY } = require('../config/environment');
 const stripe = require('stripe')(STRIPE_API_KEY);
+const { retrieveAccount } = require('../utils/stripe.helper');
 
 module.exports = {
   Query: {
@@ -70,6 +71,11 @@ module.exports = {
       if (!stripeAccountId) {
         return new Error('Creator payouts are off. Please contact Support.');
       }
+      const { charges_enabled } = await retrieveAccount(stripeAccountId);
+      if (!charges_enabled) {
+        return new Error('Creator payouts are off. Please contact Support.');
+      }
+
       const { id } = await stripe.products.create({
         name: product.title,
         images: product.thumbnail
@@ -83,13 +89,6 @@ module.exports = {
         product: id,
         unit_amount: product.price * 100,
         currency: 'usd',
-      });
-
-      console.log({
-        application_fee_amount: ((product.price * 10) / 100) * 100,
-        transfer_data: {
-          destination: stripeAccountId,
-        },
       });
 
       const session = await stripe.checkout.sessions.create({
