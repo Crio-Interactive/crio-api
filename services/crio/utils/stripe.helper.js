@@ -52,7 +52,7 @@ module.exports = {
       cancel_url: `${CLIENT_URL}product/${productId}`,
       metadata: { productId, userId },
       payment_intent_data: {
-        application_fee_amount: fee,
+        application_fee_amount: parseInt(fee),
         transfer_data: {
           destination: stripeAccountId,
         },
