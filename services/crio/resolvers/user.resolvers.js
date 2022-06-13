@@ -105,18 +105,19 @@ module.exports = {
         const creator = await loaders.userById.load(product.userId);
 
         try {
-          const res = await sendMail({
+          await sendMail({
             to: creator.email,
-            subject: `Message for service: ${product.title}`,
+            subject: `Purchased service message: "${product.title}"`,
             cc: fan.email,
             text: `
-The Fan ${fan.username} messaged you -
+Fan ${fan.username} messaged you -
 
 ${mailInfo.message}
 
-For reply, please, write to this email address - ${fan.email}
+To reply, please, use this email - ${fan.email}
 
-Kind regards, Crio team.
+Kind regards,
+Crio team.
           `,
           });
           return true;
@@ -136,11 +137,12 @@ Kind regards, Crio team.
           to: SENDGRID_CC_EMAILS,
           subject: 'Request for cancel subscription',
           text: `
-The Fan ${email} request to cancel the subscription.
+Fan ${email} request to cancel the subscription.
 
-For reply, please, write to this email address - ${email}!
+To reply, please, use this email - ${email}
 
-Kind regards, Crio team.
+Kind regards,
+Crio team.
         `,
         });
         if (res) {

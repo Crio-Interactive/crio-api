@@ -1,4 +1,6 @@
 const fromUnixTime = require('date-fns/fromUnixTime');
+
+const sendMail = require('./config/mail');
 const { addUnixTimeMonth } = require('./utils');
 const DB = require('./models');
 
@@ -26,7 +28,15 @@ const createProductCustomer = async attributes => {
   const productId = attributes.metadata.productId;
   // const transaction = await DB.sequelize.transaction();
   try {
-    const product = await DB.Product.findOne({ where: { id: productId } });
+    const product = await DB.Product.findOne({
+      raw: true,
+      where: { id: productId },
+      attributes: ['User.username', 'User.email', 'limit', 'title'],
+      include: {
+        attributes: [],
+        model: DB.User,
+      },
+    });
     DB.ProductCustomer.create(
       {
         userId: attributes.metadata.userId,
@@ -41,6 +51,17 @@ const createProductCustomer = async attributes => {
     if (product.limit > 0) {
       await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
     }
+    const x = await sendMail({
+      to: product.email,
+      subject: `Request for Purchase of: "${product.title}"`,
+      cc: attributes.customer_details.email,
+      text: `
+${attributes.customer_details.name} (email - ${attributes.customer_details.email}) purchased "${product.title}". Please complete the order at the earliest convenience. Thank you
+
+Kind regards,
+Crio team.
+    `,
+    });
     // await transaction.commit();
   } catch (e) {
     // await transaction.rollback();

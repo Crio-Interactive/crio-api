@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "@tidepoollabs/node-lambda-logs": "^1.0.0",
     "date-fns": "^2.26.0",
     "dotenv": "^10.0.0",
