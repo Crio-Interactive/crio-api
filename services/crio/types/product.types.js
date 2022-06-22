@@ -44,6 +44,7 @@ module.exports = gql`
   type randomProductsInfo {
     count: Int!
     products: [ProductDetail!]!
+    keyword: String
   }
 
   type MoreProducts {

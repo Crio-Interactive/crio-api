@@ -49,17 +49,39 @@ module.exports = {
     },
     getRandomProducts: async (
       _,
-      { params: { count, userId, productId, limit = 15, offset = 0 } },
+      { params: { count, userId, productId, limit = 15, offset = 0, keyword } },
       { models },
-    ) =>
-      models.RandomProduct.findAll({
-        ...(userId
-          ? { where: { userId, productId: { [models.sequelize.Sequelize.Op.ne]: productId } } }
-          : {}),
+    ) => {
+      let condition = {};
+      if (userId) {
+        condition = {
+          where: { userId, productId: { [models.sequelize.Sequelize.Op.ne]: productId } },
+        };
+      } else if (keyword) {
+        condition = {
+          where: {
+            [models.sequelize.Sequelize.Op.or]: [
+              {
+                username: {
+                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                },
+              },
+              {
+                title: {
+                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                },
+              },
+            ],
+          },
+        };
+      }
+      return models.RandomProduct.findAll({
+        ...condition,
         order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],
         limit,
         offset,
-      }),
+      });
+    },
     getStripeCheckoutSession: async (_, { productId }, { user, loaders }) => {
       try {
         if (!productId) {
