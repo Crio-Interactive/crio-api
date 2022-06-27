@@ -4,10 +4,12 @@ const { SENDGRID_API_KEY, SENDGRID_CC_EMAILS, SENDGRID_VERIFIED_SENDER } = requi
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
-const sendMail = async ({ to, subject, text, cc }) =>
+const sendMail = async ({ sender, to, subject, text, cc }) =>
   sgMail.send({
     to,
-    from: SENDGRID_VERIFIED_SENDER,
+    from: sender
+      ? { name: `Creator ${sender} via Crio`, email: SENDGRID_VERIFIED_SENDER }
+      : SENDGRID_VERIFIED_SENDER,
     subject,
     text,
     cc: [SENDGRID_CC_EMAILS, cc].filter(email => email !== to),

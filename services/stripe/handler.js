@@ -51,12 +51,14 @@ const createProductCustomer = async attributes => {
     if (product.limit > 0) {
       await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
     }
-    const x = await sendMail({
+    await sendMail({
       to: product.email,
-      subject: `Request for Purchase of: "${product.title}"`,
+      name: product.username,
+      subject: `A Fan Purchased "${product.title}" from your Crio Page!`,
       cc: attributes.customer_details.email,
       text: `
-${attributes.customer_details.name} (email - ${attributes.customer_details.email}) purchased "${product.title}". Please complete the order at the earliest convenience. Thank you
+Fan, "${attributes.customer_details.name}" (cc’d), purchased "${product.title}" from your Crio Page!
+Please complete the order at your earliest convenience by replying to this email, ${attributes.customer_details.email} and working directly with them.
 
 Kind regards,
 Crio team.
