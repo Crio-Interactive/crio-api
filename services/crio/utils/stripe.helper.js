@@ -28,7 +28,7 @@ module.exports = {
       name: title,
       images: thumbnail
         ? [
-            `https://crio-in-staging-bucket.s3.us-west-2.amazonaws.com/${userId}/products/thumbnail-${thumbnail}`,
+            `https://${process.env.APP_NAME}-bucket.s3.${process.env.AWS_REGION}.amazonaws.com/${userId}/products/thumbnail-${thumbnail}`,
           ]
         : [],
       url: `${CLIENT_URL}pricing`,
