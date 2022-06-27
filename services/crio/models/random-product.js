@@ -3,7 +3,7 @@ const { Model } = require('sequelize');
 const { ACCESSIBILITY } = require('../constants');
 
 module.exports = (sequelize, DataTypes) => {
-  class RandomArtwork extends Model {
+  class RandomProduct extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  RandomArtwork.init(
+  RandomProduct.init(
     {
       userId: {
         type: DataTypes.INTEGER,
@@ -35,17 +35,13 @@ module.exports = (sequelize, DataTypes) => {
       avatar: {
         type: DataTypes.STRING,
       },
-      artworkId: {
+      productId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      videoUri: {
+      type: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false,
-      },
-      thumbnailUri: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
       title: {
@@ -54,20 +50,29 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: {
         type: DataTypes.TEXT,
+      },
+      price: {
+        type: DataTypes.FLOAT,
         allowNull: false,
+      },
+      limit: {
+        type: DataTypes.INTEGER,
       },
       accessibility: {
         type: DataTypes.ENUM,
         values: Object.values(ACCESSIBILITY),
         default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
+      thumbnail: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
-      modelName: 'RandomArtwork',
+      modelName: 'RandomProduct',
       timestamps: false,
     },
   );
 
-  return RandomArtwork;
+  return RandomProduct;
 };

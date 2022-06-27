@@ -1,6 +1,35 @@
 // https://github.com/graphql/dataloader
 const DataLoader = require('dataloader');
 
+const attributes = [
+  'userId',
+  'User.username',
+  'User.providerType',
+  'User.providerUserId',
+  'User.avatar',
+  'title',
+  'description',
+  'accessibility',
+];
+
+const artworkAttributes = [
+  ...attributes,
+  ['id', 'artworkId'],
+  'status',
+  'videoUri',
+  'pictures_uri',
+  'thumbnailUri',
+];
+
+const productAttributes = [
+  ...attributes,
+  ['id', 'productId'],
+  'type',
+  'price',
+  'limit',
+  'thumbnail',
+];
+
 const loaders = (models, user) => {
   const self = {
     userById: new DataLoader(ids =>
@@ -42,22 +71,7 @@ const loaders = (models, user) => {
       models.Artwork.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: [
-          'id',
-          ['id', 'artworkId'],
-          'userId',
-          'videoUri',
-          'pictures_uri',
-          'thumbnailUri',
-          'title',
-          'description',
-          'accessibility',
-          'status',
-          'User.providerType',
-          'User.providerUserId',
-          'User.avatar',
-          [models.sequelize.Sequelize.col('username'), 'name'],
-        ],
+        attributes: artworkAttributes,
         include: {
           attributes: [],
           model: models.User,
@@ -65,27 +79,13 @@ const loaders = (models, user) => {
         where: {
           id: ids,
         },
-      }).then(artworks => ids.map(id => artworks.find(artwork => artwork.id == id))),
+      }).then(artworks => ids.map(id => artworks.find(artwork => artwork.artworkId == id))),
     ),
     artworksByUserId: new DataLoader(async userIds =>
       models.Artwork.findAll({
         raw: true,
-        order: [['updatedAt', 'DESC']],
-        attributes: [
-          'id',
-          ['id', 'artworkId'],
-          'userId',
-          'videoUri',
-          'thumbnailUri',
-          'title',
-          'description',
-          'accessibility',
-          'status',
-          'User.providerType',
-          'User.providerUserId',
-          'User.avatar',
-          [models.sequelize.Sequelize.col('username'), 'name'],
-        ],
+        order: [['id', 'DESC']],
+        attributes: artworkAttributes,
         include: {
           attributes: [],
           model: models.User,
@@ -95,6 +95,51 @@ const loaders = (models, user) => {
         },
       }).then(artworks =>
         userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
+      ),
+    ),
+    productById: new DataLoader(ids =>
+      models.Product.findAll({
+        raw: true,
+        order: [['updatedAt', 'DESC']],
+        attributes: productAttributes,
+        include: {
+          attributes: [],
+          model: models.User,
+        },
+        where: {
+          id: ids,
+        },
+      }).then(products => ids.map(id => products.find(product => product.productId == id))),
+    ),
+    productsByUserId: new DataLoader(async userIds =>
+      models.Product.findAll({
+        raw: true,
+        order: [['id', 'DESC']],
+        attributes: productAttributes,
+        include: {
+          attributes: [],
+          model: models.User,
+        },
+        where: {
+          userId: userIds,
+        },
+      }).then(artworks =>
+        userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
+      ),
+    ),
+    paymentMethodByUserId: new DataLoader(async userIds =>
+      models.PaymentMethod.findAll({
+        raw: true,
+        order: [['id', 'DESC']],
+        include: {
+          attributes: [],
+          model: models.User,
+        },
+        where: {
+          userId: userIds,
+        },
+      }).then(paymentMethods =>
+        userIds.map(userId => paymentMethods.find(paymentMethod => paymentMethod.userId == userId)),
       ),
     ),
   };

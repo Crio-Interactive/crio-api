@@ -1,4 +1,3 @@
-const BlueBird = require('bluebird');
 const { vimeoClient } = require('../config/httpClient');
 
 module.exports = {
@@ -16,8 +15,27 @@ module.exports = {
       }
       return loaders.artworksByUserId.load(userId);
     },
-    getRandomArtworksInfo: async (_, {}, { models }) => {
-      const count = await models.RandomArtwork.count();
+    getRandomInfo: async (_, { keyword }, { models }) => {
+      const condition = keyword
+        ? {
+            where: {
+              [models.sequelize.Sequelize.Op.or]: [
+                {
+                  username: {
+                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                  },
+                },
+                {
+                  title: {
+                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                  },
+                },
+              ],
+            },
+          }
+        : {};
+      const productsCount = await models.RandomProduct.count(condition);
+      const artworksCount = await models.RandomArtwork.count(condition);
       const [artworks] = await models.sequelize.query(`
         SELECT  *
         FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
@@ -26,68 +44,42 @@ module.exports = {
         ORDER BY Random()
         LIMIT 4
       `);
-      return { count, artworks };
+      return { productsCount, artworksCount, artworks };
     },
-    // getRandomArtworksInfo: async (_, {}, { user, models }) => {
-    //   const count = await models.RandomArtwork.count();
-    //   let creatorIds = [];
-    //   let artworks = [];
-    //   if (user) {
-    //     creatorIds = (
-    //       await models.RandomArtwork.findAll({
-    //         raw: true,
-    //         attributes: ['userId'],
-    //         group: ['userId'],
-    //         order: [models.sequelize.literal('Random()')],
-    //       })
-    //     ).map(({ userId }) => userId);
-    //     [artworks] = await models.sequelize.query(`
-    //       SELECT  *
-    //       FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
-    //               FROM "RandomArtworks") AS artworks
-    //       WHERE artworks.RowNumber = 1
-    //       ORDER BY Random()
-    //       LIMIT 4
-    //     `);
-    //   }
-    //   return { count, creatorIds, artworks };
-    // },
     getRandomArtworks: async (
       _,
-      { params: { count, userId, artworkId, limit = 15, offset = 0 } },
+      { params: { count, userId, artworkId, limit = 24, offset = 0, keyword } },
       { models },
-    ) =>
-      models.RandomArtwork.findAll({
-        ...(userId
-          ? { where: { userId, artworkId: { [models.sequelize.Sequelize.Op.ne]: artworkId } } }
-          : {}),
+    ) => {
+      let condition = {};
+      if (userId) {
+        condition = {
+          where: { userId, artworkId: { [models.sequelize.Sequelize.Op.ne]: artworkId } },
+        };
+      } else if (keyword) {
+        condition = {
+          where: {
+            [models.sequelize.Sequelize.Op.or]: [
+              {
+                username: {
+                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                },
+              },
+              {
+                title: {
+                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                },
+              },
+            ],
+          },
+        };
+      }
+      return models.RandomArtwork.findAll({
+        ...condition,
         order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],
         limit,
         offset,
-        logging: true,
-      }),
-    getRandomArtworksForFeed: async (
-      _,
-      { params: { count, userId, offset = 0, limit = 15 } },
-      { models },
-    ) => {
-      const artworks = await models.RandomArtwork.findAll({
-        raw: true,
-        order: [models.sequelize.literal(`id % ${count}`)],
-        limit,
-        offset,
       });
-      const userArtworks = await models.RandomArtwork.findAll({
-        where: { userId },
-        order: [models.sequelize.literal('Random()')],
-        limit: 16,
-      });
-
-      return {
-        topArtworks: offset ? undefined : artworks.slice(0, 8),
-        userArtworks,
-        artworks: offset ? artworks : artworks.length < 8 + 15 ? undefined : artworks.slice(8),
-      };
     },
   },
   Mutation: {

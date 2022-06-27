@@ -6,6 +6,8 @@ module.exports = {
     isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
     payment: async (parent, {}, { models }) =>
       models.Payment.findOne({ where: { userId: parent.id } }),
+    productsCount: (parent, {}, { models }) =>
+      models.Product.count({ where: { userId: parent.id } }),
     artworksCount: (parent, {}, { models }) =>
       models.Artwork.count({ where: { userId: parent.id } }),
     followersCount: (parent, {}, { models }) =>
@@ -14,16 +16,28 @@ module.exports = {
       const followings = await models.Following.findAll({ where: { userId: parent.id } });
       return followings ? followings.map(({ followingId }) => followingId) : [];
     },
+    boughtProducts: async (parent, {}, { models }) => {
+      const products = await models.ProductCustomer.findAll({ where: { userId: parent.id } });
+      return products ? products.map(({ productId }) => productId) : [];
+    },
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
     getUser: async (_, { username }, { user: loggedInUser, loaders, models }) => {
       const user = await loaders.userByUsername.load(username);
+      const productsCount = await models.Product.count({ where: { userId: user.id } });
       const artworksCount = await models.Artwork.count({ where: { userId: user.id } });
       const followersCount = await models.Following.count({ where: { userId: user.id } });
       const followingsCount = await models.Following.count({ where: { followingId: user.id } });
       const isFollowing = loggedInUser ? await loaders.isFollowing.load(user.id) : false;
-      return { ...user.dataValues, artworksCount, followersCount, followingsCount, isFollowing };
+      return {
+        ...user.dataValues,
+        productsCount,
+        artworksCount,
+        followersCount,
+        followingsCount,
+        isFollowing,
+      };
     },
   },
   Mutation: {
@@ -84,40 +98,29 @@ module.exports = {
         return e;
       }
     },
-    contactCreator: async (_, { mailInfo }, { user, models, loaders }) => {
+    contactCreator: async (_, { mailInfo }, { user, loaders }) => {
       try {
         const fan = await loaders.userByUserId.load(user.attributes.sub);
-        const creator = await loaders.userByUsername.load(mailInfo.creatorUsername);
-        const tierKey = `tier${mailInfo.tier}`;
-        const vouchers = await models.Voucher.findOne({
-          where: {
-            userId: fan.id,
-          },
-        });
-        if (vouchers[tierKey] <= 0) {
-          return Promise.reject('Not enough vouchers!');
-        }
+        const product = await loaders.productById.load(mailInfo.productId);
+        const creator = await loaders.userById.load(product.userId);
 
         try {
-          const res = await sendMail({
+          await sendMail({
             to: creator.email,
-            subject: `Request for service: Tier ${mailInfo.tier}`,
+            subject: `Purchased service message: "${product.title}"`,
             cc: fan.email,
             text: `
-            The Fan ${fan.email} messaged you -
+Fan ${fan.username} messaged you -
 
-            ${mailInfo.message}
+${mailInfo.message}
 
-            For reply, please, write to this email address - ${fan.email}!
+To reply, please, use this email - ${fan.email}
 
-            Kind regards, Crio team.
+Kind regards,
+Crio team.
           `,
           });
-          if (res) {
-            vouchers[tierKey] = vouchers[tierKey] - 1;
-            await vouchers.save();
-            return true;
-          }
+          return true;
         } catch (e) {
           console.log('error sending email', e.response.body);
           throw e;
@@ -134,11 +137,12 @@ module.exports = {
           to: SENDGRID_CC_EMAILS,
           subject: 'Request for cancel subscription',
           text: `
-          The Fan ${email} request to cancel the subscription.
+Fan ${email} request to cancel the subscription.
 
-          For reply, please, write to this email address - ${email}!
+To reply, please, use this email - ${email}
 
-          Kind regards, Crio team.
+Kind regards,
+Crio team.
         `,
         });
         if (res) {

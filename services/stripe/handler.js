@@ -1,4 +1,6 @@
 const fromUnixTime = require('date-fns/fromUnixTime');
+
+const sendMail = require('./config/mail');
 const { addUnixTimeMonth } = require('./utils');
 const DB = require('./models');
 
@@ -6,9 +8,9 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
   const voucher = await DB.Voucher.findOne({
     where: {
       userId,
-    }
+    },
   });
-  console.log('foundVoucher', voucher);
+
   if (voucher) {
     for (const key of Object.keys(params)) {
       voucher[key] = params[key];
@@ -22,9 +24,56 @@ const createOrUpdateVoucher = async ({ userId, ...params }) => {
   }
 };
 
+const createProductCustomer = async attributes => {
+  const productId = attributes.metadata.productId;
+  // const transaction = await DB.sequelize.transaction();
+  try {
+    const product = await DB.Product.findOne({
+      raw: true,
+      where: { id: productId },
+      attributes: ['User.username', 'User.email', 'limit', 'title'],
+      include: {
+        attributes: [],
+        model: DB.User,
+      },
+    });
+    DB.ProductCustomer.create(
+      {
+        userId: attributes.metadata.userId,
+        productId,
+        customerEmail: attributes.customer_details.email,
+        customerName: attributes.customer_details.name,
+        status: attributes.status,
+        eventSnapshot: attributes,
+      },
+      // { transaction },
+    );
+    if (product.limit > 0) {
+      await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
+    }
+    const x = await sendMail({
+      to: product.email,
+      subject: `Request for Purchase of: "${product.title}"`,
+      cc: attributes.customer_details.email,
+      text: `
+${attributes.customer_details.name} (email - ${attributes.customer_details.email}) purchased "${product.title}". Please complete the order at the earliest convenience. Thank you
+
+Kind regards,
+Crio team.
+    `,
+    });
+    // await transaction.commit();
+  } catch (e) {
+    // await transaction.rollback();
+    console.log(e, 'Can not create customer');
+  }
+};
+
 const handler = async (headers, body) => {
   try {
     const event = typeof body === 'string' ? JSON.parse(body) : body;
+
+    console.log(event.type, 'event.type');
 
     switch (event.type) {
       case 'invoice.paid': {
@@ -49,17 +98,20 @@ const handler = async (headers, body) => {
         });
         console.log('paymentDetails', paymentDetails);
         if (paymentDetails) {
-          await DB.Payment.update({
-            periodStart: periodStartDate,
-            periodEnd: periodEndDate,
-            subscriptionStatus: 'active',
-            lastEventSnapshot: invoice,
-            subscriptionCancel: false,
-          }, {
-            where: {
-              customerEmail: invoice.customer_email,
+          await DB.Payment.update(
+            {
+              periodStart: periodStartDate,
+              periodEnd: periodEndDate,
+              subscriptionStatus: 'active',
+              lastEventSnapshot: invoice,
+              subscriptionCancel: false,
             },
-          });
+            {
+              where: {
+                customerEmail: invoice.customer_email,
+              },
+            },
+          );
           console.log('payment updated');
         } else {
           const user = await DB.User.findOne({
@@ -99,14 +151,17 @@ const handler = async (headers, body) => {
           },
         });
         if (paymentDetails) {
-          await DB.Payment.update({
-            subscriptionStatus: 'unpaid',
-            lastEventSnapshot: invoice,
-          }, {
-            where: {
-              customerEmail: invoice.customer_email,
+          await DB.Payment.update(
+            {
+              subscriptionStatus: 'unpaid',
+              lastEventSnapshot: invoice,
             },
-          });
+            {
+              where: {
+                customerEmail: invoice.customer_email,
+              },
+            },
+          );
           await createOrUpdateVoucher({
             userId: paymentDetails.userId,
             tier1: 0,
@@ -114,6 +169,10 @@ const handler = async (headers, body) => {
             tier3: 0,
           });
         }
+        break;
+      }
+      case 'checkout.session.completed': {
+        await createProductCustomer(event.data.object);
         break;
       }
       default:

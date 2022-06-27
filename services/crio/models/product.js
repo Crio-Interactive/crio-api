@@ -1,9 +1,8 @@
-'use strict';
 const { Model } = require('sequelize');
 const { ACCESSIBILITY } = require('../constants');
 
 module.exports = (sequelize, DataTypes) => {
-  class RandomArtwork extends Model {
+  class Product extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,40 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Product.belongsTo(models.User, { foreignKey: 'userId' });
     }
   }
 
-  RandomArtwork.init(
+  Product.init(
     {
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      providerType: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      providerUserId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      avatar: {
-        type: DataTypes.STRING,
-      },
-      artworkId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      videoUri: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-      },
-      thumbnailUri: {
+      type: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -54,20 +30,29 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: {
         type: DataTypes.TEXT,
-        allowNull: false,
+      },
+      price: {
+        type: DataTypes.FLOAT,
+      },
+      limit: {
+        type: DataTypes.SMALLINT,
       },
       accessibility: {
         type: DataTypes.ENUM,
         values: Object.values(ACCESSIBILITY),
         default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
+      thumbnail: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
-      modelName: 'RandomArtwork',
-      timestamps: false,
+      modelName: 'Product',
+      timestamps: true,
+      paranoid: true,
     },
   );
 
-  return RandomArtwork;
+  return Product;
 };

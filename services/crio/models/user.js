@@ -54,6 +54,9 @@ module.exports = (sequelize, DataTypes) => {
       about: {
         type: DataTypes.TEXT,
       },
+      stripeAccountId: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,

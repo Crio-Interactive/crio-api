@@ -14,13 +14,12 @@ module.exports = gql`
   }
 
   type WorkDetail {
-    id: ID!
     artworkId: ID
     userId: ID!
+    username: String!
     providerType: String!
     providerUserId: String!
     avatar: String
-    name: String!
     videoUri: String!
     thumbnailUri: String!
     title: String!
@@ -40,11 +39,12 @@ module.exports = gql`
     artworkId: ID
     limit: Int
     offset: Int
+    keyword: String
   }
 
-  type randomArtworksInfo {
-    count: Int!
-    creatorIds: [ID!]
+  type randomInfo {
+    productsCount: Int!
+    artworksCount: Int!
     artworks: [WorkDetail!]!
   }
 
@@ -57,14 +57,12 @@ module.exports = gql`
   type Query {
     getArtwork(artworkId: ID!): WorkDetail
     getUserArtworks(username: String): [WorkDetail!]!
-    getRandomArtworksInfo: randomArtworksInfo!
+    getRandomInfo(keyword: String): randomInfo!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
-    getRandomArtworksForFeed(params: paginationParams!): feedArtworks!
   }
 
   type Mutation {
     createArtwork(videoUri: String!): Artwork
-    updateArtworks: Boolean
     deleteArtwork(params: DeletingParams!): Boolean
   }
 `;

@@ -9,32 +9,38 @@
 if [ "${CIRCLE_BRANCH}" == "develop" ]
 then
   {
-    echo "export CLIENT_URL=https://crio-qa.criointeractive.com/"
+    echo "export CLIENT_URL=$CLIENT_URL_DEVELOP"
     echo "export SUBDOMAIN_NAME=crio-qa-api"
     echo "export STACK_REGION=us-west-2"
     echo "export APP_NAME=crio-development"
-    echo "export SENDGRID_VERIFIED_SENDER=info@criointeractive.com"
-    echo "export SENDGRID_CC_EMAILS=narine@tidepoollabs.com"
+    echo "export SENDGRID_API_KEY=$SENDGRID_API_KEY_DEVELOP"
+    echo "export SENDGRID_VERIFIED_SENDER=$SENDGRID_VERIFIED_SENDER_DEVELOP"
+    echo "export SENDGRID_CC_EMAILS=$SENDGRID_CC_EMAILS_DEVELOP"
+    echo "export STRIPE_API_KEY=$STRIPE_API_KEY_DEVELOP"
   } >> "$BASH_ENV"
 elif [ "${CIRCLE_BRANCH}" == "staging" ]
 then
   {
-    echo "export CLIENT_URL=https://crio-staging.criointeractive.com/"
+    echo "export CLIENT_URL=$CLIENT_URL_STAGING"
     echo "export SUBDOMAIN_NAME=crio-staging-api"
     echo "export STACK_REGION=us-west-2"
     echo "export APP_NAME=crio-in-staging"
-    echo "export SENDGRID_VERIFIED_SENDER=info@criointeractive.com"
-    echo "export SENDGRID_CC_EMAILS=narine@tidepoollabs.com"
+    echo "export SENDGRID_API_KEY=$SENDGRID_API_KEY_STAGING"
+    echo "export SENDGRID_VERIFIED_SENDER=$SENDGRID_VERIFIED_SENDER_STAGING"
+    echo "export SENDGRID_CC_EMAILS=$SENDGRID_CC_EMAILS_STAGING"
+    echo "export STRIPE_API_KEY=$STRIPE_API_KEY_STAGING"
   } >> "$BASH_ENV"
 elif [ "${CIRCLE_BRANCH}" == "master" ]
 then
   {
-    echo "export CLIENT_URL=https://www.criointeractive.com/"
+    echo "export CLIENT_URL=$CLIENT_URL_MASTER"
     echo "export SUBDOMAIN_NAME=api"
     echo "export STACK_REGION=us-east-1"
     echo "export APP_NAME=crio-in-production"
-    echo "export SENDGRID_VERIFIED_SENDER=info@criointeractive.com"
-    echo "export SENDGRID_CC_EMAILS=klodi.beqiri@criointeractive.com"
+    echo "export SENDGRID_API_KEY=$SENDGRID_API_KEY_MASTER"
+    echo "export SENDGRID_VERIFIED_SENDER=$SENDGRID_VERIFIED_SENDER_MASTER"
+    echo "export SENDGRID_CC_EMAILS=$SENDGRID_CC_EMAILS_MASTER"
+    echo "export STRIPE_API_KEY=$STRIPE_API_KEY_MASTER"
   } >> "$BASH_ENV"
 else
   #should not be executed

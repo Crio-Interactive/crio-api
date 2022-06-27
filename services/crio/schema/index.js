@@ -1,6 +1,6 @@
 const { applyMiddleware, shield } = require('@tidepoollabs/node-auth');
 const { buildFederatedSchema } = require('@apollo/federation');
-const { isAuthenticated, isNotAuthenticated } = require('./permissions');
+const { isAuthenticated } = require('./permissions');
 const typeDefs = require('../types/index');
 const resolvers = require('../resolvers/index');
 
@@ -19,16 +19,21 @@ module.exports = applyMiddleware(
       getFollowersCount: isAuthenticated,
       getUploadUrl: isAuthenticated,
       getUploadImageLink: isAuthenticated,
-      getRandomArtworksForFeed: isAuthenticated,
+      getConnectAccount: isAuthenticated,
+      getConnectOnboardingLink: isAuthenticated,
+      getConnectLoginLink: isAuthenticated,
+      deleteStripeAccount: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,
       updateUser: isAuthenticated,
       createFollowing: isAuthenticated,
       createArtwork: isAuthenticated,
-      updateArtworks: isAuthenticated,
       deleteArtwork: isAuthenticated,
       updateMetadata: isAuthenticated,
+      createProduct: isAuthenticated,
+      updateProduct: isAuthenticated,
+      deleteProduct: isAuthenticated,
       contactCreator: isAuthenticated,
       cancelSubscription: isAuthenticated,
     },

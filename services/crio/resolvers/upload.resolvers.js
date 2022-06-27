@@ -42,7 +42,7 @@ module.exports = {
         const artwork = await loaders.artworkById.load(artworkId);
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         if (artwork.userId !== id) {
-          throw new Error(`An artwork does not belong to you`);
+          throw new Error('An artwork does not belong to you');
         }
         if (title && description) {
           if (title !== artwork.title || description !== artwork.description) {
