@@ -107,7 +107,7 @@ module.exports = {
         try {
           await sendMail({
             to: creator.email,
-            subject: `Purchased service message: "${product.title}"`,
+            subject: `A Fan Purchased "${product.title}" from your Crio Page!`,
             cc: fan.email,
             text: `
 Fan ${fan.username} messaged you -

@@ -57,8 +57,8 @@ const createProductCustomer = async attributes => {
       subject: `A Fan Purchased "${product.title}" from your Crio Page!`,
       cc: attributes.customer_details.email,
       text: `
-Fan, "${attributes.customer_details.name}" (cc’d), purchased "${product.title}" from your Crio Page!
-Please complete the order at your earliest convenience by replying to this email, ${attributes.customer_details.email} and working directly with them.
+Fan, "${attributes.customer_details.email}" (cc’d), purchased "${product.title}" from your Crio Page!
+Please complete the order at your earliest convenience by replying to this email and working directly with them.
 
 Kind regards,
 Crio team.
