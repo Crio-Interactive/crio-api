@@ -53,7 +53,7 @@ const createProductCustomer = async attributes => {
     }
     await sendMail({
       to: product.email,
-      name: product.username,
+      sender: product.username,
       subject: `A Fan Purchased "${product.title}" from your Crio Page!`,
       cc: attributes.customer_details.email,
       text: `
