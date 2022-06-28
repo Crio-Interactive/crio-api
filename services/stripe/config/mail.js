@@ -10,6 +10,7 @@ const sendMail = async ({ sender, to, subject, text, cc }) =>
     from: sender
       ? { name: `Creator ${sender} via Crio`, email: SENDGRID_VERIFIED_SENDER }
       : SENDGRID_VERIFIED_SENDER,
+    replyTo: 'test@gmail.com',
     subject,
     text,
     cc: [SENDGRID_CC_EMAILS, cc].filter(email => email !== to),
