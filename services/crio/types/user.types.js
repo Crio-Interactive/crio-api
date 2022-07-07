@@ -13,6 +13,8 @@ module.exports = gql`
     firstName: String
     lastName: String
     about: String
+    featuresSeen: Boolean
+    helpSeen: Boolean
   }
 
   type response {
