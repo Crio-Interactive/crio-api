@@ -41,6 +41,20 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING,
       },
+      about: {
+        type: Sequelize.TEXT,
+      },
+      stripeAccountId: {
+        type: Sequelize.STRING,
+      },
+      featuresSeen: {
+        type: Sequelize.BOOLEAN,
+        default: false,
+      },
+      helpSeen: {
+        type: Sequelize.BOOLEAN,
+        default: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

@@ -57,6 +57,14 @@ module.exports = (sequelize, DataTypes) => {
       stripeAccountId: {
         type: DataTypes.STRING,
       },
+      featuresSeen: {
+        type: DataTypes.BOOLEAN,
+        default: false,
+      },
+      helpSeen: {
+        type: DataTypes.BOOLEAN,
+        default: false,
+      },
     },
     {
       sequelize,
