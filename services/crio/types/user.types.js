@@ -13,6 +13,8 @@ module.exports = gql`
     firstName: String
     lastName: String
     about: String
+    featuresSeen: Boolean
+    helpSeen: Boolean
   }
 
   type response {
@@ -54,7 +56,8 @@ module.exports = gql`
     isFollowing: Boolean
     followings: [ID]
     boughtProducts: [ID]
-    hasStripeAccount: Boolean
+    featuresSeen: Boolean
+    helpSeen: Boolean
   }
 
   input MailInfo {
