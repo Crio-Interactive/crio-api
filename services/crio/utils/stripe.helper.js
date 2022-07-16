@@ -1,4 +1,4 @@
-const { CLIENT_URL, STRIPE_API_KEY } = require('../config/environment');
+const { BUCKET, CLIENT_URL, STRIPE_API_KEY } = require('../config/environment');
 const stripe = require('stripe')(STRIPE_API_KEY);
 
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
       name: title,
       images: thumbnail
         ? [
-            `https://${process.env.APP_NAME}-bucket.s3.${process.env.AWS_REGION}.amazonaws.com/${userId}/products/thumbnail-${thumbnail}`,
+            `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${userId}/products/thumbnail-${thumbnail}`,
           ]
         : [],
       url: `${CLIENT_URL}pricing`,
