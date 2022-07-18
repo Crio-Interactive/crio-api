@@ -12,6 +12,11 @@ module.exports = gql`
     thumbnail: String
   }
 
+  type ProductType {
+    id: ID!
+    name: String!
+  }
+
   type ProductDetail {
     productId: ID!
     userId: ID!
@@ -58,6 +63,7 @@ module.exports = gql`
 
   type Query {
     getProduct(productId: ID!): ProductDetail
+    getProductTypes: [ProductType]!
     getUserProducts(username: String): [ProductDetail!]!
     getRandomProductsInfo: randomProductsInfo!
     getRandomProducts(params: paginationParams!): [ProductDetail]!
