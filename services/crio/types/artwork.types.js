@@ -1,6 +1,10 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
+  type ArtworkId {
+    id: ID!
+  }
+
   type Artwork {
     id: ID!
     artworkId: ID!
@@ -26,6 +30,15 @@ module.exports = gql`
     description: String!
     status: String
     accessibility: Accessibility!
+  }
+
+  input ArtworkParams {
+    videoUri: String!
+    thumbnailUri: String
+    title: String
+    description: String
+    accessibility: Accessibility
+    isVideo: Boolean
   }
 
   input DeletingParams {
@@ -62,7 +75,7 @@ module.exports = gql`
   }
 
   type Mutation {
-    createArtwork(videoUri: String!): Artwork
+    createArtwork(params: ArtworkParams!): ArtworkId!
     deleteArtwork(params: DeletingParams!): Boolean
   }
 `;
