@@ -46,7 +46,7 @@ module.exports = {
         }
         if (title && description) {
           if (title !== artwork.title || description !== artwork.description) {
-            await vimeoClient.patch(artwork.videoUri, { name: title, description });
+            await vimeoClient.patch(artwork.content, { name: title, description });
           }
           await models.Artwork.update(
             { title, description, accessibility },
@@ -57,7 +57,7 @@ module.exports = {
         if (uri) {
           await vimeoClient.patch(uri, { active: true });
           const videoData = await vimeoClient.get(
-            `${artwork.videoUri}/pictures?fields=base_link,active`,
+            `${artwork.content}/pictures?fields=base_link,active`,
           );
           await models.Artwork.update(
             { thumbnail: videoData.data.data.find(({ active }) => active === true)?.base_link },

@@ -16,7 +16,7 @@ const artworkAttributes = [
   ...attributes,
   ['id', 'artworkId'],
   'status',
-  'videoUri',
+  'content',
   'pictures_uri',
   'thumbnail',
 ];

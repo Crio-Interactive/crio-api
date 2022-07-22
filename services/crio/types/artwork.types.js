@@ -9,7 +9,7 @@ module.exports = gql`
     id: ID!
     artworkId: ID!
     userId: ID!
-    videoUri: String!
+    content: String!
     thumbnail: String!
     title: String!
     description: String!
@@ -24,7 +24,7 @@ module.exports = gql`
     providerType: String!
     providerUserId: String!
     avatar: String
-    videoUri: String!
+    content: String!
     thumbnail: String!
     title: String!
     description: String!
@@ -33,7 +33,7 @@ module.exports = gql`
   }
 
   input ArtworkParams {
-    videoUri: String!
+    content: String!
     thumbnail: String
     title: String
     description: String
@@ -43,7 +43,7 @@ module.exports = gql`
 
   input DeletingParams {
     artworkId: ID
-    videoUri: String
+    content: String
   }
 
   input paginationParams {

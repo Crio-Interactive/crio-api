@@ -40,7 +40,7 @@ const checkStatus = async () => {
             },
             {
               where: {
-                videoUri: itm.data.uri,
+                content: itm.data.uri,
               },
             },
           );

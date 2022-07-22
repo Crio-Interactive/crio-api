@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      videoUri: {
+      content: {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,

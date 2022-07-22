@@ -88,7 +88,7 @@ module.exports = {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         const attributes = {
           userId: id,
-          videoUri: params.videoUri,
+          content: params.content,
           thumbnail: params.thumbnail || '',
           title: params.title,
           description: params.description || 'No description',
@@ -97,7 +97,7 @@ module.exports = {
           pictures_uri: '',
         };
         if (params.isVideo) {
-          const videoData = await vimeoClient.get(params.videoUri);
+          const videoData = await vimeoClient.get(params.content);
           attributes.title = videoData?.data?.name;
           attributes.status = videoData?.data?.status;
           attributes.thumbnail = videoData?.data?.pictures?.base_link;
@@ -109,12 +109,12 @@ module.exports = {
         return e;
       }
     },
-    deleteArtwork: async (_, { params: { artworkId, videoUri } }, { loaders, models }) => {
+    deleteArtwork: async (_, { params: { artworkId, content } }, { loaders, models }) => {
       try {
-        let uri = videoUri;
+        let uri = content;
         if (artworkId) {
           const artwork = await loaders.artworkById.load(artworkId);
-          uri = artwork.videoUri;
+          uri = artwork.content;
           await models.Artwork.destroy({ where: { id: artworkId } });
         }
         if (uri) {

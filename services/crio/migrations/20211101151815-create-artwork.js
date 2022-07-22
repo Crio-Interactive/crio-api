@@ -20,7 +20,7 @@ module.exports = {
         },
         allowNull: false,
       },
-      videoUri: {
+      content: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
