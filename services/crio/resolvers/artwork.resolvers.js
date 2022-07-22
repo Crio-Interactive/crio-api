@@ -83,19 +83,29 @@ module.exports = {
     },
   },
   Mutation: {
-    createArtwork: async (_, { videoUri }, { user, loaders, models }) => {
+    createArtwork: async (_, { params }, { user, loaders, models }) => {
       try {
-        const videoData = await vimeoClient.get(videoUri);
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        return models.Artwork.create({
+        const attributes = {
           userId: id,
-          videoUri,
-          thumbnailUri: videoData?.data?.pictures?.base_link,
-          title: videoData?.data?.name,
-          description: 'No description',
-          status: videoData?.data?.status,
-          pictures_uri: videoData?.data?.metadata?.connections?.pictures?.uri,
-        });
+          videoUri: params.videoUri,
+          thumbnailUri: params.thumbnailUri,
+          title: params.title,
+          description: params.description || 'No description',
+          thumbnailUri: '',
+          status: 'available',
+          accessibility: params.accessibility,
+          pictures_uri: '',
+        };
+        if (params.isVideo) {
+          const videoData = await vimeoClient.get(params.videoUri);
+          attributes.title = videoData?.data?.name;
+          attributes.status = videoData?.data?.status;
+          attributes.thumbnailUri = videoData?.data?.pictures?.base_link;
+          attributes.pictures_uri = videoData?.data?.metadata?.connections?.pictures?.uri;
+        }
+        const { id: artworkId } = await models.Artwork.create(attributes);
+        return { id: artworkId };
       } catch (e) {
         return e;
       }
