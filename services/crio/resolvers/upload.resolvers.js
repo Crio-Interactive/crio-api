@@ -60,7 +60,7 @@ module.exports = {
             `${artwork.videoUri}/pictures?fields=base_link,active`,
           );
           await models.Artwork.update(
-            { thumbnailUri: videoData.data.data.find(({ active }) => active === true)?.base_link },
+            { thumbnail: videoData.data.data.find(({ active }) => active === true)?.base_link },
             { where: { id: artworkId } },
           );
           return true;

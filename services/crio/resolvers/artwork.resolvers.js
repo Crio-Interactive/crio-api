@@ -89,10 +89,9 @@ module.exports = {
         const attributes = {
           userId: id,
           videoUri: params.videoUri,
-          thumbnailUri: params.thumbnailUri,
+          thumbnail: params.thumbnail || '',
           title: params.title,
           description: params.description || 'No description',
-          thumbnailUri: '',
           status: 'available',
           accessibility: params.accessibility,
           pictures_uri: '',
@@ -101,7 +100,7 @@ module.exports = {
           const videoData = await vimeoClient.get(params.videoUri);
           attributes.title = videoData?.data?.name;
           attributes.status = videoData?.data?.status;
-          attributes.thumbnailUri = videoData?.data?.pictures?.base_link;
+          attributes.thumbnail = videoData?.data?.pictures?.base_link;
           attributes.pictures_uri = videoData?.data?.metadata?.connections?.pictures?.uri;
         }
         const { id: artworkId } = await models.Artwork.create(attributes);

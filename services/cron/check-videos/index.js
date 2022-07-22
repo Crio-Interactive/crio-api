@@ -15,32 +15,35 @@ const checkStatus = async () => {
           {
             status: {
               [Op.not]: 'available',
-            }
+            },
           },
           {
-            thumbnailUri: {
+            thumbnail: {
               [Op.like]: `%/default%`,
-            }
-          }
+            },
+          },
         ],
       },
       limit: 10,
     });
     if (videosToCheck.length) {
-      const requests = videosToCheck.map((vid) => vimeoClient.get(vid.videoUri));
+      const requests = videosToCheck.map(vid => vimeoClient.get(vid.videoUri));
       const results = await Promise.all(requests);
       console.log('results', results);
       const available = results.filter(res => res.data.status === 'available');
       if (available.length) {
-        const dbQueries = available.map((itm) => {
-          return Artwork.update({
-            status: 'available',
-            thumbnailUri: itm.data.pictures.base_link,
-          }, {
-            where: {
-              videoUri: itm.data.uri,
+        const dbQueries = available.map(itm => {
+          return Artwork.update(
+            {
+              status: 'available',
+              thumbnail: itm.data.pictures.base_link,
             },
-          });
+            {
+              where: {
+                videoUri: itm.data.uri,
+              },
+            },
+          );
         });
         const res = await Promise.all(dbQueries);
         console.log('res', res);

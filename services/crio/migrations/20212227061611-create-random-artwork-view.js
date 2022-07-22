@@ -13,7 +13,7 @@ module.exports = {
       "providerUserId",
       "avatar",
       "videoUri",
-      "thumbnailUri",
+      "thumbnail",
       "title",
       "description",
       "Artworks"."accessibility"

@@ -25,7 +25,7 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      thumbnailUri: {
+      thumbnail: {
         type: Sequelize.STRING,
         allowNull: false,
       },

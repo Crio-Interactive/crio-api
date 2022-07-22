@@ -4,7 +4,7 @@ module.exports = gql`
   type Work {
     artworkId: ID!
     videoUri: String!
-    thumbnailUri: String!
+    thumbnail: String!
     title: String!
     description: String!
   }

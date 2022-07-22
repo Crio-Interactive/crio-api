@@ -10,7 +10,7 @@ module.exports = gql`
     artworkId: ID!
     userId: ID!
     videoUri: String!
-    thumbnailUri: String!
+    thumbnail: String!
     title: String!
     description: String!
     status: String!
@@ -25,7 +25,7 @@ module.exports = gql`
     providerUserId: String!
     avatar: String
     videoUri: String!
-    thumbnailUri: String!
+    thumbnail: String!
     title: String!
     description: String!
     status: String
@@ -34,7 +34,7 @@ module.exports = gql`
 
   input ArtworkParams {
     videoUri: String!
-    thumbnailUri: String
+    thumbnail: String
     title: String
     description: String
     accessibility: Accessibility

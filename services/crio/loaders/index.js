@@ -18,7 +18,7 @@ const artworkAttributes = [
   'status',
   'videoUri',
   'pictures_uri',
-  'thumbnailUri',
+  'thumbnail',
 ];
 
 const productAttributes = [
