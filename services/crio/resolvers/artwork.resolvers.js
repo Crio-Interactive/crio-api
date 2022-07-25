@@ -117,7 +117,7 @@ module.exports = {
           uri = artwork.content;
           await models.Artwork.destroy({ where: { id: artworkId } });
         }
-        if (uri) {
+        if (uri?.startsWith('/videos/')) {
           await vimeoClient.delete(uri);
         }
         return true;
