@@ -27,7 +27,7 @@ const checkStatus = async () => {
       limit: 10,
     });
     if (videosToCheck.length) {
-      const requests = videosToCheck.map(vid => vimeoClient.get(vid.videoUri));
+      const requests = videosToCheck.map(({ content }) => vimeoClient.get(content));
       const results = await Promise.all(requests);
       console.log('results', results);
       const available = results.filter(res => res.data.status === 'available');
