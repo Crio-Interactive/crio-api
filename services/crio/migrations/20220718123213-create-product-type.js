@@ -1,16 +1,18 @@
 'use strict';
 
 const types = [
-  'eBooks',
-  'Comics',
-  'Artworks',
-  'Art Tools & Assets',
-  'Game Assets',
-  'Software',
-  'Photos',
-  'Videw',
-  'Guids/ Documents',
-  'Templates',
+  'Digital Product',
+  'Service',
+  // 'eBooks',
+  // 'Comics',
+  // 'Artworks',
+  // 'Art Tools & Assets',
+  // 'Game Assets',
+  // 'Software',
+  // 'Photos',
+  // 'Videw',
+  // 'Guids/ Documents',
+  // 'Templates',
 ];
 const values = types.map(item => `('${item}',now(),now())`).join(',');
 
