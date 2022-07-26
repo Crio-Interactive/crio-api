@@ -45,7 +45,10 @@ module.exports = {
           throw new Error('An artwork does not belong to you');
         }
         if (title && description) {
-          if (title !== artwork.title || description !== artwork.description) {
+          if (
+            artwork.content.startsWith('/videos/') &&
+            (title !== artwork.title || description !== artwork.description)
+          ) {
             await vimeoClient.patch(artwork.content, { name: title, description });
           }
           await models.Artwork.update(
