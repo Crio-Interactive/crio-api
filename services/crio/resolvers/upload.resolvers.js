@@ -38,13 +38,13 @@ module.exports = {
   Mutation: {
     updateMetadata: async (_, { params }, { user, loaders, models }) => {
       try {
-        const { artworkId, title, description, accessibility, uri } = params;
+        const { artworkId, title, description, accessibility, uri, thumbnail } = params;
         const artwork = await loaders.artworkById.load(artworkId);
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         if (artwork.userId !== id) {
           throw new Error('An artwork does not belong to you');
         }
-        if (title && description) {
+        if (thumbnail || (title && description)) {
           if (
             artwork.content.startsWith('/videos/') &&
             (title !== artwork.title || description !== artwork.description)
@@ -52,7 +52,7 @@ module.exports = {
             await vimeoClient.patch(artwork.content, { name: title, description });
           }
           await models.Artwork.update(
-            { title, description, accessibility },
+            { title, description, accessibility, thumbnail },
             { where: { id: artworkId } },
           );
           return true;

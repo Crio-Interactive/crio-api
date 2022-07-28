@@ -19,6 +19,7 @@ module.exports = gql`
     description: String
     accessibility: Accessibility
     uri: String
+    thumbnail: String
   }
 
   type Query {
