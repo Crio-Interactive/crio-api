@@ -23,6 +23,7 @@ module.exports = {
         include: {
           attributes: [],
           model: models.User,
+          required: true,
         },
         where: { userId },
       });
