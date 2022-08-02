@@ -4,26 +4,6 @@ const sendMail = require('./config/mail');
 const { addUnixTimeMonth } = require('./utils');
 const DB = require('./models');
 
-const createOrUpdateVoucher = async ({ userId, ...params }) => {
-  const voucher = await DB.Voucher.findOne({
-    where: {
-      userId,
-    },
-  });
-
-  if (voucher) {
-    for (const key of Object.keys(params)) {
-      voucher[key] = params[key];
-    }
-    return voucher.save();
-  } else {
-    return DB.Voucher.create({
-      userId,
-      ...params,
-    });
-  }
-};
-
 const createProductCustomer = async attributes => {
   const productId = attributes.metadata.productId;
   // const transaction = await DB.sequelize.transaction();
@@ -135,15 +115,6 @@ const handler = async (headers, body) => {
             console.log('created-paymentDetails', paymentDetails);
           }
         }
-        if (paymentDetails) {
-          await createOrUpdateVoucher({
-            userId: paymentDetails.userId,
-            tier1: 1,
-            tier2: 2,
-            tier3: 2,
-          });
-          console.log('voucher updated');
-        }
         break;
       }
       case 'invoice.payment_failed': {
@@ -165,12 +136,6 @@ const handler = async (headers, body) => {
               },
             },
           );
-          await createOrUpdateVoucher({
-            userId: paymentDetails.userId,
-            tier1: 0,
-            tier2: 0,
-            tier3: 0,
-          });
         }
         break;
       }

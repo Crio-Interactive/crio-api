@@ -21,12 +21,6 @@ module.exports = gql`
     error: String
   }
 
-  type Voucher {
-    tier1: Int
-    tier2: Int
-    tier3: Int
-  }
-
   type Payment {
     customerEmail: String
     periodStart: Date
