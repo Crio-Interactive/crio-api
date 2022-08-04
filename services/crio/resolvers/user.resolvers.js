@@ -45,9 +45,8 @@ module.exports = {
     },
     job: async (_, {}, { models }) => {
       const [subscribersCount] = await models.sequelize.query(`
-        SELECT COUNT(DISTINCT "Followings"."userId") FROM "Followings" INNER JOIN "Payments"
-          ON "Followings"."userId"="Payments"."userId"
-            AND "Payments"."subscriptionStatus" = 'active'
+        SELECT COUNT(*) FROM "Payments"
+        WHERE "Payments"."subscriptionStatus" = 'active'
             AND ("Payments"."subscriptionCancel" IS NULL OR "Payments"."subscriptionCancel" = false)
       `);
       const [creatorsFollowersCount] = await models.sequelize.query(`
@@ -55,7 +54,7 @@ module.exports = {
           "Users"."firstName",
           "Users"."lastName",
           "Users"."email",
-          "Users"."email",
+          CASE WHEN "Users"."stripeAccountId" IS NULL THEN false ELSE true END AS "stripe",
           (SELECT COUNT(*)
           FROM "Followings"
             INNER JOIN "Payments" ON "Followings"."userId"="Payments"."userId"
