@@ -43,6 +43,31 @@ module.exports = {
         isFollowing,
       };
     },
+    job: async (_, {}, { models }) => {
+      const [subscribersCount] = await models.sequelize.query(`
+        SELECT COUNT(DISTINCT "Followings"."userId") FROM "Followings" INNER JOIN "Payments"
+          ON "Followings"."userId"="Payments"."userId"
+            AND "Payments"."subscriptionStatus" = 'active'
+            AND ("Payments"."subscriptionCancel" IS NULL OR "Payments"."subscriptionCancel" = false)
+      `);
+      const [creatorsFollowersCount] = await models.sequelize.query(`
+        SELECT
+          "Users"."firstName",
+          "Users"."lastName",
+          "Users"."email",
+          "Users"."email",
+          (SELECT COUNT(*)
+          FROM "Followings"
+            INNER JOIN "Payments" ON "Followings"."userId"="Payments"."userId"
+                                  AND "Payments"."subscriptionStatus" = 'active'
+                                  AND ("Payments"."subscriptionCancel" IS NULL OR "Payments"."subscriptionCancel" = false)
+          WHERE "Followings"."followingId"="Users"."id"
+            AND "Followings"."deletedAt" IS NULL) AS "followersCount"
+        FROM "Users" INNER JOIN "Creators" ON "Users"."email" = "Creators"."email"
+        WHERE "Users"."deletedAt" IS NULL AND "Creators"."deletedAt" IS NULL
+      `);
+      return { subscribersCount: subscribersCount[0].count, creatorsFollowersCount };
+    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, loaders, models }) => {

@@ -65,9 +65,22 @@ module.exports = gql`
     message: String!
   }
 
+  type CreatorsFollowersCount {
+    firstName: String!
+    lastName: String!
+    email: String!
+    followersCount: String!
+  }
+
+  type Job {
+    subscribersCount: Int!
+    creatorsFollowersCount: [CreatorsFollowersCount]!
+  }
+
   type Query {
     me: UserInfo
     getUser(username: String!): UserInfo
+    job: Job
   }
 
   type Mutation {
