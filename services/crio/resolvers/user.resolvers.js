@@ -55,7 +55,7 @@ module.exports = {
           "Users"."firstName",
           "Users"."lastName",
           "Users"."email",
-          "Users"."email",
+          CASE WHEN "Users"."stripeAccountId" IS NULL THEN false ELSE true END AS "stripe",
           (SELECT COUNT(*)
           FROM "Followings"
             INNER JOIN "Payments" ON "Followings"."userId"="Payments"."userId"

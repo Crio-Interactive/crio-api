@@ -66,9 +66,10 @@ module.exports = gql`
   }
 
   type CreatorsFollowersCount {
-    firstName: String!
-    lastName: String!
+    firstName: String
+    lastName: String
     email: String!
+    stripe: Boolean!
     followersCount: String!
   }
 
