@@ -134,6 +134,7 @@ module.exports = {
           limit: attributes.limit,
           accessibility: attributes.accessibility,
           thumbnail: attributes.thumbnail || null,
+          file: attributes.file || null,
         });
         return true;
       } catch (e) {
