@@ -127,7 +127,7 @@ module.exports = {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         await models.Product.create({
           userId: id,
-          type: attributes.type,
+          productTypeId: attributes.productTypeId,
           title: attributes.title,
           description: attributes.description,
           price: attributes.price,
@@ -151,7 +151,7 @@ module.exports = {
         await models.Product.update(
           {
             userId: product.userId,
-            type: attributes.type,
+            productTypeId: attributes.productTypeId,
             title: attributes.title,
             description: attributes.description,
             price: attributes.price || null,

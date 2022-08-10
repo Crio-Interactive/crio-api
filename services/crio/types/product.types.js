@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   input Product {
     id: ID
-    type: String!
+    productTypeId: ID!
     title: String!
     description: String
     price: Float
@@ -25,13 +25,14 @@ module.exports = gql`
     providerType: String!
     providerUserId: String!
     avatar: String
-    type: String!
+    productTypeId: ID!
     title: String!
     description: String
     price: Float
     limit: Int
     accessibility: Accessibility!
     thumbnail: String
+    file: String
   }
 
   input DeletingParams {

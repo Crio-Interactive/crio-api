@@ -12,13 +12,14 @@ module.exports = {
       "providerType",
       "providerUserId",
       "avatar",
-      "type",
+      "productTypeId",
       "title",
       "description",
       "price",
       "limit",
       "accessibility",
-      "thumbnail"
+      "thumbnail",
+      "file"
       FROM "Users" INNER JOIN "Products" ON "Users".id = "Products"."userId"
     WHERE "Users"."deletedAt" IS NULL AND "Products"."deletedAt" IS NULL
   `),
