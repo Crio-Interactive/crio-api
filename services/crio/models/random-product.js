@@ -39,9 +39,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      type: {
-        type: DataTypes.STRING,
-        unique: true,
+      productTypeId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       title: {
