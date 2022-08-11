@@ -158,6 +158,7 @@ module.exports = {
             limit: attributes.limit || null,
             accessibility: attributes.accessibility,
             thumbnail: attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnail,
+            file: attributes.file ? attributes.file : undefined,
           },
           { where: { id: attributes.id } },
         );
