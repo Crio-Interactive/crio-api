@@ -138,7 +138,7 @@ module.exports = {
           accessibility: attributes.accessibility,
           thumbnail: attributes.thumbnail || null,
           file:
-            +attributes.productTypeId === productTypes[0].id && attributes.file
+            +attributes.productTypeId === productTypes.id && attributes.file
               ? attributes.file
               : null,
         });
@@ -166,9 +166,7 @@ module.exports = {
             accessibility: attributes.accessibility,
             thumbnail: attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnail,
             file:
-              +attributes.productTypeId === productTypes[0].id
-                ? null
-                : attributes.file || undefined,
+              +attributes.productTypeId === productTypes.id ? null : attributes.file || undefined,
           },
           { where: { id: attributes.id } },
         );
