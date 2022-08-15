@@ -1,5 +1,5 @@
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env')});
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const variables = {
   VIMEO_ACCESS_TOKEN: process.env.VIMEO_ACCESS_TOKEN,
@@ -8,7 +8,6 @@ const variables = {
   DB_USERNAME: process.env.DB_USERNAME,
   DB_PASSWORD: process.env.DB_PASSWORD,
   DB_DATABASE: process.env.DB_DATABASE,
-  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
 };
 
 module.exports = variables;
