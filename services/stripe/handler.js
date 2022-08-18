@@ -40,11 +40,11 @@ const createProductCustomer = async attributes => {
         subject: `You purchased "${product.title}" from Crio`,
         cc: attributes.customer_details.email,
         text: `
-  You purchased "${product.title}" from Crio. Download the file below.
-  https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}
+You purchased "${product.title}" from Crio. Download the file below.
+https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}
 
-  Kind regards,
-  Crio team.
+Kind regards,
+Crio team.
       `,
       });
     }
