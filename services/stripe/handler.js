@@ -46,7 +46,7 @@ const createProductCustomer = async attributes => {
       replyTo: product.email,
       subject: `You purchased "${product.title}" from Crio. Download Instructions Below.`,
       text: `
-Here is the Download link.
+Here is the download link.
 https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}
 
 Kind regards,
