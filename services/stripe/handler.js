@@ -12,7 +12,15 @@ const createProductCustomer = async attributes => {
     const product = await DB.Product.findOne({
       raw: true,
       where: { id: productId },
-      attributes: ['User.username', 'User.email', 'userId', 'limit', 'title', 'file'],
+      attributes: [
+        'User.username',
+        'User.email',
+        'userId',
+        'productTypeId',
+        'limit',
+        'title',
+        'file',
+      ],
       include: {
         attributes: [],
         model: DB.User,
@@ -32,31 +40,31 @@ const createProductCustomer = async attributes => {
     if (product.limit > 0) {
       await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
     }
-    if (!attributes.metadata.userId) {
-      await sendMail({
-        to: product.email,
-        sender: product.username,
-        replyTo: attributes.customer_details.email,
-        subject: `You purchased "${product.title}" from Crio`,
-        cc: attributes.customer_details.email,
-        text: `
-You purchased "${product.title}" from Crio. Download the file below.
+    await sendMail({
+      to: attributes.customer_details.email,
+      sender: product.username,
+      replyTo: product.email,
+      subject: `You purchased "${product.title}" from Crio. Download Instructions Below.`,
+      text: `
+Here is the Download link.
 https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}
 
 Kind regards,
 Crio team.
-      `,
-      });
-    }
+    `,
+    });
     await sendMail({
       to: product.email,
       sender: product.username,
       replyTo: attributes.customer_details.email,
-      subject: `A Fan Purchased "${product.title}" from your Crio Page!`,
-      cc: attributes.customer_details.email,
+      subject: `A fan Purchased "${product.title}" from your Crio Page!`,
       text: `
-Fan, "${attributes.customer_details.email}" (cc’d), purchased "${product.title}" from your Crio Page!
-Please complete the order at your earliest convenience by replying to this email and working directly with them.
+A fan, "${attributes.customer_details.email}" purchased "${product.title}" from your Crio Page!
+${
+  product.productTypeId === 2
+    ? ''
+    : 'Please complete the order at your earliest convenience by replying to this email and working directly with them.'
+}
 
 Kind regards,
 Crio team.
