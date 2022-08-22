@@ -11,6 +11,7 @@ const variables = {
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   SENDGRID_VERIFIED_SENDER: process.env.SENDGRID_VERIFIED_SENDER,
   SENDGRID_CC_EMAILS: process.env.SENDGRID_CC_EMAILS,
+  BUCKET: process.env.BUCKET,
 };
 
 module.exports = variables;

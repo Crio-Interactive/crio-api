@@ -20,8 +20,13 @@ module.exports = {
         },
         allowNull: false,
       },
-      type: {
-        type: Sequelize.STRING,
+      productTypeId: {
+        references: {
+          model: {
+            tableName: 'ProductTypes',
+          },
+          key: 'id',
+        },
         allowNull: false,
       },
       title: {

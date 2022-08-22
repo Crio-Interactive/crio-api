@@ -125,15 +125,22 @@ module.exports = {
     createProduct: async (_, { attributes }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        const productTypes = await models.ProductType.findOne({
+          where: { name: 'Digital Product' },
+        });
         await models.Product.create({
           userId: id,
-          type: attributes.type,
+          productTypeId: attributes.productTypeId,
           title: attributes.title,
           description: attributes.description,
           price: attributes.price,
           limit: attributes.limit,
           accessibility: attributes.accessibility,
           thumbnail: attributes.thumbnail || null,
+          file:
+            +attributes.productTypeId === productTypes.id && attributes.file
+              ? attributes.file
+              : null,
         });
         return true;
       } catch (e) {
@@ -147,16 +154,19 @@ module.exports = {
         if (product.userId !== id) {
           throw new Error('A product does not belong to you');
         }
+        const productTypes = await models.ProductType.findOne({ where: { name: 'Service' } });
         await models.Product.update(
           {
             userId: product.userId,
-            type: attributes.type,
+            productTypeId: attributes.productTypeId,
             title: attributes.title,
             description: attributes.description,
             price: attributes.price || null,
             limit: attributes.limit || null,
             accessibility: attributes.accessibility,
             thumbnail: attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnail,
+            file:
+              +attributes.productTypeId === productTypes.id ? null : attributes.file || undefined,
           },
           { where: { id: attributes.id } },
         );

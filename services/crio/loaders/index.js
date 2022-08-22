@@ -24,10 +24,11 @@ const artworkAttributes = [
 const productAttributes = [
   ...attributes,
   ['id', 'productId'],
-  'type',
+  'productTypeId',
   'price',
   'limit',
   'thumbnail',
+  'file',
 ];
 
 const loaders = (models, user) => {
@@ -123,8 +124,8 @@ const loaders = (models, user) => {
         where: {
           userId: userIds,
         },
-      }).then(artworks =>
-        userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
+      }).then(products =>
+        userIds.map(userId => products.filter(product => product.userId == userId)),
       ),
     ),
   };

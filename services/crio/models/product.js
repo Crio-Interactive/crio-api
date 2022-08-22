@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Product.belongsTo(models.User, { foreignKey: 'userId' });
+      Product.belongsTo(models.ProductType, { foreignKey: 'productTypeId' });
     }
   }
 
@@ -18,10 +19,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      type: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
       title: {
@@ -43,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
         default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
       thumbnail: {
+        type: DataTypes.STRING,
+      },
+      file: {
         type: DataTypes.STRING,
       },
     },

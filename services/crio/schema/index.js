@@ -23,6 +23,7 @@ module.exports = applyMiddleware(
       getConnectOnboardingLink: isAuthenticated,
       getConnectLoginLink: isAuthenticated,
       deleteStripeAccount: isAuthenticated,
+      job: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,

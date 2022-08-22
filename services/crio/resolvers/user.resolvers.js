@@ -1,6 +1,8 @@
 const sendMail = require('../config/mail');
 const { SENDGRID_CC_EMAILS } = require('../config/environment');
 
+const AMOUNT = 6.5;
+
 module.exports = {
   UserInfo: {
     isCreator: async (parent, {}, { loaders }) => loaders.isCreator.load(parent.email),
@@ -19,6 +21,44 @@ module.exports = {
     boughtProducts: async (parent, {}, { models }) => {
       const products = await models.ProductCustomer.findAll({ where: { userId: parent.id } });
       return products ? products.map(({ productId }) => productId) : [];
+    },
+    revenue: async (parent, {}, { models, loaders }) => {
+      const isCreator = await loaders.isCreator.load(parent.email);
+      if (isCreator) {
+        const [subscribersCount] = await models.sequelize.query(`
+          SELECT COUNT(*) FROM "Payments"
+          WHERE "Payments"."subscriptionStatus" = 'active'
+              AND ("Payments"."subscriptionCancel" IS NULL OR "Payments"."subscriptionCancel" = false)
+        `);
+        const [followersCount] = await models.sequelize.query(`
+          SELECT
+            (SELECT COUNT(*)
+            FROM "Followings"
+              INNER JOIN "Payments" ON "Followings"."userId"="Payments"."userId"
+                                    AND "Payments"."subscriptionStatus" = 'active'
+                                    AND ("Payments"."subscriptionCancel" IS NULL OR "Payments"."subscriptionCancel" = false)
+            WHERE "Followings"."followingId"="Users"."id"
+              AND "Followings"."deletedAt" IS NULL) AS "followersCount"
+          FROM "Users" INNER JOIN "Creators" ON "Users"."email" = "Creators"."email"
+          WHERE "Users".id=${parent.id}
+        `);
+        const [totalFollowersCount] = await models.sequelize.query(`
+          SELECT SUM(
+            (SELECT COUNT(*)
+             FROM "Followings"
+               INNER JOIN "Payments" ON "Followings"."userId"="Payments"."userId"
+                                     AND "Payments"."subscriptionStatus" = 'active'
+                                     AND ("Payments"."subscriptionCancel" IS NULL OR "Payments"."subscriptionCancel" = false)
+             WHERE "Followings"."followingId"="Users"."id" AND "Followings"."deletedAt" IS NULL))
+          FROM "Users" INNER JOIN "Creators" ON "Users"."email" = "Creators"."email"
+          WHERE "Users"."deletedAt" IS NULL AND "Creators"."deletedAt" IS NULL
+        `);
+        const price = (AMOUNT * subscribersCount[0].count * 80) / 100;
+        return ((+followersCount[0].followersCount / totalFollowersCount[0].sum) * price).toFixed(
+          2,
+        );
+      }
+      return null;
     },
   },
   Query: {

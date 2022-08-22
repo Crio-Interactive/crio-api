@@ -1,28 +1,9 @@
 const fromUnixTime = require('date-fns/fromUnixTime');
 
+const { BUCKET } = require('./config/environment');
 const sendMail = require('./config/mail');
 const { addUnixTimeMonth } = require('./utils');
 const DB = require('./models');
-
-const createOrUpdateVoucher = async ({ userId, ...params }) => {
-  const voucher = await DB.Voucher.findOne({
-    where: {
-      userId,
-    },
-  });
-
-  if (voucher) {
-    for (const key of Object.keys(params)) {
-      voucher[key] = params[key];
-    }
-    return voucher.save();
-  } else {
-    return DB.Voucher.create({
-      userId,
-      ...params,
-    });
-  }
-};
 
 const createProductCustomer = async attributes => {
   const productId = attributes.metadata.productId;
@@ -31,7 +12,15 @@ const createProductCustomer = async attributes => {
     const product = await DB.Product.findOne({
       raw: true,
       where: { id: productId },
-      attributes: ['User.username', 'User.email', 'limit', 'title'],
+      attributes: [
+        'User.username',
+        'User.email',
+        'userId',
+        'productTypeId',
+        'limit',
+        'title',
+        'file',
+      ],
       include: {
         attributes: [],
         model: DB.User,
@@ -52,14 +41,30 @@ const createProductCustomer = async attributes => {
       await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
     }
     await sendMail({
+      to: attributes.customer_details.email,
+      sender: product.username,
+      replyTo: product.email,
+      subject: `You purchased "${product.title}" from Crio. Download Instructions Below.`,
+      text: `
+Here is the download link.
+https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}
+
+Kind regards,
+Crio team.
+    `,
+    });
+    await sendMail({
       to: product.email,
       sender: product.username,
       replyTo: attributes.customer_details.email,
-      subject: `A Fan Purchased "${product.title}" from your Crio Page!`,
-      cc: attributes.customer_details.email,
+      subject: `A fan Purchased "${product.title}" from your Crio Page!`,
       text: `
-Fan, "${attributes.customer_details.email}" (cc’d), purchased "${product.title}" from your Crio Page!
-Please complete the order at your earliest convenience by replying to this email and working directly with them.
+A fan, "${attributes.customer_details.email}" purchased "${product.title}" from your Crio Page!
+${
+  product.productTypeId === 2
+    ? ''
+    : 'Please complete the order at your earliest convenience by replying to this email and working directly with them.'
+}
 
 Kind regards,
 Crio team.
@@ -135,15 +140,6 @@ const handler = async (headers, body) => {
             console.log('created-paymentDetails', paymentDetails);
           }
         }
-        if (paymentDetails) {
-          await createOrUpdateVoucher({
-            userId: paymentDetails.userId,
-            tier1: 1,
-            tier2: 2,
-            tier3: 2,
-          });
-          console.log('voucher updated');
-        }
         break;
       }
       case 'invoice.payment_failed': {
@@ -165,12 +161,6 @@ const handler = async (headers, body) => {
               },
             },
           );
-          await createOrUpdateVoucher({
-            userId: paymentDetails.userId,
-            tier1: 0,
-            tier2: 0,
-            tier3: 0,
-          });
         }
         break;
       }

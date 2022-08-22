@@ -21,12 +21,6 @@ module.exports = gql`
     error: String
   }
 
-  type Voucher {
-    tier1: Int
-    tier2: Int
-    tier3: Int
-  }
-
   type Payment {
     customerEmail: String
     periodStart: Date
@@ -58,6 +52,7 @@ module.exports = gql`
     boughtProducts: [ID]
     featuresSeen: Boolean
     helpSeen: Boolean
+    revenue: String
   }
 
   input MailInfo {

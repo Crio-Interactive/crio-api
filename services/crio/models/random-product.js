@@ -39,9 +39,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      type: {
-        type: DataTypes.STRING,
-        unique: true,
+      productTypeId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       title: {
@@ -64,6 +63,9 @@ module.exports = (sequelize, DataTypes) => {
         default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
       thumbnail: {
+        type: DataTypes.STRING,
+      },
+      file: {
         type: DataTypes.STRING,
       },
     },
