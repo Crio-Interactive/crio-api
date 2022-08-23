@@ -1,4 +1,8 @@
-const { SENDGRID_TEMPLATE_PURCHASE, SENDGRID_VERIFIED_SENDER } = require('../config/environment');
+const {
+  SENDGRID_TEMPLATE_DOWNLOAD,
+  SENDGRID_TEMPLATE_PURCHASE,
+  SENDGRID_VERIFIED_SENDER,
+} = require('../config/environment');
 
 const from = {
   email: SENDGRID_VERIFIED_SENDER,
