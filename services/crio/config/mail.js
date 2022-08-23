@@ -16,12 +16,3 @@ const sendMail = async ({ to, cc, templateName, dynamicData = {} }) => {
 };
 
 module.exports = sendMail;
-
-// const sendMail = async ({ to, subject, text, cc }) =>
-//   sgMail.send({
-//     to,
-//     from: SENDGRID_VERIFIED_SENDER,
-//     subject,
-//     text,
-//     cc: [SENDGRID_CC_EMAILS, cc].filter(email => email !== to),
-//   });

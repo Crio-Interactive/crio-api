@@ -17,15 +17,3 @@ const sendMail = async ({ to, replyTo, sender, cc, templateName, dynamicData = {
 };
 
 module.exports = sendMail;
-
-// const sendMail = async ({ sender, replyTo, to, subject, text, cc }) =>
-//   sgMail.send({
-//     to,
-//     from: sender
-//       ? { name: `Creator ${sender} via Crio`, email: SENDGRID_VERIFIED_SENDER }
-//       : SENDGRID_VERIFIED_SENDER,
-//     replyTo,
-//     subject,
-//     text,
-//     cc: [cc].filter(email => email !== to),
-//   });
