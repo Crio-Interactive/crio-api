@@ -166,6 +166,18 @@ module.exports = {
         return e;
       }
     },
+    sendInvitation: async (_, {}, {}) => {
+      try {
+        await sendMail({
+          to: 'nkosyan123@gmail.com',
+          templateName: 'INVITATION',
+          dynamicData: {},
+        });
+        return true;
+      } catch (e) {
+        return e;
+      }
+    },
     contactCreator: async (_, { mailInfo }, { user, loaders }) => {
       try {
         const fan = await loaders.userByUserId.load(user.attributes.sub);
@@ -175,18 +187,13 @@ module.exports = {
         try {
           await sendMail({
             to: creator.email,
-            subject: `A Fan Purchased "${product.title}" from your Crio Page!`,
-            cc: fan.email,
-            text: `
-Fan ${fan.username} messaged you -
-
-${mailInfo.message}
-
-To reply, please, use this email - ${fan.email}
-
-Kind regards,
-Crio team.
-          `,
+            templateName: 'NEW_MESSAGE',
+            dynamicData: {
+              email: fan.email,
+              username: fan.username,
+              title: product.title,
+              message: mailInfo.message,
+            },
           });
           return true;
         } catch (e) {
@@ -203,15 +210,10 @@ Crio team.
         const { id, email } = await loaders.userByUserId.load(user.attributes.sub);
         const res = await sendMail({
           to: SENDGRID_CC_EMAILS,
-          subject: 'Request for cancel subscription',
-          text: `
-Fan ${email} request to cancel the subscription.
-
-To reply, please, use this email - ${email}
-
-Kind regards,
-Crio team.
-        `,
+          templateName: 'CANCEL_SUBSCRIPTION',
+          dynamicData: {
+            email,
+          },
         });
         if (res) {
           await models.Payment.update({ subscriptionCancel: true }, { where: { userId: id } });

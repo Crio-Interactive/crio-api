@@ -37,6 +37,7 @@ module.exports = applyMiddleware(
       deleteProduct: isAuthenticated,
       contactCreator: isAuthenticated,
       cancelSubscription: isAuthenticated,
+      sendInvitation: isAuthenticated,
     },
   }),
 );

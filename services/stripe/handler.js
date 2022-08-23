@@ -44,31 +44,22 @@ const createProductCustomer = async attributes => {
       to: attributes.customer_details.email,
       sender: product.username,
       replyTo: product.email,
-      subject: `You purchased "${product.title}" from Crio. Download Instructions Below.`,
-      text: `
-Here is the download link.
-https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}
-
-Kind regards,
-Crio team.
-    `,
+      templateName: 'DOWNLOAD',
+      dynamicData: {
+        title: product.title,
+        url: `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}`,
+      },
     });
     await sendMail({
       to: product.email,
       sender: product.username,
       replyTo: attributes.customer_details.email,
-      subject: `A fan Purchased "${product.title}" from your Crio Page!`,
-      text: `
-A fan, "${attributes.customer_details.email}" purchased "${product.title}" from your Crio Page!
-${
-  product.productTypeId === 2
-    ? ''
-    : 'Please complete the order at your earliest convenience by replying to this email and working directly with them.'
-}
-
-Kind regards,
-Crio team.
-    `,
+      templateName: 'PURCHASE',
+      dynamicData: {
+        title: product.title,
+        email: attributes.customer_details.email,
+        type: product.productTypeId,
+      },
     });
     // await transaction.commit();
   } catch (e) {

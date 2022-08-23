@@ -84,5 +84,6 @@ module.exports = gql`
     updateUser(attributes: UserAttributes!): UserInfo!
     contactCreator(mailInfo: MailInfo!): Boolean!
     cancelSubscription: Boolean!
+    sendInvitation: Boolean!
   }
 `;
