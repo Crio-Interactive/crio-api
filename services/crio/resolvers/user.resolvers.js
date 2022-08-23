@@ -166,13 +166,27 @@ module.exports = {
         return e;
       }
     },
-    sendInvitation: async (_, {}, {}) => {
+    sendInvitation: async (_, { emails }, { user, loaders, models }) => {
       try {
-        await sendMail({
-          to: 'nkosyan123@gmail.com',
-          templateName: 'INVITATION',
-          dynamicData: {},
-        });
+        const creators = await models.Creator.findAll({ where: { email: emails } });
+        const invitations = await models.Invitation.findAll({ where: { email: emails } });
+        if (creators.length || invitations.length) {
+          throw new Error(
+            `${[...creators, ...invitations]
+              .map(({ email }) => email)
+              .join(', ')} email(s) have been already invited`,
+          );
+        }
+        const { id, username } = await loaders.userByUserId.load(user.attributes.sub);
+        await emails.map(
+          async to =>
+            await sendMail({
+              to,
+              templateName: 'INVITATION',
+              dynamicData: { to, username },
+            }),
+        );
+        await models.Invitation.bulkCreate(emails.map(email => ({ userId: id, email })));
         return true;
       } catch (e) {
         return e;
