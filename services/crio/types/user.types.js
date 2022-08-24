@@ -73,10 +73,20 @@ module.exports = gql`
     creatorsFollowersCount: [CreatorsFollowersCount]!
   }
 
+  type EmailStatus {
+    email: String!
+    accept: Boolean!
+  }
+  type Invitations {
+    username: String!
+    emails: [EmailStatus!]!
+  }
+
   type Query {
     me: UserInfo
     getUser(username: String!): UserInfo
     job: Job
+    getInvitations: [Invitations!]!
   }
 
   type Mutation {

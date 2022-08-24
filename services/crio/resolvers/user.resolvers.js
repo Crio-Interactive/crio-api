@@ -83,6 +83,34 @@ module.exports = {
         isFollowing,
       };
     },
+    getInvitations: async (_, {}, { models }) => {
+      const invitations = await models.Invitation.findAll({
+        raw: true,
+        attributes: ['User.username', 'Invitation.email'],
+        include: {
+          attributes: [],
+          model: models.User,
+        },
+      });
+      const creators = (await models.Creator.findAll({ attributes: ['email'] }))?.map(
+        ({ email }) => email,
+      );
+      const inviters = invitations.reduce((acc, item) => {
+        const index = acc.findIndex(user => user.username === item.username);
+        if (index > 0) {
+          acc[index].emails.push({ email: item.email, accept: creators.includes(item.email) });
+        } else {
+          acc.push({
+            ...item,
+            email: undefined,
+            emails: [{ email: item.email, accept: creators.includes(item.email) }],
+          });
+        }
+        return acc;
+      }, []);
+      console.log(inviters);
+      return inviters;
+    },
     job: async (_, {}, { models }) => {
       const [subscribersCount] = await models.sequelize.query(`
         SELECT COUNT(*) FROM "Payments"
