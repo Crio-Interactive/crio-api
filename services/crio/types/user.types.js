@@ -95,5 +95,6 @@ module.exports = gql`
     contactCreator(mailInfo: MailInfo!): Boolean!
     cancelSubscription: Boolean!
     sendInvitation(emails: [String!]!): Boolean!
+    acceptInvitation(email: String!): Boolean!
   }
 `;

@@ -240,7 +240,7 @@ module.exports = {
           return true;
         } catch (e) {
           console.log('error sending email', e.response.body);
-          throw e;
+          return e;
         }
       } catch (e) {
         console.log('error contactCreator', e);
@@ -262,8 +262,24 @@ module.exports = {
           return true;
         }
       } catch (e) {
-        console.log('error sending cancel subscription email', e.response.body);
-        throw e;
+        return e;
+      }
+    },
+    acceptInvitation: async (_, { email }, { models }) => {
+      try {
+        const exist = await models.Creator.findOne({ where: { email } });
+        if (exist) {
+          throw new Error('The invitation has already been accepted');
+        }
+        const invitation = await models.Invitation.findOne({ where: { email } });
+        if (invitation) {
+          await models.Creator.create({ email });
+        } else {
+          throw new Error('Wrong Invitation');
+        }
+        return true;
+      } catch (e) {
+        return e;
       }
     },
   },
