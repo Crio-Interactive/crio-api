@@ -25,6 +25,7 @@ module.exports = applyMiddleware(
       deleteStripeAccount: isAuthenticated,
       job: isAuthenticated,
       getInvitations: isAuthenticated,
+      getUserInvitations: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,

@@ -108,8 +108,16 @@ module.exports = {
         }
         return acc;
       }, []);
-      console.log(inviters);
       return inviters;
+    },
+    getUserInvitations: async (_, {}, { user, loaders, models }) => {
+      console.log();
+      const { id } = await loaders.userByUserId.load(user.attributes.sub);
+      const invitations = await models.Invitation.findAll({ where: { userId: id } });
+      const creators = (await models.Creator.findAll({ attributes: ['email'] }))?.map(
+        ({ email }) => email,
+      );
+      return invitations.map(({ email }) => ({ email, accept: creators.includes(email) }));
     },
     job: async (_, {}, { models }) => {
       const [subscribersCount] = await models.sequelize.query(`

@@ -87,6 +87,7 @@ module.exports = gql`
     getUser(username: String!): UserInfo
     job: Job
     getInvitations: [Invitations!]!
+    getUserInvitations: [EmailStatus!]!
   }
 
   type Mutation {
