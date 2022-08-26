@@ -5,7 +5,7 @@ const { from, templates } = require('../constants/send-grid');
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
-const sendMail = async ({ to, replyTo, sender, cc, templateName, dynamicData = {} }) => {
+const sendMail = async ({ to, replyTo, sender, cc, templateName, dynamicData = {} }) =>
   sgMail.send({
     to,
     from: sender ? { ...from, name: `Creator ${sender} via Crio` } : from,
@@ -14,6 +14,5 @@ const sendMail = async ({ to, replyTo, sender, cc, templateName, dynamicData = {
     templateId: templates[templateName],
     dynamic_template_data: dynamicData,
   });
-};
 
 module.exports = sendMail;
