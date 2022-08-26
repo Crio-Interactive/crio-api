@@ -31,7 +31,6 @@ module.exports = {
         let accountId = stripeAccountId;
         if (!stripeAccountId) {
           const account = await createAccount(username, email);
-          console.log(account.id);
           accountId = account.id;
           await models.User.update({ stripeAccountId: account.id }, { where: { id } });
         }
