@@ -16,4 +16,7 @@ module.exports = gql`
     getConnectLoginLink: Link!
     deleteStripeAccount: Boolean!
   }
+  type Mutation {
+    createTransfers: Boolean!
+  }
 `;
