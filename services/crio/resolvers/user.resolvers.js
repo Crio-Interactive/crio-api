@@ -111,7 +111,6 @@ module.exports = {
       return inviters;
     },
     getUserInvitations: async (_, {}, { user, loaders, models }) => {
-      console.log(test);
       const { id } = await loaders.userByUserId.load(user.attributes.sub);
       const invitations = await models.Invitation.findAll({ where: { userId: id } });
       const creators = (await models.Creator.findAll({ attributes: ['email'] }))?.map(
