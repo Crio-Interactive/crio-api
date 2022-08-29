@@ -40,6 +40,7 @@ module.exports = applyMiddleware(
       contactCreator: isAuthenticated,
       cancelSubscription: isAuthenticated,
       sendInvitation: isAuthenticated,
+      createTransfers: isAuthenticated,
     },
   }),
 );

@@ -95,7 +95,7 @@ module.exports = {
           }
         });
       } catch (e) {
-        console.log(`Cannot transfer for connect ${stripeAccountId}`, e);
+        console.log('Cannot transfer', e);
       }
       return true;
     },
