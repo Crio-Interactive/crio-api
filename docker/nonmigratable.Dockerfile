@@ -1,4 +1,4 @@
-FROM amazon/aws-lambda-nodejs:14
+FROM amazon/aws-lambda-nodejs:16.2022.05.09.14
 
 ARG NPM_TOKEN
 ARG NODE_ENV=production
