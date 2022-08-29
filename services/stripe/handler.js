@@ -58,7 +58,7 @@ const createProductCustomer = async attributes => {
       dynamicData: {
         title: product.title,
         email: attributes.customer_details.email,
-        type: product.productTypeId,
+        isService: +product.productTypeId === 1,
       },
     });
     // await transaction.commit();
