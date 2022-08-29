@@ -58,4 +58,10 @@ module.exports = {
         },
       },
     }),
+  createTransfer: (destination, amount) =>
+    stripe.transfers.create({
+      amount,
+      destination,
+      currency: 'usd',
+    }),
 };
