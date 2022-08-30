@@ -24,6 +24,8 @@ module.exports = applyMiddleware(
       getConnectLoginLink: isAuthenticated,
       deleteStripeAccount: isAuthenticated,
       job: isAuthenticated,
+      getInvitations: isAuthenticated,
+      getUserInvitations: isAuthenticated,
     },
     Mutation: {
       saveUser: isAuthenticated,
@@ -37,6 +39,8 @@ module.exports = applyMiddleware(
       deleteProduct: isAuthenticated,
       contactCreator: isAuthenticated,
       cancelSubscription: isAuthenticated,
+      sendInvitation: isAuthenticated,
+      createTransfers: isAuthenticated,
     },
   }),
 );

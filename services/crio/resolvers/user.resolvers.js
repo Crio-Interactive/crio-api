@@ -83,6 +83,41 @@ module.exports = {
         isFollowing,
       };
     },
+    getInvitations: async (_, {}, { models }) => {
+      const invitations = await models.Invitation.findAll({
+        raw: true,
+        attributes: ['User.username', 'Invitation.email'],
+        include: {
+          attributes: [],
+          model: models.User,
+        },
+      });
+      const creators = (await models.Creator.findAll({ attributes: ['email'] }))?.map(
+        ({ email }) => email,
+      );
+      const inviters = invitations.reduce((acc, item) => {
+        const index = acc.findIndex(user => user.username === item.username);
+        if (index > 0) {
+          acc[index].emails.push({ email: item.email, accept: creators.includes(item.email) });
+        } else {
+          acc.push({
+            ...item,
+            email: undefined,
+            emails: [{ email: item.email, accept: creators.includes(item.email) }],
+          });
+        }
+        return acc;
+      }, []);
+      return inviters;
+    },
+    getUserInvitations: async (_, {}, { user, loaders, models }) => {
+      const { id } = await loaders.userByUserId.load(user.attributes.sub);
+      const invitations = await models.Invitation.findAll({ where: { userId: id } });
+      const creators = (await models.Creator.findAll({ attributes: ['email'] }))?.map(
+        ({ email }) => email,
+      );
+      return invitations.map(({ email }) => ({ email, accept: creators.includes(email) }));
+    },
     job: async (_, {}, { models }) => {
       const [subscribersCount] = await models.sequelize.query(`
         SELECT COUNT(*) FROM "Payments"
@@ -166,6 +201,32 @@ module.exports = {
         return e;
       }
     },
+    sendInvitation: async (_, { emails }, { user, loaders, models }) => {
+      try {
+        const creators = await models.Creator.findAll({ where: { email: emails } });
+        const invitations = await models.Invitation.findAll({ where: { email: emails } });
+        if (creators.length || invitations.length) {
+          throw new Error(
+            `${[...creators, ...invitations]
+              .map(({ email }) => email)
+              .join(', ')} email(s) have been already invited`,
+          );
+        }
+        const { id, username } = await loaders.userByUserId.load(user.attributes.sub);
+        await emails.map(
+          async to =>
+            await sendMail({
+              to,
+              templateName: 'INVITATION',
+              dynamicData: { to, username },
+            }),
+        );
+        await models.Invitation.bulkCreate(emails.map(email => ({ userId: id, email })));
+        return true;
+      } catch (e) {
+        return e;
+      }
+    },
     contactCreator: async (_, { mailInfo }, { user, loaders }) => {
       try {
         const fan = await loaders.userByUserId.load(user.attributes.sub);
@@ -175,23 +236,18 @@ module.exports = {
         try {
           await sendMail({
             to: creator.email,
-            subject: `A Fan Purchased "${product.title}" from your Crio Page!`,
-            cc: fan.email,
-            text: `
-Fan ${fan.username} messaged you -
-
-${mailInfo.message}
-
-To reply, please, use this email - ${fan.email}
-
-Kind regards,
-Crio team.
-          `,
+            templateName: 'NEW_MESSAGE',
+            dynamicData: {
+              email: fan.email,
+              username: fan.username,
+              title: product.title,
+              message: mailInfo.message,
+            },
           });
           return true;
         } catch (e) {
           console.log('error sending email', e.response.body);
-          throw e;
+          return e;
         }
       } catch (e) {
         console.log('error contactCreator', e);
@@ -203,23 +259,34 @@ Crio team.
         const { id, email } = await loaders.userByUserId.load(user.attributes.sub);
         const res = await sendMail({
           to: SENDGRID_CC_EMAILS,
-          subject: 'Request for cancel subscription',
-          text: `
-Fan ${email} request to cancel the subscription.
-
-To reply, please, use this email - ${email}
-
-Kind regards,
-Crio team.
-        `,
+          templateName: 'CANCEL_SUBSCRIPTION',
+          dynamicData: {
+            email,
+          },
         });
         if (res) {
           await models.Payment.update({ subscriptionCancel: true }, { where: { userId: id } });
           return true;
         }
       } catch (e) {
-        console.log('error sending cancel subscription email', e.response.body);
-        throw e;
+        return e;
+      }
+    },
+    acceptInvitation: async (_, { email }, { models }) => {
+      try {
+        const exist = await models.Creator.findOne({ where: { email } });
+        if (exist) {
+          throw new Error('The invitation has already been accepted');
+        }
+        const invitation = await models.Invitation.findOne({ where: { email } });
+        if (invitation) {
+          await models.Creator.create({ email });
+        } else {
+          throw new Error('Wrong Invitation');
+        }
+        return true;
+      } catch (e) {
+        return e;
       }
     },
   },
