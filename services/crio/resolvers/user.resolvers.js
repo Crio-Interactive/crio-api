@@ -206,11 +206,8 @@ module.exports = {
         const creators = await models.Creator.findAll({ where: { email: emails } });
         const invitations = await models.Invitation.findAll({ where: { email: emails } });
         if (creators.length || invitations.length) {
-          throw new Error(
-            `${[...creators, ...invitations]
-              .map(({ email }) => email)
-              .join(', ')} email(s) have been already invited`,
-          );
+          const array = [...creators, ...invitations].map(({ email }) => email);
+          throw new Error(`${[...new Set(array)].join(', ')} email(s) have been already invited`);
         }
         const { id, username } = await loaders.userByUserId.load(user.attributes.sub);
         await emails.map(
