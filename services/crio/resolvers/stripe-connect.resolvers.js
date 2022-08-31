@@ -84,16 +84,18 @@ module.exports = {
       creatorsFollowersCount.forEach(item => (totalFollowersCount += +item.followersCount));
       const price = (AMOUNT * subscribersCount[0].count * 80) / 100;
       try {
-        creatorsFollowersCount.forEach(async ({ userId, followersCount, stripeAccountId }) => {
-          if (followersCount > 0 && stripeAccountId) {
-            const amount = (followersCount / totalFollowersCount) * price;
-            const account = await retrieveAccount(stripeAccountId);
-            if (account.charges_enabled) {
-              const snapshot = await createTransfer(stripeAccountId, amount * 100);
-              await models.Transfer.create({ userId, stripeAccountId, price: amount, snapshot });
+        await Promise.all(
+          creatorsFollowersCount.map(async ({ userId, followersCount, stripeAccountId }) => {
+            if (followersCount > 0 && stripeAccountId) {
+              const amount = (followersCount / totalFollowersCount) * price;
+              const account = await retrieveAccount(stripeAccountId);
+              if (account.charges_enabled) {
+                const snapshot = await createTransfer(stripeAccountId, amount * 100);
+                await models.Transfer.create({ userId, stripeAccountId, price: amount, snapshot });
+              }
             }
-          }
-        });
+          }),
+        );
       } catch (e) {
         console.log('Cannot transfer', e);
       }
