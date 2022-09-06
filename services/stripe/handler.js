@@ -40,16 +40,18 @@ const createProductCustomer = async attributes => {
     if (product.limit > 0) {
       await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
     }
-    await sendMail({
-      to: attributes.customer_details.email,
-      sender: product.username,
-      replyTo: product.email,
-      templateName: 'DOWNLOAD',
-      dynamicData: {
-        title: product.title,
-        url: `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}`,
-      },
-    });
+    if (+product.productTypeId === 2) {
+      await sendMail({
+        to: attributes.customer_details.email,
+        sender: product.username,
+        replyTo: product.email,
+        templateName: 'DOWNLOAD',
+        dynamicData: {
+          title: product.title,
+          url: `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${product.userId}/products/file-${product.file}`,
+        },
+      });
+    }
     await sendMail({
       to: product.email,
       sender: product.username,
