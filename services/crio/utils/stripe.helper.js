@@ -12,6 +12,8 @@ module.exports = {
       email,
       business_type: 'individual',
       business_profile: { url: `${CLIENT_URL}profile/${username}` },
+      // capabilities: { transfers: { requested: true } },
+      // tos_acceptance: { service_agreement: 'recipient' },
       // business_profile: { url: 'https://crio-staging.criointeractive.com/profile/narine_kosyan' },
     }),
   createAccountLink: account =>
