@@ -4,7 +4,7 @@ const userTypes = require('./user.types');
 const followingTypes = require('./following.types');
 const uploadTypes = require('./upload.types');
 const artworkTypes = require('./artwork.types');
-const productTypes = require('./product.types');
+const categories = require('./category.types');
 const stripeConnectTypes = require('./stripe-connect.types');
 
 const types = [
@@ -13,7 +13,7 @@ const types = [
   followingTypes,
   uploadTypes,
   artworkTypes,
-  productTypes,
+  categories,
   stripeConnectTypes,
 ];
 

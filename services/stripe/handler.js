@@ -12,15 +12,7 @@ const createProductCustomer = async attributes => {
     const product = await DB.Product.findOne({
       raw: true,
       where: { id: productId },
-      attributes: [
-        'User.username',
-        'User.email',
-        'userId',
-        'productTypeId',
-        'limit',
-        'title',
-        'file',
-      ],
+      attributes: ['User.username', 'User.email', 'userId', 'categoryId', 'limit', 'title', 'file'],
       include: {
         attributes: [],
         model: DB.User,
@@ -40,7 +32,7 @@ const createProductCustomer = async attributes => {
     if (product.limit > 0) {
       await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
     }
-    if (+product.productTypeId === 2) {
+    if (+product.categoryId === 2) {
       await sendMail({
         to: attributes.customer_details.email,
         sender: product.username,
@@ -60,7 +52,7 @@ const createProductCustomer = async attributes => {
       dynamicData: {
         title: product.title,
         email: attributes.customer_details.email,
-        isService: +product.productTypeId === 1,
+        isService: +product.categoryId === 1,
       },
     });
     // await transaction.commit();

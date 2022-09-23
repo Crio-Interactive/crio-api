@@ -8,7 +8,8 @@ const {
 module.exports = {
   Query: {
     getProduct: async (_, { productId }, { loaders }) => loaders.productById.load(productId),
-    getProductTypes: async (_, {}, { models }) => models.ProductType.findAll({ order: [['name']] }),
+    getCategories: async (_, {}, { models }) =>
+      console.log(1111) || models.Category.findAll({ order: [['name']], logging: true }),
     getUserProducts: async (_, { username }, { user, loaders }) => {
       let userId;
       if (username) {
@@ -125,12 +126,12 @@ module.exports = {
     createProduct: async (_, { attributes }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        const productTypes = await models.ProductType.findOne({
+        const { id: digitalCategoryId } = await models.Category.findOne({
           where: { name: 'Digital Product' },
         });
         await models.Product.create({
           userId: id,
-          productTypeId: attributes.productTypeId,
+          categoryId: attributes.categoryId,
           title: attributes.title,
           description: attributes.description,
           price: attributes.price,
@@ -138,7 +139,7 @@ module.exports = {
           accessibility: attributes.accessibility,
           thumbnail: attributes.thumbnail || null,
           file:
-            +attributes.productTypeId === productTypes.id && attributes.file
+            +attributes.categoryId === digitalCategoryId.id && attributes.file
               ? attributes.file
               : null,
         });
@@ -154,11 +155,13 @@ module.exports = {
         if (product.userId !== id) {
           throw new Error('A product does not belong to you');
         }
-        const productTypes = await models.ProductType.findOne({ where: { name: 'Service' } });
+        const { id: commissionCategoryId } = await models.Category.findOne({
+          where: { name: 'Commission' },
+        });
         await models.Product.update(
           {
             userId: product.userId,
-            productTypeId: attributes.productTypeId,
+            categoryId: attributes.categoryId,
             title: attributes.title,
             description: attributes.description,
             price: attributes.price || null,
@@ -166,7 +169,7 @@ module.exports = {
             accessibility: attributes.accessibility,
             thumbnail: attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnail,
             file:
-              +attributes.productTypeId === productTypes.id ? null : attributes.file || undefined,
+              +attributes.categoryId === commissionCategoryId ? null : attributes.file || undefined,
           },
           { where: { id: attributes.id } },
         );

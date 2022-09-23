@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   input Product {
     id: ID
-    productTypeId: ID!
+    categoryId: ID!
     title: String!
     description: String
     price: Float
@@ -13,10 +13,9 @@ module.exports = gql`
     file: String
   }
 
-  type ProductType {
+  type Category {
     id: ID!
     name: String!
-    mainTypeId: ID
   }
 
   type ProductDetail {
@@ -26,7 +25,7 @@ module.exports = gql`
     providerType: String!
     providerUserId: String!
     avatar: String
-    productTypeId: ID!
+    categoryId: ID!
     title: String!
     description: String
     price: Float
@@ -66,7 +65,7 @@ module.exports = gql`
 
   type Query {
     getProduct(productId: ID!): ProductDetail
-    getProductTypes: [ProductType]!
+    getCategories: [Category]!
     getUserProducts(username: String): [ProductDetail!]!
     getRandomProductsInfo: randomProductsInfo!
     getRandomProducts(params: paginationParams!): [ProductDetail]!

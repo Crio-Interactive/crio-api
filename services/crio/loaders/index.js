@@ -24,7 +24,7 @@ const artworkAttributes = [
 const productAttributes = [
   ...attributes,
   ['id', 'productId'],
-  'productTypeId',
+  'categoryId',
   'price',
   'limit',
   'thumbnail',
