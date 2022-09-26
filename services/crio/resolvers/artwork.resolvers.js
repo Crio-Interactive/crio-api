@@ -95,6 +95,7 @@ module.exports = {
           status: 'available',
           accessibility: params.accessibility,
           pictures_uri: '',
+          categoryId: params.categoryId,
         };
         if (params.isVideo) {
           const videoData = await vimeoClient.get(params.content);
