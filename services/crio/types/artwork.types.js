@@ -30,6 +30,7 @@ module.exports = gql`
     description: String!
     status: String
     accessibility: Accessibility!
+    categoryId: ID
   }
 
   input ArtworkParams {
@@ -38,6 +39,7 @@ module.exports = gql`
     title: String
     description: String
     accessibility: Accessibility
+    categoryId: ID
     isVideo: Boolean
   }
 

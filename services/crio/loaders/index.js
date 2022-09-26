@@ -15,6 +15,7 @@ const attributes = [
 const artworkAttributes = [
   ...attributes,
   ['id', 'artworkId'],
+  'categoryId',
   'status',
   'content',
   'pictures_uri',

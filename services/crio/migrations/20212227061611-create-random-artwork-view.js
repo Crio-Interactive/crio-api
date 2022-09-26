@@ -12,6 +12,7 @@ module.exports = {
       "providerType",
       "providerUserId",
       "avatar",
+      "categoryId",
       "content",
       "thumbnail",
       "title",
