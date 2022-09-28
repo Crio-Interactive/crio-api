@@ -1,5 +1,7 @@
 const { Model } = require('sequelize');
 
+const { TYPES } = require('../constants');
+
 module.exports = (sequelize, DataTypes) => {
   class Category extends Model {
     /**
@@ -9,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Category.belongsTo(models.Category, { foreignKey: 'mainCategoryId' });
     }
   }
 
@@ -17,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      type: {
+        type: DataTypes.ENUM,
+        values: Object.values(TYPES),
       },
     },
     {
