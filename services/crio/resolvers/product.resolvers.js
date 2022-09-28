@@ -155,7 +155,7 @@ module.exports = {
           throw new Error('A product does not belong to you');
         }
         const { id: commissionCategoryId } = await models.Category.findOne({
-          where: { name: 'Commission' },
+          where: { name: 'Commissions' },
         });
         await models.Product.update(
           {
