@@ -76,7 +76,7 @@ module.exports = {
       }
       return models.RandomArtwork.findAll({
         ...condition,
-        order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],
+        order: [['artworkId', 'DESC']],
         limit,
         offset,
       });

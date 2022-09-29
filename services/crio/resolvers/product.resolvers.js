@@ -78,7 +78,7 @@ module.exports = {
       }
       return models.RandomProduct.findAll({
         ...condition,
-        order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],
+        order: [['productId', 'DESC']],
         limit,
         offset,
       });
