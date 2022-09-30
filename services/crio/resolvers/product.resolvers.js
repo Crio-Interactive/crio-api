@@ -125,9 +125,12 @@ module.exports = {
     createProduct: async (_, { attributes }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        const { id: digitalCategoryId } = await models.Category.findOne({
-          where: { name: 'Digital Product' },
+        const { id: commissionCategoryId } = await models.Category.findOne({
+          where: { name: 'Commissions' },
         });
+        if (+attributes.categoryId !== commissionCategoryId && !attributes.file) {
+          throw new Error('A digital product must have a file');
+        }
         await models.Product.create({
           userId: id,
           categoryId: attributes.categoryId,
@@ -137,10 +140,7 @@ module.exports = {
           limit: attributes.limit,
           accessibility: attributes.accessibility,
           thumbnail: attributes.thumbnail || null,
-          file:
-            +attributes.categoryId === digitalCategoryId.id && attributes.file
-              ? attributes.file
-              : null,
+          file: attributes.file || null,
         });
         return true;
       } catch (e) {
@@ -157,6 +157,9 @@ module.exports = {
         const { id: commissionCategoryId } = await models.Category.findOne({
           where: { name: 'Commissions' },
         });
+        if (+attributes.categoryId !== commissionCategoryId && !(attributes.file || product.file)) {
+          throw new Error('A digital product must have a file');
+        }
         await models.Product.update(
           {
             userId: product.userId,
