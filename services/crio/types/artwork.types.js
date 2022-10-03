@@ -57,12 +57,6 @@ module.exports = gql`
     keyword: String
   }
 
-  type randomInfo {
-    productsCount: Int!
-    artworksCount: Int!
-    artworks: [WorkDetail!]!
-  }
-
   type feedArtworks {
     topArtworks: [WorkDetail]
     userArtworks: [WorkDetail]
@@ -72,7 +66,6 @@ module.exports = gql`
   type Query {
     getArtwork(artworkId: ID!): WorkDetail
     getUserArtworks(username: String): [WorkDetail!]!
-    getRandomInfo(keyword: String): randomInfo!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
   }
 

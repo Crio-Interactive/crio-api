@@ -21,6 +21,42 @@ module.exports = {
       }
       return loaders.productsByUserId.load(userId);
     },
+    getRandomInfo: async (_, { keyword }, { models }) => {
+      const condition = keyword
+        ? {
+            where: {
+              [models.sequelize.Sequelize.Op.or]: [
+                {
+                  username: {
+                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                  },
+                },
+                {
+                  title: {
+                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                  },
+                },
+              ],
+            },
+          }
+        : {};
+      const productsCount = await models.RandomProduct.count(condition);
+      const artworksCount = await models.RandomArtwork.count(condition);
+      const [products] = await models.sequelize.query(`
+        SELECT  *
+        FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
+              FROM "RandomProducts"
+              WHERE "userId" IN (SELECT "userId"
+                                FROM "RandomProducts"
+                                GROUP BY "userId", username
+                                ORDER BY count(*) DESC
+                                LIMIT 4)) AS products
+        WHERE products.RowNumber = 1
+        ORDER BY Random()
+        LIMIT 4
+      `);
+      return { productsCount, artworksCount, products };
+    },
     getMoreProducts: async (_, { params: { userId, productId } }, { models }) => {
       const userProducts = models.RandomProduct.findAll({
         where: productId
@@ -35,18 +71,6 @@ module.exports = {
         limit: 4,
       });
       return { userProducts, products };
-    },
-    getRandomProductsInfo: async (_, {}, { models }) => {
-      const count = await models.RandomProduct.count();
-      const [products] = await models.sequelize.query(`
-        SELECT  *
-        FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
-                FROM "RandomProducts") AS products
-        WHERE products.RowNumber = 1
-        ORDER BY Random()
-        LIMIT 4
-      `);
-      return { count, products };
     },
     getRandomProducts: async (
       _,

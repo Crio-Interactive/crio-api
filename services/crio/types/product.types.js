@@ -50,10 +50,10 @@ module.exports = gql`
     offset: Int
   }
 
-  type randomProductsInfo {
-    count: Int!
+  type randomInfo {
+    productsCount: Int!
+    artworksCount: Int!
     products: [ProductDetail!]!
-    keyword: String
   }
 
   type MoreProducts {
@@ -69,7 +69,7 @@ module.exports = gql`
     getProduct(productId: ID!): ProductDetail
     getCategories: [Category]!
     getUserProducts(username: String): [ProductDetail!]!
-    getRandomProductsInfo: randomProductsInfo!
+    getRandomInfo(keyword: String): randomInfo!
     getRandomProducts(params: paginationParams!): [ProductDetail]!
     getMoreProducts(params: paginationParams!): MoreProducts!
     getStripeCheckoutSession(productId: ID!): StripeCheckoutSession!
