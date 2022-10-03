@@ -46,9 +46,10 @@ module.exports = {
         SELECT  *
         FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
               FROM "RandomProducts"
-              WHERE "userId" IN (SELECT "userId"
-                                FROM "RandomProducts"
-                                GROUP BY "userId", username
+              WHERE "userId" IN (SELECT "followingId"
+                                FROM "Followings"
+                                WHERE "Followings"."deletedAt" IS NULL
+                                GROUP BY "followingId"
                                 ORDER BY count(*) DESC
                                 LIMIT 4)) AS products
         WHERE products.RowNumber = 1
