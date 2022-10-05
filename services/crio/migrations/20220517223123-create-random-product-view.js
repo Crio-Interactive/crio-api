@@ -12,7 +12,7 @@ module.exports = {
       "providerType",
       "providerUserId",
       "avatar",
-      "productTypeId",
+      "categoryId",
       "title",
       "description",
       "price",

@@ -15,6 +15,7 @@ const attributes = [
 const artworkAttributes = [
   ...attributes,
   ['id', 'artworkId'],
+  'categoryId',
   'status',
   'content',
   'pictures_uri',
@@ -24,7 +25,7 @@ const artworkAttributes = [
 const productAttributes = [
   ...attributes,
   ['id', 'productId'],
-  'productTypeId',
+  'categoryId',
   'price',
   'limit',
   'thumbnail',

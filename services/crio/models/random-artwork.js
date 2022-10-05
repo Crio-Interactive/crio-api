@@ -61,6 +61,9 @@ module.exports = (sequelize, DataTypes) => {
         values: Object.values(ACCESSIBILITY),
         default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
+      categoryId: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       sequelize,

@@ -20,10 +20,10 @@ module.exports = {
         },
         allowNull: false,
       },
-      productTypeId: {
+      categoryId: {
         references: {
           model: {
-            tableName: 'ProductTypes',
+            tableName: 'Categories',
           },
           key: 'id',
         },

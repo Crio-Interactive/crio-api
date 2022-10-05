@@ -15,37 +15,6 @@ module.exports = {
       }
       return loaders.artworksByUserId.load(userId);
     },
-    getRandomInfo: async (_, { keyword }, { models }) => {
-      const condition = keyword
-        ? {
-            where: {
-              [models.sequelize.Sequelize.Op.or]: [
-                {
-                  username: {
-                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                  },
-                },
-                {
-                  title: {
-                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                  },
-                },
-              ],
-            },
-          }
-        : {};
-      const productsCount = await models.RandomProduct.count(condition);
-      const artworksCount = await models.RandomArtwork.count(condition);
-      const [artworks] = await models.sequelize.query(`
-        SELECT  *
-        FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
-                FROM "RandomArtworks") AS artworks
-        WHERE artworks.RowNumber = 1
-        ORDER BY Random()
-        LIMIT 4
-      `);
-      return { productsCount, artworksCount, artworks };
-    },
     getRandomArtworks: async (
       _,
       { params: { count, userId, artworkId, limit = 24, offset = 0, keyword } },
@@ -76,7 +45,7 @@ module.exports = {
       }
       return models.RandomArtwork.findAll({
         ...condition,
-        order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],
+        order: [['artworkId', 'DESC']],
         limit,
         offset,
       });
@@ -95,6 +64,7 @@ module.exports = {
           status: 'available',
           accessibility: params.accessibility,
           pictures_uri: '',
+          categoryId: params.categoryId,
         };
         if (params.isVideo) {
           const videoData = await vimeoClient.get(params.content);

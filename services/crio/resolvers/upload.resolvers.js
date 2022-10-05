@@ -38,7 +38,7 @@ module.exports = {
   Mutation: {
     updateMetadata: async (_, { params }, { user, loaders, models }) => {
       try {
-        const { artworkId, title, description, accessibility, uri, thumbnail } = params;
+        const { artworkId, title, description, accessibility, uri, thumbnail, categoryId } = params;
         const artwork = await loaders.artworkById.load(artworkId);
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         if (artwork.userId !== id) {
@@ -52,7 +52,7 @@ module.exports = {
             await vimeoClient.patch(artwork.content, { name: title, description });
           }
           await models.Artwork.update(
-            { title, description, accessibility, thumbnail },
+            { title, description, accessibility, thumbnail, categoryId },
             { where: { id: artworkId } },
           );
           return true;

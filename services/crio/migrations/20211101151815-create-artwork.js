@@ -42,6 +42,15 @@ module.exports = {
         values: Object.values(ACCESSIBILITY),
         default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
+      categoryId: {
+        references: {
+          model: {
+            tableName: 'Categories',
+          },
+          key: 'id',
+        },
+        allowNull: false,
+      },
       status: {
         type: Sequelize.STRING,
         allowNull: false,

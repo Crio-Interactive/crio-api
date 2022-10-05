@@ -20,6 +20,7 @@ module.exports = gql`
     accessibility: Accessibility
     uri: String
     thumbnail: String
+    categoryId: ID
   }
 
   type Query {

@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   input Product {
     id: ID
-    productTypeId: ID!
+    categoryId: ID!
     title: String!
     description: String
     price: Float
@@ -13,9 +13,11 @@ module.exports = gql`
     file: String
   }
 
-  type ProductType {
+  type Category {
     id: ID!
     name: String!
+    type: String
+    mainCategoryId: ID
   }
 
   type ProductDetail {
@@ -25,7 +27,7 @@ module.exports = gql`
     providerType: String!
     providerUserId: String!
     avatar: String
-    productTypeId: ID!
+    categoryId: ID!
     title: String!
     description: String
     price: Float
@@ -48,10 +50,10 @@ module.exports = gql`
     offset: Int
   }
 
-  type randomProductsInfo {
-    count: Int!
+  type randomInfo {
+    productsCount: Int!
+    artworksCount: Int!
     products: [ProductDetail!]!
-    keyword: String
   }
 
   type MoreProducts {
@@ -65,9 +67,9 @@ module.exports = gql`
 
   type Query {
     getProduct(productId: ID!): ProductDetail
-    getProductTypes: [ProductType]!
+    getCategories: [Category]!
     getUserProducts(username: String): [ProductDetail!]!
-    getRandomProductsInfo: randomProductsInfo!
+    getRandomInfo(keyword: String): randomInfo!
     getRandomProducts(params: paginationParams!): [ProductDetail]!
     getMoreProducts(params: paginationParams!): MoreProducts!
     getStripeCheckoutSession(productId: ID!): StripeCheckoutSession!

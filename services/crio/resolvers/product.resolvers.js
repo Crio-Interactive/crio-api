@@ -8,7 +8,7 @@ const {
 module.exports = {
   Query: {
     getProduct: async (_, { productId }, { loaders }) => loaders.productById.load(productId),
-    getProductTypes: async (_, {}, { models }) => models.ProductType.findAll(),
+    getCategories: async (_, {}, { models }) => models.Category.findAll({ order: [['name']] }),
     getUserProducts: async (_, { username }, { user, loaders }) => {
       let userId;
       if (username) {
@@ -20,6 +20,43 @@ module.exports = {
         userId = id;
       }
       return loaders.productsByUserId.load(userId);
+    },
+    getRandomInfo: async (_, { keyword }, { models }) => {
+      const condition = keyword
+        ? {
+            where: {
+              [models.sequelize.Sequelize.Op.or]: [
+                {
+                  username: {
+                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                  },
+                },
+                {
+                  title: {
+                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+                  },
+                },
+              ],
+            },
+          }
+        : {};
+      const productsCount = await models.RandomProduct.count(condition);
+      const artworksCount = await models.RandomArtwork.count(condition);
+      const [products] = await models.sequelize.query(`
+        SELECT  *
+        FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
+              FROM "RandomProducts"
+              WHERE "userId" IN (SELECT "followingId"
+                                FROM "Followings"
+                                WHERE "Followings"."deletedAt" IS NULL
+                                GROUP BY "followingId"
+                                ORDER BY count(*) DESC
+                                LIMIT 4)) AS products
+        WHERE products.RowNumber = 1
+        ORDER BY Random()
+        LIMIT 4
+      `);
+      return { productsCount, artworksCount, products };
     },
     getMoreProducts: async (_, { params: { userId, productId } }, { models }) => {
       const userProducts = models.RandomProduct.findAll({
@@ -35,18 +72,6 @@ module.exports = {
         limit: 4,
       });
       return { userProducts, products };
-    },
-    getRandomProductsInfo: async (_, {}, { models }) => {
-      const count = await models.RandomProduct.count();
-      const [products] = await models.sequelize.query(`
-        SELECT  *
-        FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
-                FROM "RandomProducts") AS products
-        WHERE products.RowNumber = 1
-        ORDER BY Random()
-        LIMIT 4
-      `);
-      return { count, products };
     },
     getRandomProducts: async (
       _,
@@ -78,7 +103,7 @@ module.exports = {
       }
       return models.RandomProduct.findAll({
         ...condition,
-        order: [models.sequelize.literal(count ? `id % ${count}` : 'Random()')],
+        order: [['productId', 'DESC']],
         limit,
         offset,
       });
@@ -125,22 +150,22 @@ module.exports = {
     createProduct: async (_, { attributes }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        const productTypes = await models.ProductType.findOne({
-          where: { name: 'Digital Product' },
+        const { id: commissionCategoryId } = await models.Category.findOne({
+          where: { name: 'Commissions' },
         });
+        if (+attributes.categoryId !== commissionCategoryId && !attributes.file) {
+          throw new Error('A digital product must have a file');
+        }
         await models.Product.create({
           userId: id,
-          productTypeId: attributes.productTypeId,
+          categoryId: attributes.categoryId,
           title: attributes.title,
           description: attributes.description,
           price: attributes.price,
           limit: attributes.limit,
           accessibility: attributes.accessibility,
           thumbnail: attributes.thumbnail || null,
-          file:
-            +attributes.productTypeId === productTypes.id && attributes.file
-              ? attributes.file
-              : null,
+          file: attributes.file || null,
         });
         return true;
       } catch (e) {
@@ -154,11 +179,16 @@ module.exports = {
         if (product.userId !== id) {
           throw new Error('A product does not belong to you');
         }
-        const productTypes = await models.ProductType.findOne({ where: { name: 'Service' } });
+        const { id: commissionCategoryId } = await models.Category.findOne({
+          where: { name: 'Commissions' },
+        });
+        if (+attributes.categoryId !== commissionCategoryId && !(attributes.file || product.file)) {
+          throw new Error('A digital product must have a file');
+        }
         await models.Product.update(
           {
             userId: product.userId,
-            productTypeId: attributes.productTypeId,
+            categoryId: attributes.categoryId,
             title: attributes.title,
             description: attributes.description,
             price: attributes.price || null,
@@ -166,7 +196,7 @@ module.exports = {
             accessibility: attributes.accessibility,
             thumbnail: attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnail,
             file:
-              +attributes.productTypeId === productTypes.id ? null : attributes.file || undefined,
+              +attributes.categoryId === commissionCategoryId ? null : attributes.file || undefined,
           },
           { where: { id: attributes.id } },
         );
