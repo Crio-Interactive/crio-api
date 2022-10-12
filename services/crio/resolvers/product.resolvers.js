@@ -75,34 +75,31 @@ module.exports = {
     },
     getRandomProducts: async (
       _,
-      { params: { count, userId, productId, limit = 15, offset = 0, keyword } },
+      { params: { limit = 15, offset = 0, categoryId, keyword } },
       { models },
     ) => {
-      let condition = {};
-      if (userId) {
-        condition = {
-          where: { userId, productId: { [models.sequelize.Sequelize.Op.ne]: productId } },
-        };
-      } else if (keyword) {
-        condition = {
-          where: {
-            [models.sequelize.Sequelize.Op.or]: [
-              {
-                username: {
-                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                },
+      let where = {};
+      if (keyword) {
+        where = {
+          [models.sequelize.Sequelize.Op.or]: [
+            {
+              username: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
               },
-              {
-                title: {
-                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                },
+            },
+            {
+              title: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
               },
-            ],
-          },
+            },
+          ],
         };
       }
+      if (categoryId) {
+        where = { ...where, categoryId };
+      }
       return models.RandomProduct.findAll({
-        ...condition,
+        where,
         order: [['productId', 'DESC']],
         limit,
         offset,
