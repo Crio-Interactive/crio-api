@@ -17,34 +17,31 @@ module.exports = {
     },
     getRandomArtworks: async (
       _,
-      { params: { count, userId, artworkId, limit = 24, offset = 0, keyword } },
+      { params: { limit = 24, offset = 0, keyword, categoryId } },
       { models },
     ) => {
-      let condition = {};
-      if (userId) {
-        condition = {
-          where: { userId, artworkId: { [models.sequelize.Sequelize.Op.ne]: artworkId } },
-        };
-      } else if (keyword) {
-        condition = {
-          where: {
-            [models.sequelize.Sequelize.Op.or]: [
-              {
-                username: {
-                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                },
+      let where = {};
+      if (keyword) {
+        where = {
+          [models.sequelize.Sequelize.Op.or]: [
+            {
+              username: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
               },
-              {
-                title: {
-                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                },
+            },
+            {
+              title: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
               },
-            ],
-          },
+            },
+          ],
         };
       }
+      if (categoryId) {
+        where = { ...where, categoryId };
+      }
       return models.RandomArtwork.findAll({
-        ...condition,
+        where,
         order: [['artworkId', 'DESC']],
         limit,
         offset,

@@ -21,27 +21,29 @@ module.exports = {
       }
       return loaders.productsByUserId.load(userId);
     },
-    getRandomInfo: async (_, { keyword }, { models }) => {
-      const condition = keyword
-        ? {
-            where: {
-              [models.sequelize.Sequelize.Op.or]: [
-                {
-                  username: {
-                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                  },
-                },
-                {
-                  title: {
-                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                  },
-                },
-              ],
+    getRandomInfo: async (_, { params: { keyword, categoryId } }, { models }) => {
+      let where = {};
+      if (keyword) {
+        where = {
+          [models.sequelize.Sequelize.Op.or]: [
+            {
+              username: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+              },
             },
-          }
-        : {};
-      const productsCount = await models.RandomProduct.count(condition);
-      const artworksCount = await models.RandomArtwork.count(condition);
+            {
+              title: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+              },
+            },
+          ],
+        };
+      }
+      if (categoryId) {
+        where = { ...where, categoryId };
+      }
+      const productsCount = await models.RandomProduct.count({ where });
+      const artworksCount = await models.RandomArtwork.count({ where });
       const [products] = await models.sequelize.query(`
         SELECT  *
         FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
@@ -56,6 +58,7 @@ module.exports = {
         ORDER BY Random()
         LIMIT 4
       `);
+
       return { productsCount, artworksCount, products };
     },
     getMoreProducts: async (_, { params: { userId, productId } }, { models }) => {

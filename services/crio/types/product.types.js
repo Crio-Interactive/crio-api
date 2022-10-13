@@ -47,8 +47,13 @@ module.exports = gql`
     productId: ID
     limit: Int
     offset: Int
-    categoryId: Int
+    categoryId: String
     keyword: String
+  }
+
+  input SearchParams {
+    keyword: String
+    categoryId: String
   }
 
   type randomInfo {
@@ -70,7 +75,7 @@ module.exports = gql`
     getProduct(productId: ID!): ProductDetail
     getCategories: [Category]!
     getUserProducts(username: String): [ProductDetail!]!
-    getRandomInfo(keyword: String): randomInfo!
+    getRandomInfo(params: SearchParams!): randomInfo!
     getRandomProducts(params: paginationParams!): [ProductDetail]!
     getMoreProducts(params: paginationParams!): MoreProducts!
     getStripeCheckoutSession(productId: ID!): StripeCheckoutSession!

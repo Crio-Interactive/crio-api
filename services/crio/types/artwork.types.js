@@ -53,7 +53,7 @@ module.exports = gql`
     artworkId: ID
     limit: Int
     offset: Int
-    categoryId: Int
+    categoryId: String
     keyword: String
   }
 
