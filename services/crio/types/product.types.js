@@ -53,7 +53,8 @@ module.exports = gql`
 
   input SearchParams {
     keyword: String
-    categoryId: String
+    productCategoryId: String
+    artworkCategoryId: String
   }
 
   type randomInfo {
