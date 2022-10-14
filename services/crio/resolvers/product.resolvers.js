@@ -21,6 +21,23 @@ module.exports = {
       }
       return loaders.productsByUserId.load(userId);
     },
+    getTopProducts: async (_, {}, { models }) => {
+      const [products] = await models.sequelize.query(`
+        SELECT  *
+        FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
+              FROM "RandomProducts"
+              WHERE "userId" IN (SELECT "followingId"
+                                FROM "Followings"
+                                WHERE "Followings"."deletedAt" IS NULL
+                                GROUP BY "followingId"
+                                ORDER BY count(*) DESC
+                                LIMIT 4)) AS products
+        WHERE products.RowNumber = 1
+        ORDER BY Random()
+        LIMIT 4
+      `);
+      return products;
+    },
     getRandomInfo: async (
       _,
       { params: { keyword, productCategoryId, artworkCategoryId } },
@@ -49,22 +66,8 @@ module.exports = {
       const artworksCount = await models.RandomArtwork.count(
         artworkCategoryId ? { where: { ...where, categoryId: artworkCategoryId } } : { where },
       );
-      const [products] = await models.sequelize.query(`
-        SELECT  *
-        FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
-              FROM "RandomProducts"
-              WHERE "userId" IN (SELECT "followingId"
-                                FROM "Followings"
-                                WHERE "Followings"."deletedAt" IS NULL
-                                GROUP BY "followingId"
-                                ORDER BY count(*) DESC
-                                LIMIT 4)) AS products
-        WHERE products.RowNumber = 1
-        ORDER BY Random()
-        LIMIT 4
-      `);
 
-      return { productsCount, artworksCount, products };
+      return { productsCount, artworksCount };
     },
     getMoreProducts: async (_, { params: { userId, productId } }, { models }) => {
       const userProducts = models.RandomProduct.findAll({
