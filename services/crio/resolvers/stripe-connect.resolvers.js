@@ -90,8 +90,13 @@ module.exports = {
               const amount = (followersCount / totalFollowersCount) * price;
               const account = await retrieveAccount(stripeAccountId);
               if (account.charges_enabled) {
-                const snapshot = await createTransfer(stripeAccountId, amount * 100);
-                await models.Transfer.create({ userId, stripeAccountId, price: amount, snapshot });
+                const snapshot = await createTransfer(stripeAccountId, (amount * 100).toFixed(0));
+                await models.Transfer.create({
+                  userId,
+                  stripeAccountId,
+                  price: amount.toFixed(2),
+                  snapshot,
+                });
               }
             }
           }),
