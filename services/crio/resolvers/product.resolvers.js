@@ -21,27 +21,7 @@ module.exports = {
       }
       return loaders.productsByUserId.load(userId);
     },
-    getRandomInfo: async (_, { keyword }, { models }) => {
-      const condition = keyword
-        ? {
-            where: {
-              [models.sequelize.Sequelize.Op.or]: [
-                {
-                  username: {
-                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                  },
-                },
-                {
-                  title: {
-                    [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                  },
-                },
-              ],
-            },
-          }
-        : {};
-      const productsCount = await models.RandomProduct.count(condition);
-      const artworksCount = await models.RandomArtwork.count(condition);
+    getTopProducts: async (_, {}, { models }) => {
       const [products] = await models.sequelize.query(`
         SELECT  *
         FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY "userId" ORDER BY Random()) AS RowNumber
@@ -56,7 +36,38 @@ module.exports = {
         ORDER BY Random()
         LIMIT 4
       `);
-      return { productsCount, artworksCount, products };
+      return products;
+    },
+    getRandomInfo: async (
+      _,
+      { params: { keyword, productCategoryId, artworkCategoryId } },
+      { models },
+    ) => {
+      let where = {};
+      if (keyword) {
+        where = {
+          [models.sequelize.Sequelize.Op.or]: [
+            {
+              username: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+              },
+            },
+            {
+              title: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
+              },
+            },
+          ],
+        };
+      }
+      const productsCount = await models.RandomProduct.count(
+        productCategoryId ? { where: { ...where, categoryId: productCategoryId } } : { where },
+      );
+      const artworksCount = await models.RandomArtwork.count(
+        artworkCategoryId ? { where: { ...where, categoryId: artworkCategoryId } } : { where },
+      );
+
+      return { productsCount, artworksCount };
     },
     getMoreProducts: async (_, { params: { userId, productId } }, { models }) => {
       const userProducts = models.RandomProduct.findAll({
@@ -75,34 +86,31 @@ module.exports = {
     },
     getRandomProducts: async (
       _,
-      { params: { count, userId, productId, limit = 15, offset = 0, keyword } },
+      { params: { limit = 15, offset = 0, categoryId, keyword } },
       { models },
     ) => {
-      let condition = {};
-      if (userId) {
-        condition = {
-          where: { userId, productId: { [models.sequelize.Sequelize.Op.ne]: productId } },
-        };
-      } else if (keyword) {
-        condition = {
-          where: {
-            [models.sequelize.Sequelize.Op.or]: [
-              {
-                username: {
-                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                },
+      let where = {};
+      if (keyword) {
+        where = {
+          [models.sequelize.Sequelize.Op.or]: [
+            {
+              username: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
               },
-              {
-                title: {
-                  [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
-                },
+            },
+            {
+              title: {
+                [models.sequelize.Sequelize.Op.iLike]: `%${keyword}%`,
               },
-            ],
-          },
+            },
+          ],
         };
       }
+      if (categoryId) {
+        where = { ...where, categoryId };
+      }
       return models.RandomProduct.findAll({
-        ...condition,
+        where,
         order: [['productId', 'DESC']],
         limit,
         offset,

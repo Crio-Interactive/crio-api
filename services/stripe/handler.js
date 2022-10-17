@@ -35,7 +35,7 @@ const createProductCustomer = async attributes => {
     if (product.limit > 0) {
       await DB.Product.update({ limit: product.limit - 1 }, { where: { id: productId } });
     }
-    if (+product.categoryId !== commissionCategoryId) {
+    if (product.categoryId !== commissionCategoryId) {
       await sendMail({
         to: attributes.customer_details.email,
         sender: product.username,
@@ -55,7 +55,7 @@ const createProductCustomer = async attributes => {
       dynamicData: {
         title: product.title,
         email: attributes.customer_details.email,
-        isService: +product.categoryId === commissionCategoryId,
+        isService: product.categoryId === commissionCategoryId,
       },
     });
     // await transaction.commit();

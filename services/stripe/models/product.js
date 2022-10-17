@@ -42,6 +42,9 @@ module.exports = (sequelize, DataTypes) => {
       thumbnail: {
         type: DataTypes.STRING,
       },
+      file: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
