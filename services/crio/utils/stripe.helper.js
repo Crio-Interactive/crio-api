@@ -50,7 +50,7 @@ module.exports = {
         },
       ],
       mode: 'payment',
-      success_url: `${CLIENT_URL}product/${productId}`,
+      success_url: `${CLIENT_URL}product/${productId}?show_banner=true`,
       cancel_url: `${CLIENT_URL}product/${productId}`,
       metadata: { productId, userId },
       payment_intent_data: {
