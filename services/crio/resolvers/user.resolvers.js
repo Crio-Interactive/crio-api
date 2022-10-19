@@ -275,7 +275,7 @@ module.exports = {
         if (exist) {
           throw new Error('The invitation has already been accepted');
         }
-        console.log(email, 'EMAIL-EMAIL');
+        console.log(email, 'EMAIL-EMAIL-EMAIL');
         const invitation = await models.Invitation.findOne({ where: { email } });
         console.log(invitation, 'INVITATION-INVITATION');
         if (invitation) {
