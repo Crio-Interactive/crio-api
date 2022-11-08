@@ -38,7 +38,7 @@ module.exports = {
   createPrice: (id, price) =>
     stripe.prices.create({
       product: id,
-      unit_amount: price * 100,
+      unit_amount: (price * 100).toFixed(),
       currency: 'usd',
     }),
   createCheckoutSession: (userId, productId, priceId, stripeAccountId, fee) =>
