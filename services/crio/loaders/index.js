@@ -129,6 +129,18 @@ const loaders = (models, user) => {
         userIds.map(userId => products.filter(product => product.userId == userId)),
       ),
     ),
+    productLikesById: new DataLoader(ids =>
+      models.ProductLike.findAll({
+        raw: true,
+        attributes: ['userId', 'productId'],
+        where: {
+          productId: ids,
+        },
+        logging: true,
+      }).then(productLikes =>
+        ids.map(id => productLikes.filter(productLike => productLike.productId == id)),
+      ),
+    ),
   };
   return self;
 };
