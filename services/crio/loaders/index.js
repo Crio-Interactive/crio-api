@@ -99,6 +99,18 @@ const loaders = (models, user) => {
         userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
       ),
     ),
+    artworkLikesById: new DataLoader(ids =>
+      models.ArtworkLike.findAll({
+        raw: true,
+        attributes: ['userId', 'artworkId'],
+        where: {
+          artworkId: ids,
+        },
+        logging: true,
+      }).then(artworkLikes =>
+        ids.map(id => artworkLikes.filter(artworkLike => artworkLike.artworkId == id)),
+      ),
+    ),
     productById: new DataLoader(ids =>
       models.Product.findAll({
         raw: true,
@@ -136,7 +148,6 @@ const loaders = (models, user) => {
         where: {
           productId: ids,
         },
-        logging: true,
       }).then(productLikes =>
         ids.map(id => productLikes.filter(productLike => productLike.productId == id)),
       ),

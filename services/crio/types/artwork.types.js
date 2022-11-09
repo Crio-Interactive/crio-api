@@ -63,14 +63,20 @@ module.exports = gql`
     artworks: [WorkDetail]
   }
 
+  type ArtworkLikes {
+    userId: Int!
+  }
+
   type Query {
     getArtwork(artworkId: ID!): WorkDetail
     getUserArtworks(username: String): [WorkDetail!]!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
+    getArtworkLikes(artworkId: ID!): [ArtworkLikes!]!
   }
 
   type Mutation {
     createArtwork(params: ArtworkParams!): ArtworkId!
     deleteArtwork(params: DeletingParams!): Boolean
+    likeArtwork(artworkId: ID!): Boolean
   }
 `;

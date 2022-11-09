@@ -19,7 +19,7 @@ module.exports = {
         },
         allowNull: false,
       },
-      productId: {
+      artworkId: {
         type: Sequelize.INTEGER,
         references: {
           model: {
