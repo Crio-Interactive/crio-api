@@ -27,15 +27,15 @@ class AwsHelper {
           AccessToken: accessToken,
         })
         .promise();
-      const { Groups } = await this.cognito
-        .adminListGroupsForUser({
-          Username,
-          UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
-        })
-        .promise();
+      // const { Groups } = await this.cognito
+      //   .adminListGroupsForUser({
+      //     Username,
+      //     UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+      //   })
+      //   .promise();
       return {
         username: Username,
-        groups: Groups.map(({ GroupName }) => GroupName),
+        // groups: Groups.map(({ GroupName }) => GroupName),
         attributes: UserAttributes.reduce((result, attr) => {
           result[attr.Name] = attr.Value;
           return result;
