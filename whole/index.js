@@ -27,16 +27,16 @@ const gateway = new ApolloGateway({
         if (context.token) {
           const user = await awsHelper.getUserFromToken(context.token);
           if (user) {
-            request.http.headers.set(
-              'user',
-              JSON.stringify({
-                ...user,
-                attributes: {
-                  ...user.attributes,
-                  name: user.attributes.name.replace('“', '').replace('”', ''),
-                },
-              }),
-            );
+            const formattedUser = user.attributes.name
+              ? {
+                  ...user,
+                  attributes: {
+                    ...user.attributes,
+                    name: user.attributes.name.replace('“', '').replace('”', ''),
+                  },
+                }
+              : user;
+            request.http.headers.set('user', JSON.stringify(formattedUser));
           }
         }
       },
