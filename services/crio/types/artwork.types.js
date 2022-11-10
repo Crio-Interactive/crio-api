@@ -31,6 +31,7 @@ module.exports = gql`
     status: String
     accessibility: Accessibility!
     categoryId: ID
+    likes: Int
   }
 
   input ArtworkParams {

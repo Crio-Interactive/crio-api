@@ -35,6 +35,7 @@ module.exports = gql`
     accessibility: Accessibility!
     thumbnail: String
     file: String
+    likes: Int
   }
 
   input DeletingParams {

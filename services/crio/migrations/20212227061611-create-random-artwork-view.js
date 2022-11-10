@@ -17,9 +17,26 @@ module.exports = {
       "thumbnail",
       "title",
       "description",
-      "Artworks"."accessibility"
-    FROM "Users" INNER JOIN "Artworks" ON "Users".id = "Artworks"."userId"
-    WHERE status='available' AND "Users"."deletedAt" IS NULL AND "Artworks"."deletedAt" IS NULL
+      "Artworks"."accessibility",
+      count("ArtworkLikes"."artworkId") AS likes
+    FROM "Users"
+      INNER JOIN "Artworks" ON "Users".id = "Artworks"."userId"
+      LEFT JOIN "ArtworkLikes" ON "Artworks".id = "ArtworkLikes"."artworkId"
+    WHERE status='available' AND "Users"."deletedAt" IS NULL AND "Artworks"."deletedAt" IS NULL AND "ArtworkLikes"."deletedAt" IS NULL
+    GROUP BY
+      "Artworks"."id",
+      "Artworks"."userId",
+      "username",
+      "providerType",
+      "providerUserId",
+      "avatar",
+      "categoryId",
+      "content",
+      "thumbnail",
+      "title",
+      "description",
+      "Artworks"."accessibility",
+      "ArtworkLikes"."artworkId"
   `),
 
   down: queryInterface => queryInterface.sequelize.query('DROP VIEW IF EXISTS "RandomArtworks"'),

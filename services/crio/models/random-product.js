@@ -68,6 +68,9 @@ module.exports = (sequelize, DataTypes) => {
       file: {
         type: DataTypes.STRING,
       },
+      likes: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       sequelize,

@@ -19,9 +19,28 @@ module.exports = {
       "limit",
       "accessibility",
       "thumbnail",
-      "file"
-      FROM "Users" INNER JOIN "Products" ON "Users".id = "Products"."userId"
-    WHERE "Users"."deletedAt" IS NULL AND "Products"."deletedAt" IS NULL
+      "file",
+      count("ProductLikes"."productId") AS likes
+    FROM "Users"
+      INNER JOIN "Products" ON "Users".id = "Products"."userId"
+      LEFT JOIN "ProductLikes" ON "Products".id = "ProductLikes"."productId"
+    WHERE "Users"."deletedAt" IS NULL AND "Products"."deletedAt" IS NULL AND "ProductLikes"."deletedAt" IS NULL
+    GROUP BY
+      "Products"."id",
+      "Products"."userId",
+      "username",
+      "providerType",
+      "providerUserId",
+      "avatar",
+      "categoryId",
+      "title",
+      "description",
+      "price",
+      "limit",
+      "accessibility",
+      "thumbnail",
+      "file",
+      "ProductLikes"."productId"
   `),
 
   down: queryInterface => queryInterface.sequelize.query('DROP VIEW IF EXISTS "RandomProducts"'),
