@@ -72,7 +72,7 @@ const loaders = (models, user) => {
       models.Artwork.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: artworkAttributes,
+        attributes: [...artworkAttributes, ['id', 'artworkId']],
         include: {
           attributes: [],
           model: models.User,
@@ -124,7 +124,7 @@ const loaders = (models, user) => {
       models.Product.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: productAttributes,
+        attributes: [...productAttributes, ['id', 'productId']],
         include: {
           attributes: [],
           model: models.User,
