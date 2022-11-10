@@ -2,7 +2,6 @@
 const DataLoader = require('dataloader');
 
 const attributes = [
-  'userId',
   'User.username',
   'User.providerType',
   'User.providerUserId',
@@ -14,7 +13,7 @@ const attributes = [
 
 const artworkAttributes = [
   ...attributes,
-  ['id', 'artworkId'],
+  'Artwork.userId',
   'categoryId',
   'status',
   'content',
@@ -24,7 +23,7 @@ const artworkAttributes = [
 
 const productAttributes = [
   ...attributes,
-  ['id', 'productId'],
+  'Product.userId',
   'categoryId',
   'price',
   'limit',
@@ -86,12 +85,23 @@ const loaders = (models, user) => {
     artworksByUserId: new DataLoader(async userIds =>
       models.Artwork.findAll({
         raw: true,
+        attributes: [
+          ...artworkAttributes,
+          ['id', 'artworkId'],
+          [models.sequelize.literal('count("ArtworkLikes"."artworkId")'), 'likes'],
+        ],
+        group: [...artworkAttributes, 'Artwork.id', 'ArtworkLikes.artworkId'],
         order: [['id', 'DESC']],
-        attributes: artworkAttributes,
-        include: {
-          attributes: [],
-          model: models.User,
-        },
+        include: [
+          {
+            attributes: [],
+            model: models.User,
+          },
+          {
+            attributes: [],
+            model: models.ArtworkLike,
+          },
+        ],
         where: {
           userId: userIds,
         },
@@ -106,7 +116,6 @@ const loaders = (models, user) => {
         where: {
           artworkId: ids,
         },
-        logging: true,
       }).then(artworkLikes =>
         ids.map(id => artworkLikes.filter(artworkLike => artworkLike.artworkId == id)),
       ),
@@ -128,12 +137,23 @@ const loaders = (models, user) => {
     productsByUserId: new DataLoader(async userIds =>
       models.Product.findAll({
         raw: true,
+        attributes: [
+          ...productAttributes,
+          ['id', 'productId'],
+          [models.sequelize.literal('count("ProductLikes"."productId")'), 'likes'],
+        ],
+        group: [...productAttributes, 'Product.id', 'ProductLikes.productId'],
         order: [['id', 'DESC']],
-        attributes: productAttributes,
-        include: {
-          attributes: [],
-          model: models.User,
-        },
+        include: [
+          {
+            attributes: [],
+            model: models.User,
+          },
+          {
+            attributes: [],
+            model: models.ProductLike,
+          },
+        ],
         where: {
           userId: userIds,
         },
