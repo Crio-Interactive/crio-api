@@ -92,6 +92,6 @@ module.exports = gql`
     createProduct(attributes: Product!): Boolean
     updateProduct(attributes: Product!): Boolean
     deleteProduct(productId: ID!): Boolean
-    likeProduct(productId: ID!): Boolean
+    likeProduct(productId: ID!): Int
   }
 `;

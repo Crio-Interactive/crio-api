@@ -253,7 +253,7 @@ module.exports = {
             },
           });
         }
-        return true;
+        return models.ProductLike.count({ where: { productId } });
       } catch (e) {
         return e;
       }

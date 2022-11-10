@@ -119,7 +119,7 @@ module.exports = {
             },
           });
         }
-        return true;
+        return models.ArtworkLike.count({ where: { artworkId } });
       } catch (e) {
         return e;
       }

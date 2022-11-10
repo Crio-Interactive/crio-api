@@ -78,6 +78,6 @@ module.exports = gql`
   type Mutation {
     createArtwork(params: ArtworkParams!): ArtworkId!
     deleteArtwork(params: DeletingParams!): Boolean
-    likeArtwork(artworkId: ID!): Boolean
+    likeArtwork(artworkId: ID!): Int
   }
 `;
