@@ -25,6 +25,13 @@ module.exports = {
       });
       return likes.map(({ productId }) => productId);
     },
+    artworkLikes: async (parent, {}, { models }) => {
+      const likes = await models.ArtworkLike.findAll({
+        attributes: ['artworkId'],
+        where: { userId: parent.id },
+      });
+      return likes.map(({ artworkId }) => artworkId);
+    },
     boughtProducts: async (parent, {}, { models }) => {
       const products = await models.ProductCustomer.findAll({ where: { userId: parent.id } });
       return products ? products.map(({ productId }) => productId) : [];
