@@ -31,7 +31,6 @@ module.exports = gql`
     status: String
     accessibility: Accessibility!
     categoryId: ID
-    liked: Boolean
     likes: Int
   }
 

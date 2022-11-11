@@ -18,7 +18,7 @@ module.exports = {
     getRandomArtworks: async (
       _,
       { params: { limit = 24, offset = 0, keyword, categoryId } },
-      { user, loaders, models },
+      { models },
     ) => {
       let where = {};
       if (keyword) {
@@ -40,41 +40,7 @@ module.exports = {
       if (categoryId) {
         where = { ...where, categoryId };
       }
-      let liked;
-      if (user) {
-        const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        const likes = await models.ArtworkLike.findAll({
-          attributes: ['artworkId'],
-          where: { userId: id },
-        });
-        liked = [
-          models.sequelize.literal(
-            `CASE WHEN "artworkId" IN (${likes.map(
-              ({ artworkId }) => artworkId,
-            )}) THEN TRUE ELSE FALSE END`,
-          ),
-          'liked',
-        ];
-      }
-      const attributes = [
-        'id',
-        'userId',
-        'username',
-        'providerType',
-        'providerUserId',
-        'avatar',
-        'artworkId',
-        'content',
-        'thumbnail',
-        'title',
-        'description',
-        'accessibility',
-        'categoryId',
-        'likes',
-      ];
       return models.RandomArtwork.findAll({
-        raw: true,
-        attributes: liked ? [...attributes, liked] : attributes,
         where,
         order: [['artworkId', 'DESC']],
         limit,

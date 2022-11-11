@@ -53,6 +53,7 @@ module.exports = gql`
     featuresSeen: Boolean
     helpSeen: Boolean
     revenue: String
+    productLikes: [ID]
   }
 
   input MailInfo {

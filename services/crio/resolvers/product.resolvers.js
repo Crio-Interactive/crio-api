@@ -87,7 +87,7 @@ module.exports = {
     getRandomProducts: async (
       _,
       { params: { limit = 15, offset = 0, categoryId, keyword } },
-      { user, loaders, models },
+      { models },
     ) => {
       let where = {};
       if (keyword) {
@@ -109,43 +109,7 @@ module.exports = {
       if (categoryId) {
         where = { ...where, categoryId };
       }
-      let liked;
-      if (user) {
-        const { id } = await loaders.userByUserId.load(user.attributes.sub);
-        const likes = await models.ProductLike.findAll({
-          attributes: ['productId'],
-          where: { userId: id },
-        });
-        liked = [
-          models.sequelize.literal(
-            `CASE WHEN "productId" IN (${likes.map(
-              ({ productId }) => productId,
-            )}) THEN TRUE ELSE FALSE END`,
-          ),
-          'liked',
-        ];
-      }
-      const attributes = [
-        'id',
-        'userId',
-        'username',
-        'providerType',
-        'providerUserId',
-        'avatar',
-        'productId',
-        'categoryId',
-        'title',
-        'description',
-        'price',
-        'limit',
-        'accessibility',
-        'thumbnail',
-        'file',
-        'likes',
-      ];
       return models.RandomProduct.findAll({
-        raw: true,
-        attributes: liked ? [...attributes, liked] : attributes,
         where,
         order: [['productId', 'DESC']],
         limit,
