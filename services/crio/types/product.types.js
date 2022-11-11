@@ -36,6 +36,7 @@ module.exports = gql`
     thumbnail: String
     file: String
     likes: Int
+    liked: Boolean
   }
 
   input DeletingParams {
