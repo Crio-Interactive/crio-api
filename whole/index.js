@@ -27,7 +27,16 @@ const gateway = new ApolloGateway({
         if (context.token) {
           const user = await awsHelper.getUserFromToken(context.token);
           if (user) {
-            request.http.headers.set('user', JSON.stringify(user));
+            const formattedUser = user.attributes.name
+              ? {
+                  ...user,
+                  attributes: {
+                    ...user.attributes,
+                    name: user.attributes.name.replace('“', '').replace('”', ''),
+                  },
+                }
+              : user;
+            request.http.headers.set('user', JSON.stringify(formattedUser));
           }
         }
       },
@@ -51,11 +60,7 @@ const server = new ApolloServer({
 });
 
 const waitOnOptions = {
-  resources: [
-    'tcp:4001',
-    'tcp:4004',
-    'tcp:4005',
-  ],
+  resources: ['tcp:4001', 'tcp:4004', 'tcp:4005'],
 };
 
 waitOn(waitOnOptions)
@@ -66,6 +71,6 @@ waitOn(waitOnOptions)
       console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
     });
   })
-  .catch((err) => {
+  .catch(err => {
     console.error('ERR:', err);
   });

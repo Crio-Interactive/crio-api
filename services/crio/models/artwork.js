@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Artwork.belongsTo(models.User, { foreignKey: 'userId' });
       Artwork.belongsTo(models.Category, { foreignKey: 'categoryId' });
+      Artwork.hasMany(models.ArtworkLike, { foreignKey: 'artworkId' });
     }
   }
 

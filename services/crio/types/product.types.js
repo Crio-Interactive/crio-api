@@ -35,6 +35,7 @@ module.exports = gql`
     accessibility: Accessibility!
     thumbnail: String
     file: String
+    likes: Int
   }
 
   input DeletingParams {
@@ -71,6 +72,10 @@ module.exports = gql`
     url: String!
   }
 
+  type ProductLikes {
+    userId: Int!
+  }
+
   type Query {
     getProduct(productId: ID!): ProductDetail
     getCategories: [Category]!
@@ -80,11 +85,13 @@ module.exports = gql`
     getRandomProducts(params: paginationParams!): [ProductDetail]!
     getMoreProducts(params: paginationParams!): MoreProducts!
     getStripeCheckoutSession(productId: ID!): StripeCheckoutSession!
+    getProductLikes(productId: ID!): [ProductLikes!]!
   }
 
   type Mutation {
     createProduct(attributes: Product!): Boolean
     updateProduct(attributes: Product!): Boolean
     deleteProduct(productId: ID!): Boolean
+    likeProduct(productId: ID!): Int
   }
 `;

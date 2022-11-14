@@ -2,7 +2,6 @@
 const DataLoader = require('dataloader');
 
 const attributes = [
-  'userId',
   'User.username',
   'User.providerType',
   'User.providerUserId',
@@ -14,7 +13,7 @@ const attributes = [
 
 const artworkAttributes = [
   ...attributes,
-  ['id', 'artworkId'],
+  'Artwork.userId',
   'categoryId',
   'status',
   'content',
@@ -24,7 +23,7 @@ const artworkAttributes = [
 
 const productAttributes = [
   ...attributes,
-  ['id', 'productId'],
+  'Product.userId',
   'categoryId',
   'price',
   'limit',
@@ -73,7 +72,7 @@ const loaders = (models, user) => {
       models.Artwork.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: artworkAttributes,
+        attributes: [...artworkAttributes, ['id', 'artworkId']],
         include: {
           attributes: [],
           model: models.User,
@@ -86,12 +85,23 @@ const loaders = (models, user) => {
     artworksByUserId: new DataLoader(async userIds =>
       models.Artwork.findAll({
         raw: true,
+        attributes: [
+          ...artworkAttributes,
+          ['id', 'artworkId'],
+          [models.sequelize.literal('count("ArtworkLikes"."artworkId")'), 'likes'],
+        ],
+        group: [...artworkAttributes, 'Artwork.id', 'ArtworkLikes.artworkId'],
         order: [['id', 'DESC']],
-        attributes: artworkAttributes,
-        include: {
-          attributes: [],
-          model: models.User,
-        },
+        include: [
+          {
+            attributes: [],
+            model: models.User,
+          },
+          {
+            attributes: [],
+            model: models.ArtworkLike,
+          },
+        ],
         where: {
           userId: userIds,
         },
@@ -99,11 +109,22 @@ const loaders = (models, user) => {
         userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
       ),
     ),
+    artworkLikesById: new DataLoader(ids =>
+      models.ArtworkLike.findAll({
+        raw: true,
+        attributes: ['userId', 'artworkId'],
+        where: {
+          artworkId: ids,
+        },
+      }).then(artworkLikes =>
+        ids.map(id => artworkLikes.filter(artworkLike => artworkLike.artworkId == id)),
+      ),
+    ),
     productById: new DataLoader(ids =>
       models.Product.findAll({
         raw: true,
         order: [['updatedAt', 'DESC']],
-        attributes: productAttributes,
+        attributes: [...productAttributes, ['id', 'productId']],
         include: {
           attributes: [],
           model: models.User,
@@ -116,17 +137,39 @@ const loaders = (models, user) => {
     productsByUserId: new DataLoader(async userIds =>
       models.Product.findAll({
         raw: true,
+        attributes: [
+          ...productAttributes,
+          ['id', 'productId'],
+          [models.sequelize.literal('count("ProductLikes"."productId")'), 'likes'],
+        ],
+        group: [...productAttributes, 'Product.id', 'ProductLikes.productId'],
         order: [['id', 'DESC']],
-        attributes: productAttributes,
-        include: {
-          attributes: [],
-          model: models.User,
-        },
+        include: [
+          {
+            attributes: [],
+            model: models.User,
+          },
+          {
+            attributes: [],
+            model: models.ProductLike,
+          },
+        ],
         where: {
           userId: userIds,
         },
       }).then(products =>
         userIds.map(userId => products.filter(product => product.userId == userId)),
+      ),
+    ),
+    productLikesById: new DataLoader(ids =>
+      models.ProductLike.findAll({
+        raw: true,
+        attributes: ['userId', 'productId'],
+        where: {
+          productId: ids,
+        },
+      }).then(productLikes =>
+        ids.map(id => productLikes.filter(productLike => productLike.productId == id)),
       ),
     ),
   };

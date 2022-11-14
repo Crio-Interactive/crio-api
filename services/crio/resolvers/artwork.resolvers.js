@@ -47,6 +47,8 @@ module.exports = {
         offset,
       });
     },
+    getArtworkLikes: async (_, { artworkId }, { loaders }) =>
+      loaders.artworkLikesById.load(artworkId),
   },
   Mutation: {
     createArtwork: async (_, { params }, { user, loaders, models }) => {
@@ -88,6 +90,36 @@ module.exports = {
           await vimeoClient.delete(uri);
         }
         return true;
+      } catch (e) {
+        return e;
+      }
+    },
+    likeArtwork: async (_, { artworkId }, { user, loaders, models }) => {
+      try {
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        const like = await models.ArtworkLike.findOne({
+          raw: true,
+          attributes: ['userId'],
+          where: {
+            artworkId,
+            userId: id,
+          },
+        });
+
+        if (!like) {
+          await models.ArtworkLike.create({
+            artworkId,
+            userId: id,
+          });
+        } else {
+          await models.ArtworkLike.destroy({
+            where: {
+              artworkId,
+              userId: id,
+            },
+          });
+        }
+        return models.ArtworkLike.count({ where: { artworkId } });
       } catch (e) {
         return e;
       }

@@ -153,6 +153,8 @@ module.exports = {
         return e;
       }
     },
+    getProductLikes: async (_, { productId }, { loaders }) =>
+      loaders.productLikesById.load(productId),
   },
   Mutation: {
     createProduct: async (_, { attributes }, { user, loaders, models }) => {
@@ -222,6 +224,36 @@ module.exports = {
         }
         await models.Product.destroy({ where: { id: productId } });
         return true;
+      } catch (e) {
+        return e;
+      }
+    },
+    likeProduct: async (_, { productId }, { user, loaders, models }) => {
+      try {
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        const like = await models.ProductLike.findOne({
+          raw: true,
+          attributes: ['userId'],
+          where: {
+            productId,
+            userId: id,
+          },
+        });
+
+        if (!like) {
+          await models.ProductLike.create({
+            productId,
+            userId: id,
+          });
+        } else {
+          await models.ProductLike.destroy({
+            where: {
+              productId,
+              userId: id,
+            },
+          });
+        }
+        return models.ProductLike.count({ where: { productId } });
       } catch (e) {
         return e;
       }

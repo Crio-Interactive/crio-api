@@ -18,6 +18,20 @@ module.exports = {
       const followings = await models.Following.findAll({ where: { userId: parent.id } });
       return followings ? followings.map(({ followingId }) => followingId) : [];
     },
+    productLikes: async (parent, {}, { models }) => {
+      const likes = await models.ProductLike.findAll({
+        attributes: ['productId'],
+        where: { userId: parent.id },
+      });
+      return likes.map(({ productId }) => productId);
+    },
+    artworkLikes: async (parent, {}, { models }) => {
+      const likes = await models.ArtworkLike.findAll({
+        attributes: ['artworkId'],
+        where: { userId: parent.id },
+      });
+      return likes.map(({ artworkId }) => artworkId);
+    },
     boughtProducts: async (parent, {}, { models }) => {
       const products = await models.ProductCustomer.findAll({ where: { userId: parent.id } });
       return products ? products.map(({ productId }) => productId) : [];
