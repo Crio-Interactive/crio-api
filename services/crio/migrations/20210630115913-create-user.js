@@ -55,6 +55,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         default: false,
       },
+      showRevenue: {
+        type: Sequelize.BOOLEAN,
+        default: true,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

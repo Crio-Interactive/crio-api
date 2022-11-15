@@ -15,6 +15,7 @@ module.exports = gql`
     about: String
     featuresSeen: Boolean
     helpSeen: Boolean
+    showRevenue: Boolean
   }
 
   type response {
@@ -52,6 +53,7 @@ module.exports = gql`
     boughtProducts: [ID]
     featuresSeen: Boolean
     helpSeen: Boolean
+    showRevenue: Boolean
     revenue: String
     productLikes: [ID]
     artworkLikes: [ID]
