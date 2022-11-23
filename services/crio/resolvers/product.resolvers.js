@@ -111,7 +111,7 @@ module.exports = {
       }
       return models.RandomProduct.findAll({
         where,
-        order: [['productId', 'DESC']],
+        order: [['likes', 'DESC']],
         limit,
         offset,
       });
