@@ -59,6 +59,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         default: true,
       },
+      emailVisible: {
+        type: Sequelize.BOOLEAN,
+        default: true,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

@@ -69,6 +69,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         default: true,
       },
+      emailVisible: {
+        type: DataTypes.BOOLEAN,
+        default: true,
+      },
     },
     {
       sequelize,
