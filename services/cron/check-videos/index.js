@@ -1,10 +1,6 @@
-const path = require('path');
-const dotenv = require('dotenv');
 const { Op } = require('sequelize');
 const { vimeoClient } = require('../config/httpClient');
 const db = require('../models');
-
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const checkStatus = async () => {
   try {
