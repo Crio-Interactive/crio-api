@@ -32,6 +32,11 @@ module.exports = gql`
     subscriptionCancel: Boolean
   }
 
+  type Categories {
+    productCategories: [ID]
+    artworkCategories: [ID]
+  }
+
   type UserInfo {
     id: ID
     userId: String
@@ -59,6 +64,7 @@ module.exports = gql`
     revenue: String
     productLikes: [ID]
     artworkLikes: [ID]
+    categories: Categories
   }
 
   input MailInfo {

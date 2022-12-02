@@ -74,6 +74,36 @@ module.exports = {
       }
       return null;
     },
+    categories: async (parent, {}, { models, loaders }) => {
+      let categories = [];
+      const isCreator = await loaders.isCreator.load(parent.email);
+      if (isCreator) {
+        categories = await models.Category.findAll({
+          raw: true,
+          attributes: [
+            models.sequelize.literal(
+              `array_remove(ARRAY_AGG(DISTINCT "Products"."categoryId"), NULL) AS "productCategories",
+               array_remove(ARRAY_AGG(DISTINCT "Artworks"."categoryId"), NULL) AS "artworkCategories"`,
+            ),
+          ],
+          include: [
+            {
+              attributes: [],
+              model: models.Product,
+              where: { userId: parent.id },
+              required: false,
+            },
+            {
+              attributes: [],
+              model: models.Artwork,
+              where: { userId: parent.id },
+              required: false,
+            },
+          ],
+        });
+      }
+      return categories[0];
+    },
   },
   Query: {
     me: async (_, {}, { user, loaders }) => loaders.userByUserId.load(user.attributes.sub),
