@@ -9,7 +9,7 @@ module.exports = {
   Query: {
     getProduct: async (_, { productId }, { loaders }) => loaders.productById.load(productId),
     getCategories: async (_, {}, { models }) => models.Category.findAll({ order: [['name']] }),
-    getUserProducts: async (_, { username }, { user, loaders }) => {
+    getUserProducts: async (_, { params: { username } }, { user, loaders }) => {
       let userId;
       if (username) {
         const user = await loaders.userByUsername.load(username);
