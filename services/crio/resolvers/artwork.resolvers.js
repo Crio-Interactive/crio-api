@@ -1,9 +1,29 @@
 const { vimeoClient } = require('../config/httpClient');
 
+const attributes = [
+  'User.username',
+  'User.providerType',
+  'User.providerUserId',
+  'User.avatar',
+  'title',
+  'description',
+  'accessibility',
+];
+
+const artworkAttributes = [
+  ...attributes,
+  'Artwork.userId',
+  'categoryId',
+  'status',
+  'content',
+  'pictures_uri',
+  'thumbnail',
+];
+
 module.exports = {
   Query: {
     getArtwork: async (_, { artworkId }, { loaders }) => loaders.artworkById.load(artworkId),
-    getUserArtworks: async (_, { params: { username } }, { user, loaders }) => {
+    getUserArtworks: async (_, { params: { username, categoryId } }, { user, models, loaders }) => {
       let userId;
       if (username) {
         const user = await loaders.userByUsername.load(username);
@@ -13,7 +33,32 @@ module.exports = {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         userId = id;
       }
-      return loaders.artworksByUserId.load(userId);
+      return models.Artwork.findAll({
+        raw: true,
+        attributes: [
+          ...artworkAttributes,
+          ['id', 'artworkId'],
+          [models.sequelize.literal('count("ArtworkLikes"."artworkId")'), 'likes'],
+        ],
+        group: [...artworkAttributes, 'Artwork.id', 'ArtworkLikes.artworkId'],
+        order: [['id', 'DESC']],
+        include: [
+          {
+            attributes: [],
+            model: models.User,
+          },
+          {
+            attributes: [],
+            model: models.ArtworkLike,
+          },
+        ],
+        where: categoryId
+          ? {
+              userId,
+              categoryId,
+            }
+          : { userId },
+      });
     },
     getRandomArtworks: async (
       _,
