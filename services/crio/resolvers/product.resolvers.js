@@ -39,6 +39,11 @@ module.exports = {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         userId = id;
       }
+      let where = { userId };
+      if (categoryId && categoryId !== 'all') {
+        where = categoryId === 'free' ? { userId, price: null } : { userId, categoryId };
+      }
+
       return models.Product.findAll({
         raw: true,
         attributes: [
@@ -58,12 +63,7 @@ module.exports = {
             model: models.ProductLike,
           },
         ],
-        where: categoryId
-          ? {
-              userId,
-              categoryId,
-            }
-          : { userId },
+        where,
       });
     },
     getTopProducts: async (_, {}, { models }) => {
@@ -105,11 +105,18 @@ module.exports = {
           ],
         };
       }
-      const productsCount = await models.RandomProduct.count(
-        productCategoryId ? { where: { ...where, categoryId: productCategoryId } } : { where },
-      );
+      let whereProducts = { ...where };
+      if (productCategoryId && productCategoryId !== 'all') {
+        whereProducts =
+          productCategoryId === 'free'
+            ? { ...where, price: null }
+            : { ...where, categoryId: productCategoryId };
+      }
+      const productsCount = await models.RandomProduct.count({ where: whereProducts });
       const artworksCount = await models.RandomArtwork.count(
-        artworkCategoryId ? { where: { ...where, categoryId: artworkCategoryId } } : { where },
+        artworkCategoryId && artworkCategoryId !== 'all'
+          ? { where: { ...where, categoryId: artworkCategoryId } }
+          : { where },
       );
 
       return { productsCount, artworksCount };
@@ -151,8 +158,8 @@ module.exports = {
           ],
         };
       }
-      if (categoryId) {
-        where = { ...where, categoryId };
+      if (categoryId && categoryId !== 'all') {
+        where = categoryId === 'free' ? { ...where, price: null } : { ...where, categoryId };
       }
       return models.RandomProduct.findAll({
         where,

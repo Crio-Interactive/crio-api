@@ -33,6 +33,7 @@ module.exports = {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         userId = id;
       }
+
       return models.Artwork.findAll({
         raw: true,
         attributes: [
@@ -52,12 +53,7 @@ module.exports = {
             model: models.ArtworkLike,
           },
         ],
-        where: categoryId
-          ? {
-              userId,
-              categoryId,
-            }
-          : { userId },
+        where: categoryId && categoryId !== 'all' ? { userId, categoryId } : { userId },
       });
     },
     getRandomArtworks: async (
@@ -82,7 +78,7 @@ module.exports = {
           ],
         };
       }
-      if (categoryId) {
+      if (categoryId && categoryId !== 'all') {
         where = { ...where, categoryId };
       }
       return models.RandomArtwork.findAll({
