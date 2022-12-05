@@ -58,6 +58,11 @@ module.exports = gql`
     keyword: String
   }
 
+  input UserAttributesParams {
+    username: String!
+    categoryId: ID
+  }
+
   type feedArtworks {
     topArtworks: [WorkDetail]
     userArtworks: [WorkDetail]
@@ -70,7 +75,7 @@ module.exports = gql`
 
   type Query {
     getArtwork(artworkId: ID!): WorkDetail
-    getUserArtworks(username: String): [WorkDetail!]!
+    getUserArtworks(params: UserAttributesParams!): [WorkDetail!]!
     getRandomArtworks(params: paginationParams!): [WorkDetail]!
     getArtworkLikes(artworkId: ID!): [ArtworkLikes!]!
   }

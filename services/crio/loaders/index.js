@@ -82,33 +82,6 @@ const loaders = (models, user) => {
         },
       }).then(artworks => ids.map(id => artworks.find(artwork => artwork.artworkId == id))),
     ),
-    artworksByUserId: new DataLoader(async userIds =>
-      models.Artwork.findAll({
-        raw: true,
-        attributes: [
-          ...artworkAttributes,
-          ['id', 'artworkId'],
-          [models.sequelize.literal('count("ArtworkLikes"."artworkId")'), 'likes'],
-        ],
-        group: [...artworkAttributes, 'Artwork.id', 'ArtworkLikes.artworkId'],
-        order: [['id', 'DESC']],
-        include: [
-          {
-            attributes: [],
-            model: models.User,
-          },
-          {
-            attributes: [],
-            model: models.ArtworkLike,
-          },
-        ],
-        where: {
-          userId: userIds,
-        },
-      }).then(artworks =>
-        userIds.map(userId => artworks.filter(artwork => artwork.userId == userId)),
-      ),
-    ),
     artworkLikesById: new DataLoader(ids =>
       models.ArtworkLike.findAll({
         raw: true,
@@ -133,33 +106,6 @@ const loaders = (models, user) => {
           id: ids,
         },
       }).then(products => ids.map(id => products.find(product => product.productId == id))),
-    ),
-    productsByUserId: new DataLoader(async userIds =>
-      models.Product.findAll({
-        raw: true,
-        attributes: [
-          ...productAttributes,
-          ['id', 'productId'],
-          [models.sequelize.literal('count("ProductLikes"."productId")'), 'likes'],
-        ],
-        group: [...productAttributes, 'Product.id', 'ProductLikes.productId'],
-        order: [['id', 'DESC']],
-        include: [
-          {
-            attributes: [],
-            model: models.User,
-          },
-          {
-            attributes: [],
-            model: models.ProductLike,
-          },
-        ],
-        where: {
-          userId: userIds,
-        },
-      }).then(products =>
-        userIds.map(userId => products.filter(product => product.userId == userId)),
-      ),
     ),
     productLikesById: new DataLoader(ids =>
       models.ProductLike.findAll({

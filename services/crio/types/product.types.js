@@ -58,6 +58,11 @@ module.exports = gql`
     artworkCategoryId: String
   }
 
+  input UserAttributesParams {
+    username: String!
+    categoryId: ID
+  }
+
   type RandomInfo {
     productsCount: Int!
     artworksCount: Int!
@@ -79,7 +84,7 @@ module.exports = gql`
   type Query {
     getProduct(productId: ID!): ProductDetail
     getCategories: [Category]!
-    getUserProducts(username: String): [ProductDetail!]!
+    getUserProducts(params: UserAttributesParams!): [ProductDetail!]!
     getTopProducts: [ProductDetail!]!
     getRandomInfo(params: SearchParams!): RandomInfo!
     getRandomProducts(params: paginationParams!): [ProductDetail]!

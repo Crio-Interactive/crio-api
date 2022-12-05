@@ -5,11 +5,31 @@ const {
   retrieveAccount,
 } = require('../utils/stripe.helper');
 
+const attributes = [
+  'User.username',
+  'User.providerType',
+  'User.providerUserId',
+  'User.avatar',
+  'title',
+  'description',
+  'accessibility',
+];
+
+const productAttributes = [
+  ...attributes,
+  'Product.userId',
+  'categoryId',
+  'price',
+  'limit',
+  'thumbnail',
+  'file',
+];
+
 module.exports = {
   Query: {
     getProduct: async (_, { productId }, { loaders }) => loaders.productById.load(productId),
     getCategories: async (_, {}, { models }) => models.Category.findAll({ order: [['name']] }),
-    getUserProducts: async (_, { username }, { user, loaders }) => {
+    getUserProducts: async (_, { params: { username, categoryId } }, { user, models, loaders }) => {
       let userId;
       if (username) {
         const user = await loaders.userByUsername.load(username);
@@ -19,7 +39,32 @@ module.exports = {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         userId = id;
       }
-      return loaders.productsByUserId.load(userId);
+      let where = { userId };
+      if (categoryId && categoryId !== 'all') {
+        where = categoryId === 'free' ? { userId, price: null } : { userId, categoryId };
+      }
+
+      return models.Product.findAll({
+        raw: true,
+        attributes: [
+          ...productAttributes,
+          ['id', 'productId'],
+          [models.sequelize.literal('count("ProductLikes"."productId")'), 'likes'],
+        ],
+        group: [...productAttributes, 'Product.id', 'ProductLikes.productId'],
+        order: [['id', 'DESC']],
+        include: [
+          {
+            attributes: [],
+            model: models.User,
+          },
+          {
+            attributes: [],
+            model: models.ProductLike,
+          },
+        ],
+        where,
+      });
     },
     getTopProducts: async (_, {}, { models }) => {
       const [products] = await models.sequelize.query(`
@@ -60,11 +105,18 @@ module.exports = {
           ],
         };
       }
-      const productsCount = await models.RandomProduct.count(
-        productCategoryId ? { where: { ...where, categoryId: productCategoryId } } : { where },
-      );
+      let whereProducts = { ...where };
+      if (productCategoryId && productCategoryId !== 'all') {
+        whereProducts =
+          productCategoryId === 'free'
+            ? { ...where, price: null }
+            : { ...where, categoryId: productCategoryId };
+      }
+      const productsCount = await models.RandomProduct.count({ where: whereProducts });
       const artworksCount = await models.RandomArtwork.count(
-        artworkCategoryId ? { where: { ...where, categoryId: artworkCategoryId } } : { where },
+        artworkCategoryId && artworkCategoryId !== 'all'
+          ? { where: { ...where, categoryId: artworkCategoryId } }
+          : { where },
       );
 
       return { productsCount, artworksCount };
@@ -106,8 +158,8 @@ module.exports = {
           ],
         };
       }
-      if (categoryId) {
-        where = { ...where, categoryId };
+      if (categoryId && categoryId !== 'all') {
+        where = categoryId === 'free' ? { ...where, price: null } : { ...where, categoryId };
       }
       return models.RandomProduct.findAll({
         where,
