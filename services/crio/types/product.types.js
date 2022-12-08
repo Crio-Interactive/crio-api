@@ -10,6 +10,7 @@ module.exports = gql`
     limit: Int
     accessibility: Accessibility!
     thumbnail: String
+    thumbnails: [String]
     file: String
   }
 

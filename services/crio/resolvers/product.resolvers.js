@@ -227,6 +227,7 @@ module.exports = {
           limit: attributes.limit,
           accessibility: attributes.accessibility,
           thumbnail: attributes.thumbnail || null,
+          thumbnails: attributes.thumbnails,
           file: attributes.file || null,
         });
         return true;
@@ -257,6 +258,7 @@ module.exports = {
             limit: attributes.limit || null,
             accessibility: attributes.accessibility,
             thumbnail: attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnail,
+            thumbnails: attributes.thumbnails,
             file:
               +attributes.categoryId === commissionCategoryId ? null : attributes.file || undefined,
           },

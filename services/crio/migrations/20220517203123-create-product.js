@@ -51,6 +51,9 @@ module.exports = {
       thumbnail: {
         type: Sequelize.STRING,
       },
+      thumbnails: {
+        type: Sequelize.ARRAY(DataTypes.STRING),
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
