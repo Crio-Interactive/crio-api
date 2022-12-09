@@ -65,6 +65,9 @@ module.exports = (sequelize, DataTypes) => {
       thumbnail: {
         type: DataTypes.STRING,
       },
+      thumbnails: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+      },
       file: {
         type: DataTypes.STRING,
       },

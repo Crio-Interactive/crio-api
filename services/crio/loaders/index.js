@@ -28,6 +28,7 @@ const productAttributes = [
   'price',
   'limit',
   'thumbnail',
+  'thumbnails',
   'file',
 ];
 
