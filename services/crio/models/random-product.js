@@ -62,9 +62,6 @@ module.exports = (sequelize, DataTypes) => {
         values: Object.values(ACCESSIBILITY),
         default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
-      thumbnail: {
-        type: DataTypes.STRING,
-      },
       thumbnails: {
         type: DataTypes.ARRAY(DataTypes.STRING),
       },

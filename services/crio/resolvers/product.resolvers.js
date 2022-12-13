@@ -21,7 +21,6 @@ const productAttributes = [
   'categoryId',
   'price',
   'limit',
-  'thumbnail',
   'thumbnails',
   'file',
 ];
@@ -227,7 +226,6 @@ module.exports = {
           price: attributes.price,
           limit: attributes.limit,
           accessibility: attributes.accessibility,
-          thumbnail: attributes.thumbnail || null,
           thumbnails: attributes.thumbnails,
           file: attributes.file || null,
         });
@@ -258,8 +256,6 @@ module.exports = {
             price: attributes.price || null,
             limit: attributes.limit || null,
             accessibility: attributes.accessibility,
-            thumbnail:
-              attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnails?.[0],
             thumbnails: attributes.thumbnails,
             file:
               +attributes.categoryId === commissionCategoryId ? null : attributes.file || undefined,

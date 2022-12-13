@@ -9,7 +9,6 @@ module.exports = gql`
     price: Float
     limit: Int
     accessibility: Accessibility!
-    thumbnail: String
     thumbnails: [String]
     file: String
   }
@@ -34,15 +33,9 @@ module.exports = gql`
     price: Float
     limit: Int
     accessibility: Accessibility!
-    thumbnail: String
     thumbnails: [String]
     file: String
     likes: Int
-  }
-
-  input DeletingParams {
-    productId: ID
-    thumbnail: String
   }
 
   input paginationParams {

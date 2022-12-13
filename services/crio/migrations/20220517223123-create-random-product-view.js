@@ -18,7 +18,6 @@ module.exports = {
       "price",
       "limit",
       "accessibility",
-      "thumbnail",
       "thumbnails",
       "file",
       count("ProductLikes"."productId") AS likes
@@ -39,7 +38,6 @@ module.exports = {
       "price",
       "limit",
       "accessibility",
-      "thumbnail",
       "thumbnails",
       "file",
       "ProductLikes"."productId"

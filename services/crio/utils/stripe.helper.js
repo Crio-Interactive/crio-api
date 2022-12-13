@@ -25,13 +25,13 @@ module.exports = {
     }),
   createLoginLink: account => stripe.accounts.createLoginLink(account),
   retrieveAccount: account => stripe.accounts.retrieve(account),
-  createProduct: (userId, title, thumbnail) =>
+  createProduct: (userId, title, thumbnails) =>
     stripe.products.create({
       name: title,
-      images: thumbnail
-        ? [
+      images: thumbnails
+        ? thumbnails.map(thumbnail => [
             `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${userId}/products/thumbnail-${thumbnail}`,
-          ]
+          ])
         : [],
       url: `${CLIENT_URL}pricing`,
     }),
