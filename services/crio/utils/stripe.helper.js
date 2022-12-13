@@ -29,9 +29,10 @@ module.exports = {
     stripe.products.create({
       name: title,
       images: thumbnails
-        ? thumbnails.map(thumbnail => [
-            `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${userId}/products/thumbnail-${thumbnail}`,
-          ])
+        ? thumbnails.map(
+            thumbnail =>
+              `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${userId}/products/thumbnail-${thumbnail}`,
+          )
         : [],
       url: `${CLIENT_URL}pricing`,
     }),

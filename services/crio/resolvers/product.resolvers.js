@@ -188,7 +188,7 @@ module.exports = {
           return new Error('Creator payouts are off. Please contact Support.');
         }
 
-        const { id } = await createProduct(product.userId, product.title, product.thumbnails?.[0]);
+        const { id } = await createProduct(product.userId, product.title, product.thumbnails);
         const price = await createPrice(id, product.price);
 
         const session = await createCheckoutSession(
