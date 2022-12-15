@@ -21,7 +21,7 @@ const productAttributes = [
   'categoryId',
   'price',
   'limit',
-  'thumbnail',
+  'thumbnails',
   'file',
 ];
 
@@ -188,7 +188,7 @@ module.exports = {
           return new Error('Creator payouts are off. Please contact Support.');
         }
 
-        const { id } = await createProduct(product.userId, product.title, product.thumbnail);
+        const { id } = await createProduct(product.userId, product.title, product.thumbnails);
         const price = await createPrice(id, product.price);
 
         const session = await createCheckoutSession(
@@ -226,7 +226,7 @@ module.exports = {
           price: attributes.price,
           limit: attributes.limit,
           accessibility: attributes.accessibility,
-          thumbnail: attributes.thumbnail || null,
+          thumbnails: attributes.thumbnails,
           file: attributes.file || null,
         });
         return true;
@@ -256,7 +256,7 @@ module.exports = {
             price: attributes.price || null,
             limit: attributes.limit || null,
             accessibility: attributes.accessibility,
-            thumbnail: attributes.thumbnail === 'remove-thumbnail' ? null : attributes.thumbnail,
+            thumbnails: attributes.thumbnails,
             file:
               +attributes.categoryId === commissionCategoryId ? null : attributes.file || undefined,
           },

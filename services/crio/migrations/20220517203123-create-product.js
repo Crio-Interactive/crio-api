@@ -48,8 +48,8 @@ module.exports = {
         values: Object.values(ACCESSIBILITY),
         default: ACCESSIBILITY.SUBSCRIBER_ONLY,
       },
-      thumbnail: {
-        type: Sequelize.STRING,
+      thumbnails: {
+        type: Sequelize.ARRAY(DataTypes.STRING),
       },
       createdAt: {
         type: Sequelize.DATE,
