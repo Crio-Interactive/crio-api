@@ -196,7 +196,7 @@ module.exports = {
           productId,
           price.id,
           stripeAccountId,
-          ((product.price * 10) / 100) * 100,
+          ((product.price * 5) / 100) * 100,
         );
 
         return { url: session.url };
