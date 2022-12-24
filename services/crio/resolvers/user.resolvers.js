@@ -188,7 +188,7 @@ module.exports = {
     },
     getProfileImages: async (_, {}, { models }) => {
       try {
-        const users = await models.User.findAll({ where: { image: null } });
+        const users = await models.User.findAll({ where: { image: null }, limit: 10 });
         return users.map(async ({ id, providerUserId, providerType, avatar }) => {
           let image;
           if (providerType === 'Google') {
