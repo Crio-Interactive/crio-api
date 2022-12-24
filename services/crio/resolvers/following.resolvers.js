@@ -11,7 +11,14 @@ module.exports = {
       }
       return models.Following.findAll({
         raw: true,
-        attributes: ['id', 'User.username', 'User.firstName', 'User.lastName', 'User.image'],
+        attributes: [
+          'id',
+          'followingId',
+          'User.username',
+          'User.firstName',
+          'User.lastName',
+          'User.image',
+        ],
         include: {
           attributes: [],
           model: models.User,

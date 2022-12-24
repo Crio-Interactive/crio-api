@@ -234,7 +234,7 @@ module.exports = {
           //     attr.picture.indexOf('s96-c'),
           //   );
           // }
-          const x = await models.User.create({
+          const { id } = await models.User.create({
             userId: attr.sub,
             providerType: identity.providerType,
             providerUserId: identity.userId,
@@ -244,7 +244,7 @@ module.exports = {
             lastName: attr.family_name,
             // avatar,
           });
-          return { userId: x.id };
+          return { userId: id };
         }
         return {};
       } catch (e) {

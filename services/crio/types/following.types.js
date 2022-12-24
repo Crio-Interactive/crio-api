@@ -11,6 +11,7 @@ module.exports = gql`
 
   type FollowingInfo {
     id: ID!
+    followingId: ID!
     username: String!
     firstName: String
     lastName: String
