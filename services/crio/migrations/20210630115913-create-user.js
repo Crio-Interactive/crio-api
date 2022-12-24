@@ -14,10 +14,6 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      providerType: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       providerUserId: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -38,7 +34,7 @@ module.exports = {
       lastName: {
         type: Sequelize.STRING,
       },
-      avatar: {
+      image: {
         type: Sequelize.STRING,
       },
       about: {

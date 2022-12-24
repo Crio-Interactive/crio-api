@@ -186,6 +186,22 @@ module.exports = {
       `);
       return { subscribersCount: subscribersCount[0].count, creatorsFollowersCount };
     },
+    getProfileImages: async (_, {}, { models }) => {
+      try {
+        const users = await models.User.findAll();
+        return users.map(async ({ id, providerUserId, providerType, avatar }) => {
+          let image;
+          if (providerType === 'Google') {
+            image = `https://lh3.googleusercontent.com/${avatar}s350`;
+          } else {
+            image = `https://graph.facebook.com/${providerUserId}/picture?height=350&width=350`;
+          }
+          return { userId: id, image };
+        });
+      } catch (e) {
+        return e;
+      }
+    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, loaders, models }) => {
@@ -211,14 +227,14 @@ module.exports = {
         existingUser = await loaders.userByUserId.load(attr.sub);
         if (!existingUser) {
           const identity = JSON.parse(attr.identities)[0];
-          let avatar;
-          if (identity.providerType === 'Google') {
-            avatar = attr.picture.substring(
-              'https://lh3.googleusercontent.com/'.length,
-              attr.picture.indexOf('s96-c'),
-            );
-          }
-          await models.User.create({
+          // let avatar;
+          // if (identity.providerType === 'Google') {
+          //   avatar = attr.picture.substring(
+          //     'https://lh3.googleusercontent.com/'.length,
+          //     attr.picture.indexOf('s96-c'),
+          //   );
+          // }
+          const x = await models.User.create({
             userId: attr.sub,
             providerType: identity.providerType,
             providerUserId: identity.userId,
@@ -226,8 +242,9 @@ module.exports = {
             username: `${attr.email.substring(0, attr.email.indexOf('@'))}`.toLowerCase(),
             firstName: attr.given_name,
             lastName: attr.family_name,
-            avatar,
+            // avatar,
           });
+          return { userId: x.id };
         }
         return {};
       } catch (e) {
@@ -327,6 +344,14 @@ module.exports = {
         } else {
           throw new Error('Wrong Invitation');
         }
+        return true;
+      } catch (e) {
+        return e;
+      }
+    },
+    updateUserImage: async (_, { userId, image }, { models }) => {
+      try {
+        await models.User.update({ image }, { where: { id: userId } });
         return true;
       } catch (e) {
         return e;

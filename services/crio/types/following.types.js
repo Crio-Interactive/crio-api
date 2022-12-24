@@ -11,12 +11,10 @@ module.exports = gql`
 
   type FollowingInfo {
     id: ID!
-    providerType: String!
-    providerUserId: String!
     username: String!
     firstName: String
     lastName: String
-    avatar: String
+    image: String
   }
 
   type Query {

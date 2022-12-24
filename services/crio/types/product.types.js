@@ -24,9 +24,7 @@ module.exports = gql`
     productId: ID!
     userId: ID!
     username: String!
-    providerType: String!
-    providerUserId: String!
-    avatar: String
+    image: String
     categoryId: ID!
     title: String!
     description: String

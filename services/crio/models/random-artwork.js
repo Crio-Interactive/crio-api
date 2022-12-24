@@ -24,15 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      providerType: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      providerUserId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      avatar: {
+      image: {
         type: DataTypes.STRING,
       },
       artworkId: {

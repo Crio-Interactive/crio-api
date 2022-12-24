@@ -21,9 +21,7 @@ module.exports = gql`
     artworkId: ID
     userId: ID!
     username: String!
-    providerType: String!
-    providerUserId: String!
-    avatar: String
+    image: String
     content: String!
     thumbnail: String!
     title: String!
