@@ -352,7 +352,7 @@ module.exports = {
     updateUserImage: async (_, { userId, image }, { models }) => {
       try {
         await models.User.update({ image }, { where: { id: userId } });
-        return true;
+        return image;
       } catch (e) {
         return e;
       }
