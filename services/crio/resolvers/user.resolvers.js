@@ -325,7 +325,7 @@ module.exports = {
         return e;
       }
     },
-    updateUserImage: async (_, { image }, { user, models }) => {
+    updateUserImage: async (_, { image }, { user, loaders, models }) => {
       try {
         const { id } = await loaders.userByUserId.load(user.attributes.sub);
         await models.User.update({ image }, { where: { id } });
