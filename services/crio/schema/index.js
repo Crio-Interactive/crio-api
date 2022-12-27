@@ -30,6 +30,7 @@ module.exports = applyMiddleware(
     Mutation: {
       saveUser: isAuthenticated,
       updateUser: isAuthenticated,
+      updateUserImage: isAuthenticated,
       createFollowing: isAuthenticated,
       createArtwork: isAuthenticated,
       deleteArtwork: isAuthenticated,
