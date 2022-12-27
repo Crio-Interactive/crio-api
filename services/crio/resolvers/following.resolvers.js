@@ -13,12 +13,11 @@ module.exports = {
         raw: true,
         attributes: [
           'id',
+          'followingId',
           'User.username',
-          'User.providerType',
-          'User.providerUserId',
           'User.firstName',
           'User.lastName',
-          'User.avatar',
+          'User.image',
         ],
         include: {
           attributes: [],

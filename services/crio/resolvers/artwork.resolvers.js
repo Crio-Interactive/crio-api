@@ -1,14 +1,6 @@
 const { vimeoClient } = require('../config/httpClient');
 
-const attributes = [
-  'User.username',
-  'User.providerType',
-  'User.providerUserId',
-  'User.avatar',
-  'title',
-  'description',
-  'accessibility',
-];
+const attributes = ['User.username', 'User.image', 'title', 'description', 'accessibility'];
 
 const artworkAttributes = [
   ...attributes,

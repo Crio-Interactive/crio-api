@@ -6,8 +6,6 @@ module.exports = gql`
 
   input UserAttributes {
     userId: String
-    providerType: String
-    providerUserId: String
     email: String
     username: String
     firstName: String
@@ -17,10 +15,12 @@ module.exports = gql`
     helpSeen: Boolean
     showRevenue: Boolean
     emailVisible: Boolean
+    image: String
   }
 
-  type response {
+  type Response {
     error: String
+    userId: ID
   }
 
   type Payment {
@@ -40,13 +40,11 @@ module.exports = gql`
   type UserInfo {
     id: ID
     userId: String
-    providerType: String!
-    providerUserId: String!
     email: String
     username: String
     firstName: String
     lastName: String
-    avatar: String
+    image: String
     about: String
     isCreator: Boolean
     payment: Payment
@@ -94,20 +92,27 @@ module.exports = gql`
     emails: [EmailStatus!]!
   }
 
+  type Image {
+    userId: ID!
+    image: String!
+  }
+
   type Query {
     me: UserInfo
     getUser(username: String!): UserInfo
     job: Job
     getInvitations: [Invitations!]!
     getUserInvitations: [EmailStatus!]!
+    getProfileImages: [Image!]!
   }
 
   type Mutation {
-    saveUser: response!
+    saveUser: Response!
     updateUser(attributes: UserAttributes!): UserInfo!
     contactCreator(mailInfo: MailInfo!): Boolean!
     cancelSubscription: Boolean!
     sendInvitation(emails: [String!]!): Boolean!
     acceptInvitation(email: String!): Boolean!
+    updateUserImage(userId: ID!, image: String!): String!
   }
 `;
