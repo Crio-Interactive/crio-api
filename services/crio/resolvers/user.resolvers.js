@@ -186,22 +186,6 @@ module.exports = {
       `);
       return { subscribersCount: subscribersCount[0].count, creatorsFollowersCount };
     },
-    getProfileImages: async (_, {}, { models }) => {
-      try {
-        const users = await models.User.findAll({ where: { image: null }, limit: 10 });
-        return users.map(async ({ id, providerUserId, providerType, avatar }) => {
-          let image;
-          if (providerType === 'Google') {
-            image = `https://lh3.googleusercontent.com/${avatar}s350`;
-          } else {
-            image = `https://graph.facebook.com/${providerUserId}/picture?height=350&width=350`;
-          }
-          return { userId: id, image };
-        });
-      } catch (e) {
-        return e;
-      }
-    },
   },
   Mutation: {
     saveUser: async (_, {}, { user, loaders, models }) => {
@@ -227,13 +211,6 @@ module.exports = {
         existingUser = await loaders.userByUserId.load(attr.sub);
         if (!existingUser) {
           const identity = JSON.parse(attr.identities)[0];
-          // let avatar;
-          // if (identity.providerType === 'Google') {
-          //   avatar = attr.picture.substring(
-          //     'https://lh3.googleusercontent.com/'.length,
-          //     attr.picture.indexOf('s96-c'),
-          //   );
-          // }
           const { id } = await models.User.create({
             userId: attr.sub,
             providerType: identity.providerType,
@@ -242,7 +219,6 @@ module.exports = {
             username: `${attr.email.substring(0, attr.email.indexOf('@'))}`.toLowerCase(),
             firstName: attr.given_name,
             lastName: attr.family_name,
-            // avatar,
           });
           return { userId: id };
         }
@@ -349,9 +325,10 @@ module.exports = {
         return e;
       }
     },
-    updateUserImage: async (_, { userId, image }, { models }) => {
+    updateUserImage: async (_, { image }, { user, loaders, models }) => {
       try {
-        await models.User.update({ image }, { where: { id: userId } });
+        const { id } = await loaders.userByUserId.load(user.attributes.sub);
+        await models.User.update({ image }, { where: { id } });
         return image;
       } catch (e) {
         return e;

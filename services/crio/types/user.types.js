@@ -113,6 +113,6 @@ module.exports = gql`
     cancelSubscription: Boolean!
     sendInvitation(emails: [String!]!): Boolean!
     acceptInvitation(email: String!): Boolean!
-    updateUserImage(userId: ID!, image: String!): String!
+    updateUserImage(image: String!): String!
   }
 `;
