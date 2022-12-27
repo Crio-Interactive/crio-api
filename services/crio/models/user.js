@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
+      providerType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       providerUserId: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -42,9 +46,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       lastName: {
-        type: DataTypes.STRING,
-      },
-      avatar: {
         type: DataTypes.STRING,
       },
       image: {

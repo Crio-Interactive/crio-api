@@ -213,6 +213,7 @@ module.exports = {
           const identity = JSON.parse(attr.identities)[0];
           const { id } = await models.User.create({
             userId: attr.sub,
+            providerType: identity.providerType,
             providerUserId: identity.userId,
             email: attr.email,
             username: `${attr.email.substring(0, attr.email.indexOf('@'))}`.toLowerCase(),
